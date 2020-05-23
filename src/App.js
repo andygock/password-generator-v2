@@ -5,13 +5,25 @@ import WordListRadio from './WordListRadio';
 import './App.css';
 import Output from './Output';
 
+const defaults = {
+  words: 6,
+  lines: 10,
+  list: 'eff-long',
+};
+
 const App = () => {
-  const [wordsPerPassphrase, setWordsPerPassphrase] = React.useState(6);
-  const [numberOfPassphrases, setNumberOfPassphrases] = React.useState(10);
-  const [wordlist, setWordlist] = React.useState('eff-long');
+  const [wordsPerPassphrase, setWordsPerPassphrase] = React.useState(
+    defaults.words
+  );
+  const [numberOfPassphrases, setNumberOfPassphrases] = React.useState(
+    defaults.lines
+  );
+  const [wordlist, setWordlist] = React.useState(defaults.list);
 
   const handleReset = () => {
-    //
+    setWordsPerPassphrase(defaults.words);
+    setNumberOfPassphrases(defaults.lines);
+    setWordlist(defaults.list);
   };
 
   return (
@@ -39,7 +51,11 @@ const App = () => {
         <button onClick={handleReset}>Reset to defaults</button>
       </div>
 
-      <Output />
+      <Output
+        words={wordsPerPassphrase}
+        lines={numberOfPassphrases}
+        list={wordlist}
+      />
     </div>
   );
 };
