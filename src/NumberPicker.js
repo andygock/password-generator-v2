@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const buttonStyle = {
+  margin: '0 0rem 0 0.2rem',
+};
+
 // state is managed by parent
 const NumberPicker = ({ onChange, min, max, value, ...otherProps }) => {
   const handleChange = (val) => {
@@ -23,18 +27,20 @@ const NumberPicker = ({ onChange, min, max, value, ...otherProps }) => {
         {...otherProps}
       />
       <button
+        style={buttonStyle}
         onClick={() => {
           handleChange(value - 1);
         }}
       >
-        -
+        &darr;
       </button>
       <button
+        style={buttonStyle}
         onClick={() => {
           handleChange(value + 1);
         }}
       >
-        +
+        &uarr;
       </button>
     </div>
   );

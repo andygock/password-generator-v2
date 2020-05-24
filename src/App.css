@@ -8,11 +8,18 @@ body {
   padding: 1rem;
 }
 
-code,
-.code {
+code {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
+}
+
+.output {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
     monospace;
   line-height: 1.2rem;
+  border: solid 1px lightgray;
+  padding: 0.5rem;
+  margin-top: 0.2rem;
 }
 
 .App {
@@ -27,12 +34,25 @@ code,
   padding: 0 15px;
 }
 
+.entropy {
+  font-size: smaller;
+}
+
+.inputs > p {
+  margin: 0.5rem 0 0.5rem 0;
+}
+
 header {
   text-align: center;
 }
 
 footer {
+  font-size: smaller;
   text-align: center;
+}
+
+h1 {
+  margin: 0;
 }
 
 h3 {
@@ -43,6 +63,27 @@ h3 {
 label {
   display: block;
   cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+input,
+button,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0.4em;
+  margin: 0 0 0.5em 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+button:hover {
+  background-color: white;
 }
 
 /* https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */

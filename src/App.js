@@ -8,7 +8,7 @@ import Output from './Output';
 
 const defaults = {
   words: 6,
-  lines: 10,
+  lines: 20,
   list: 'eff-long',
 };
 
@@ -34,20 +34,20 @@ const App = () => {
       </header>
 
       <div className="container">
-        <div className="col">
-          <h3>Number of words per passphrase</h3>
+        <div className="col inputs">
+          <p>Number of words per passphrase</p>
           <NumberPicker
             onChange={(val) => setWordsPerPassphrase(val)}
             value={wordsPerPassphrase}
           />
 
-          <h3>Number of passphrases</h3>
+          <p>Number of passphrases</p>
           <NumberPicker
             onChange={(val) => setNumberOfPassphrases(val)}
             value={numberOfPassphrases}
           />
 
-          <h3>Word list</h3>
+          <p>Word list</p>
           <WordListRadio value={wordlist} onChange={setWordlist} />
 
           <div>

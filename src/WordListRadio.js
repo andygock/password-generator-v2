@@ -34,7 +34,7 @@ const WordListRadio = ({ value, onChange }) => {
             name="word-list"
             checked={value === id}
             onChange={handleChange}
-          />
+          />{' '}
           {text} ({words[id].length})
         </label>
       ))}
