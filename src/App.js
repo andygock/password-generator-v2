@@ -30,7 +30,10 @@ const App = () => {
   return (
     <div className="App">
       <header>
-        <h1>Password Generator</h1>
+        <p>
+          <strong>Password Generator</strong> - Generate random passphrases in
+          the browser. Click line to copy passphrase to clipboard.
+        </p>
       </header>
 
       <div className="container">

@@ -38,12 +38,18 @@ code {
   font-size: smaller;
 }
 
-.inputs > p {
+.inputs p {
   margin: 0.5rem 0 0.5rem 0;
 }
 
+/* heading */
 header {
-  text-align: center;
+  padding-bottom: 1rem;
+}
+
+header p {
+  margin: 0;
+  text-align: left;
 }
 
 footer {
@@ -53,6 +59,7 @@ footer {
 
 h1 {
   margin: 0;
+  font-size: 1.3rem;
 }
 
 h3 {
