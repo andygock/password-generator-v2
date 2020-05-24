@@ -41,7 +41,7 @@ const Output = ({ list, words, lines }) => {
   };
 
   return (
-    <div className="">
+    <div>
       <button
         onClick={() => {
           const passes = generate({ lines, words, wordArray: dict[list] });
@@ -52,18 +52,20 @@ const Output = ({ list, words, lines }) => {
         Regenerate
       </button>
       <CopiedToClipboard text={copied} />
-      {passphrases.map((row, rowNumber) => {
-        const pass = row.join(' ');
-        return (
-          <div
-            key={pass}
-            className={classNames('pointer', { selected: pass === copied })}
-            onClick={handleCopy(pass)}
-          >
-            {pass}
-          </div>
-        );
-      })}
+      <div className="code">
+        {passphrases.map((row, rowNumber) => {
+          const pass = row.join(' ');
+          return (
+            <div
+              key={pass}
+              className={classNames('pointer', { selected: pass === copied })}
+              onClick={handleCopy(pass)}
+            >
+              {pass}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 };

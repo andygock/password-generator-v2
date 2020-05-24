@@ -29,7 +29,7 @@ const App = () => {
 
   return (
     <div className="App">
-      <header className="App-header">
+      <header>
         <h1>Password Generator</h1>
       </header>
 
@@ -75,7 +75,9 @@ const App = () => {
             EFF word lists
           </a>
           . Passphrases are not stored or transmitted. Source code is available
-          on GitHub with MIT License.
+          on{' '}
+          <a href="https://github.com/andygock/password-generator-v2">GitHub</a>{' '}
+          with MIT License.
         </p>
         <p>
           &copy;
