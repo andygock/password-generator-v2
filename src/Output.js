@@ -71,13 +71,7 @@ const Output = ({ list, words, lines }) => {
           );
         })}
       </div>
-      <p className="entropy">
-        Each passphrase have {entropyBits}{' '}
-        <a href="https://en.wikipedia.org/wiki/Password_strength#Entropy_as_a_measure_of_password_strength">
-          bits of entropy
-        </a>
-        . Dictionary size is {dict[list].length} words.
-      </p>
+
       <EstimateCrackingTime bits={entropyBits} />
     </div>
   );

@@ -5,6 +5,7 @@ import WordListRadio from './WordListRadio';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
 import Output from './Output';
+import dict from './words';
 
 const defaults = {
   words: 6,
@@ -26,6 +27,10 @@ const App = () => {
     setNumberOfPassphrases(defaults.lines);
     setWordlist(defaults.list);
   };
+
+  const entropyBits = Math.floor(
+    Math.log(dict[wordlist].length ** wordsPerPassphrase) / Math.log(2)
+  );
 
   return (
     <div className="App">
@@ -52,6 +57,17 @@ const App = () => {
 
           <p>Word list</p>
           <WordListRadio value={wordlist} onChange={setWordlist} />
+
+          <p className="entropy">
+            Each passphrase have {entropyBits}{' '}
+            <a href="https://en.wikipedia.org/wiki/Password_strength#Entropy_as_a_measure_of_password_strength">
+              bits of entropy.
+            </a>
+          </p>
+
+          <p className="entropy">
+            Dictionary size is {dict[wordlist].length} words.
+          </p>
 
           <div>
             <button onClick={handleReset}>Reset to defaults</button>
