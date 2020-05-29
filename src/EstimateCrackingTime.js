@@ -68,31 +68,39 @@ const hash = [
   },
 ];
 
+const msAgeOfUniverse = 13.8e9 * 86400 * 1000;
+
+const prettyTime = (ms) => {
+  if (ms > msAgeOfUniverse) return '> age of universe';
+  if (ms < 1000) return '< 1 second';
+
+  return prettyMilliseconds(ms, {
+    compact: true,
+    verbose: true,
+  });
+};
+
 // cracking table
 const EstimateCrackingTime = ({ bits }) => {
   return (
     <div className="crack-time">
-      <h3 className="strong">Estimated cracking time</h3>
+      <h3 className="strong">Estimated cracking time ({bits} entropy bits)</h3>
       <p>With dictionary attack using a single RTX 2080 GPU.</p>
       <table>
         <thead>
           <tr>
             <th>Hash</th>
-            <th>Time</th>
+            <th className="time">Time</th>
           </tr>
         </thead>
         <tbody>
           {hash.map(({ name, rate }) => {
             // calculate estimated crack time
             const ms = bits > 0 ? (1000 * 0.5 * Math.pow(2, bits)) / rate : 0;
-            const prettyTime = prettyMilliseconds(ms, {
-              compact: true,
-              verbose: true,
-            });
             return (
               <tr key={name}>
                 <td>{name}</td>
-                <td>{prettyTime}</td>
+                <td>{prettyTime(ms)}</td>
               </tr>
             );
           })}

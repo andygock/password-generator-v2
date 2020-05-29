@@ -62,7 +62,7 @@ const Output = ({ list, words, lines }) => {
           const pass = row.join(' ');
           return (
             <div
-              key={pass}
+              key={rowNumber}
               className={classNames('pointer', { selected: pass === copied })}
               onClick={handleCopy(pass)}
             >
@@ -71,8 +71,6 @@ const Output = ({ list, words, lines }) => {
           );
         })}
       </div>
-
-      <EstimateCrackingTime bits={entropyBits} />
     </div>
   );
 };

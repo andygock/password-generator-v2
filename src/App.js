@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import NumberPicker from './NumberPicker';
 import WordListRadio from './WordListRadio';
+import EstimateCrackingTime from './EstimateCrackingTime';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
 import Output from './Output';
@@ -74,12 +75,16 @@ const App = () => {
           </div>
         </div>
 
-        <div className="col">
+        <div className="col col-output">
           <Output
             words={wordsPerPassphrase}
             lines={numberOfPassphrases}
             list={wordlist}
           />
+        </div>
+
+        <div className="col col-crack-time">
+          <EstimateCrackingTime bits={entropyBits} />
         </div>
       </div>
 
