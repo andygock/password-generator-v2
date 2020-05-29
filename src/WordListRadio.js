@@ -17,6 +17,10 @@ const WordListRadio = ({ value, onChange }) => {
       text: 'EFF short word list v2',
       id: 'eff-short2',
     },
+    {
+      text: 'All combined',
+      id: 'all',
+    },
   ];
 
   const handleChange = (e) => {
@@ -26,18 +30,21 @@ const WordListRadio = ({ value, onChange }) => {
 
   return (
     <>
-      {wordListOptions.map(({ text, id }) => (
-        <label key={id}>
-          <input
-            type="radio"
-            id={id}
-            name="word-list"
-            checked={value === id}
-            onChange={handleChange}
-          />{' '}
-          {text} ({words[id].length})
-        </label>
-      ))}
+      {wordListOptions.map(({ text, id }) => {
+        const wordCount = words[id].length;
+        return (
+          <label key={id}>
+            <input
+              type="radio"
+              id={id}
+              name="word-list"
+              checked={value === id}
+              onChange={handleChange}
+            />{' '}
+            {text} ({wordCount})
+          </label>
+        );
+      })}
     </>
   );
 };
