@@ -67,6 +67,10 @@ h3 {
   font-weight: normal;
 }
 
+.strong {
+  font-weight: bold;
+}
+
 label {
   display: block;
   cursor: pointer;
@@ -118,4 +122,8 @@ button:hover {
 
 .selected:hover {
   background-color: greenyellow;
+}
+
+.crack-time {
+  /* font-size: smaller; */
 }

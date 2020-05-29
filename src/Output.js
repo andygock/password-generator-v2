@@ -4,6 +4,7 @@ import copy from 'copy-to-clipboard';
 import classNames from 'classnames';
 import dict from './words';
 import CopiedToClipboard from './CopiedToClipboard';
+import EstimateCrackingTime from './EstimateCrackingTime';
 
 const Output = ({ list, words, lines }) => {
   const [copied, setCopied] = React.useState('');
@@ -77,6 +78,7 @@ const Output = ({ list, words, lines }) => {
         </a>
         . Dictionary size is {dict[list].length} words.
       </p>
+      <EstimateCrackingTime bits={entropyBits} />
     </div>
   );
 };
