@@ -22,6 +22,10 @@ Production build (files saved in `build/`):
 
     yarn build
 
+To serve `build/`. Requires global install of [http-server](https://www.npmjs.com/package/http-server).
+
+    yarn serve
+
 ## TODO
 
 ### Use of `window.location.hash`
