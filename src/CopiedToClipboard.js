@@ -30,7 +30,9 @@ const CopiedToClipboard = ({ text }) => {
   );
 };
 
-CopiedToClipboard.propTypes = {};
+CopiedToClipboard.propTypes = {
+  text: PropTypes.string.isRequired,
+};
 
 CopiedToClipboard.defaultProps = {};
 
