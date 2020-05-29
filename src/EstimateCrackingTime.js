@@ -9,62 +9,73 @@ import prettyMilliseconds from 'pretty-ms';
 
 const hash = [
   {
+    name: 'MySQL323',
+    rate: 123.4e9,
+  },
+  {
     name: 'NTLM',
-    rate: '52954900000',
+    rate: 64989.1e6,
   },
   {
     name: 'MD5',
-    rate: '37085500000',
+    rate: 39630e6,
   },
   {
     name: 'SHA1',
-    rate: '12004400000',
+    rate: 12484e6,
   },
   {
-    name: 'macOS v10.7',
-    rate: '1545900000',
+    name: 'PDF 1.7 Level 3, MySQL4.1/MySQL5',
+    rate: 5638e6,
   },
   {
     name: '3DES',
-    rate: '1482100000',
+    rate: 1096.7e6,
   },
 
   {
-    name: 'PDF 1.1 - 1.3 (Acrobat 2 - 4)',
-    rate: '511500000',
+    name: 'PDF 1.1-1.3, Office <= 2003',
+    rate: 523.6e6,
   },
 
   // https://www.secura.com/blog-kerberoasting-exploiting-kerberos-to-compromise-microsoft-active-directory
   {
     name: 'Kerberos 5 TGS-REP etype 23 (Windows)',
-    rate: '455500000',
+    rate: 455.4e6,
+  },
+  {
+    name: 'PDF 1.4-1.6',
+    rate: 22205.5e3,
   },
 
+  {
+    name: 'LastPass + LastPass sniffed, 1Password, agilekeychain',
+    rate: 4182800,
+  },
   {
     name: 'WPA-EAPOL-PBKDF2 (Wifi)',
-    rate: '571400',
+    rate: 571400,
   },
   {
-    name: 'iTunes backup < 10.0 (9999x)',
-    rate: '236500',
+    name: 'FileVault 2, KeePass 1 and 2, Office 2010',
+    rate: 152800,
   },
   {
-    name: 'LUKS (163044x)',
-    rate: '13272',
+    name: 'PDF 1.7 Level 8 (Acrobat 10-11)',
+    rate: 56942,
   },
   {
-    name: 'bcrypt $2*$, Blowfish (Unix) (32x)',
-    rate: '18485',
+    name: '7-Zip, LUKS, Office 2013',
+    rate: 16264,
+  },
+  {
+    name: 'bcrypt $2*$, Blowfish (Unix)',
+    rate: 18485,
   },
 
   {
-    name: 'VeraCrypt PBKDF2-HMAC-SHA512 + XTS 512 bit (500000x)',
-    rate: '1531',
-  },
-
-  {
-    name: 'iTunes backup >= 10.0 (9999999x)',
-    rate: '209',
+    name: 'VeraCrypt PBKDF2-HMAC-SHA512 + XTS 512 bit',
+    rate: 1531,
   },
 ];
 
@@ -84,7 +95,9 @@ const prettyTime = (ms) => {
 const EstimateCrackingTime = ({ bits }) => {
   return (
     <div className="crack-time">
-      <h3 className="strong">Estimated cracking time ({bits} entropy bits)</h3>
+      <h3 className="strong">
+        Estimated cracking time ({bits} bits of entropy)
+      </h3>
       <p>With dictionary attack using a single RTX 2080 GPU.</p>
       <table>
         <thead>
