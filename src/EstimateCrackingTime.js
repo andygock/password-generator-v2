@@ -76,8 +76,10 @@ const EstimateCrackingTime = ({ bits }) => {
       <p>With dictionary attack using a single RTX 2080 GPU.</p>
       <table>
         <thead>
-          <th>Hash</th>
-          <th>Time</th>
+          <tr>
+            <th>Hash</th>
+            <th>Time</th>
+          </tr>
         </thead>
         <tbody>
           {hash.map(({ name, rate }) => {
