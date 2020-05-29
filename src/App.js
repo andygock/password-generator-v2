@@ -23,15 +23,19 @@ const App = () => {
   );
   const [wordlist, setWordlist] = React.useState(defaults.list);
 
+  const [stupidMode, setStupidMode] = React.useState(false);
+
   const handleReset = () => {
     setWordsPerPassphrase(defaults.words);
     setNumberOfPassphrases(defaults.lines);
     setWordlist(defaults.list);
+    setStupidMode(false);
   };
 
-  const entropyBits = Math.floor(
+  let entropyBits = Math.floor(
     Math.log(dict[wordlist].length ** wordsPerPassphrase) / Math.log(2)
   );
+  if (stupidMode) entropyBits += 14;
 
   return (
     <div className="App">
@@ -49,15 +53,27 @@ const App = () => {
             onChange={(val) => setWordsPerPassphrase(val)}
             value={wordsPerPassphrase}
           />
-
           <p>Number of passphrases</p>
           <NumberPicker
             onChange={(val) => setNumberOfPassphrases(val)}
             value={numberOfPassphrases}
           />
-
           <p>Word list</p>
           <WordListRadio value={wordlist} onChange={setWordlist} />
+
+          <p>Stupid mode</p>
+          <label htmlFor="stupid-enable">
+            <input
+              type="checkbox"
+              id="stupid-enable"
+              checked={stupidMode}
+              onChange={(e) => {
+                if (e.target.checked) setWordsPerPassphrase(2);
+                setStupidMode(e.target.checked);
+              }}
+            />{' '}
+            Enable with 2 words
+          </label>
 
           <p className="entropy">
             Each passphrase have {entropyBits}{' '}
@@ -65,11 +81,9 @@ const App = () => {
               bits of entropy.
             </a>
           </p>
-
           <p className="entropy">
             Dictionary size is {dict[wordlist].length} words.
           </p>
-
           <div>
             <button onClick={handleReset}>Reset to defaults</button>
           </div>
@@ -80,6 +94,7 @@ const App = () => {
             words={wordsPerPassphrase}
             lines={numberOfPassphrases}
             list={wordlist}
+            stupidMode={stupidMode}
           />
         </div>
 
