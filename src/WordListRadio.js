@@ -1,7 +1,8 @@
-import React from 'react';
 import PropTypes from 'prop-types';
-
+import React from 'react';
 import words from './words';
+
+const baseLog = (base, val) => Math.log(val) / Math.log(base);
 
 const WordListRadio = ({ value, onChange }) => {
   const wordListOptions = [
@@ -41,7 +42,7 @@ const WordListRadio = ({ value, onChange }) => {
               checked={value === id}
               onChange={handleChange}
             />{' '}
-            {text} ({wordCount})
+            {text} ({wordCount}, 2<sup>{baseLog(2, wordCount).toFixed(1)}</sup>)
           </label>
         );
       })}

@@ -14,6 +14,8 @@ const defaults = {
   list: 'eff-long',
 };
 
+const baseLog = (base, val) => Math.log(val) / Math.log(base);
+
 const App = () => {
   const [wordsPerPassphrase, setWordsPerPassphrase] = React.useState(
     defaults.words
