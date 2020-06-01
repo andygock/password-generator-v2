@@ -2,19 +2,19 @@ import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
+import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';
 import Output from './Output';
 import WordListRadio from './WordListRadio';
 import dict from './words';
-import config from './config';
 
 const UI = ({ stupidMode }) => {
   const history = useHistory();
 
   // route format:
-  //   /:words/:passphrases/:wordlist
-  //   /:words/:passphrases/:wordlist/stupid
+  //   /:words/:passphrases/:wordList
+  //   /:words/:passphrases/:wordList/stupid
 
   // get parameters from router hash
   const params = useParams();
@@ -28,14 +28,14 @@ const UI = ({ stupidMode }) => {
     params.numberOfPassphrases || config.defaults.numberOfPassphrases,
     10
   );
-  const wordlist = params.wordlist || config.list.wordlist;
+  const wordList = params.wordList || config.defaults.wordList;
 
   // set route to window.history, based on params
   const setHistory = (params) => {
     const newState = {
       wordsPerPassphrase,
       numberOfPassphrases,
-      wordlist,
+      wordList,
       stupidMode,
       ...params,
     };
@@ -43,7 +43,7 @@ const UI = ({ stupidMode }) => {
     // set new hash path to window.history
     const path = `/${newState.wordsPerPassphrase}/${
       newState.numberOfPassphrases
-    }/${newState.wordlist}${newState.stupidMode === true ? '/stupid' : ''}`;
+    }/${newState.wordList}${newState.stupidMode === true ? '/stupid' : ''}`;
     history.replace(path);
   };
 
@@ -52,13 +52,13 @@ const UI = ({ stupidMode }) => {
     setHistory({
       wordsPerPassphrase: config.defaults.wordsPerPassphrase,
       numberOfPassphrases: config.defaults.numberOfPassphrases,
-      wordlist: config.defaults.wordlist,
+      wordList: config.defaults.wordList,
       stupidMode: config.defaults.stupidMode,
     });
   };
 
   let entropyBits = Math.floor(
-    Math.log(dict[wordlist].length ** wordsPerPassphrase) / Math.log(2)
+    Math.log(dict[wordList].length ** wordsPerPassphrase) / Math.log(2)
   );
   if (stupidMode) entropyBits += 14;
 
@@ -81,9 +81,9 @@ const UI = ({ stupidMode }) => {
         />
         <p>Word list</p>
         <WordListRadio
-          value={wordlist}
-          onChange={(wordlist) => {
-            setHistory({ wordlist });
+          value={wordList}
+          onChange={(wordList) => {
+            setHistory({ wordList });
           }}
         />
 
@@ -116,7 +116,7 @@ const UI = ({ stupidMode }) => {
           </a>
         </p>
         <p className="entropy">
-          Dictionary size is {dict[wordlist].length} words.
+          Dictionary size is {dict[wordList].length} words.
         </p>
         <div>
           <button onClick={handleReset}>Reset to defaults</button>
@@ -127,7 +127,7 @@ const UI = ({ stupidMode }) => {
         <Output
           words={wordsPerPassphrase}
           lines={numberOfPassphrases}
-          list={wordlist}
+          list={wordList}
           stupidMode={stupidMode}
         />
       </div>

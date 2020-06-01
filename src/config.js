@@ -3,7 +3,7 @@ export default {
   defaults: {
     wordsPerPassphrase: 6,
     numberOfPassphrases: 20,
-    wordlist: 'eff-long',
+    wordList: 'eff-long',
     stupidMode: false,
   },
 };
