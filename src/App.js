@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
 import UI from './UI';
@@ -18,6 +18,18 @@ const App = () => {
         <Switch>
           <Route exact path="/">
             <UI />
+          </Route>
+          <Route
+            exact
+            path="/:wordsPerPassphrase/:numberOfPassphrases/:wordlist"
+          >
+            <UI stupidMode={false} />
+          </Route>
+          <Route
+            exact
+            path="/:wordsPerPassphrase/:numberOfPassphrases/:wordlist/stupid"
+          >
+            <UI stupidMode={true} />
           </Route>
         </Switch>
       </Router>

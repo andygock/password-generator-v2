@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
 import EstimateCrackingTime from './EstimateCrackingTime';
@@ -13,22 +14,52 @@ const defaults = {
   list: 'eff-long',
 };
 
-const UI = () => {
-  const [wordsPerPassphrase, setWordsPerPassphrase] = React.useState(
-    defaults.words
-  );
-  const [numberOfPassphrases, setNumberOfPassphrases] = React.useState(
-    defaults.lines
-  );
-  const [wordlist, setWordlist] = React.useState(defaults.list);
+const UI = ({ stupidMode }) => {
+  const history = useHistory();
 
-  const [stupidMode, setStupidMode] = React.useState(false);
+  // route format:
+  //   /:words/:passphrases/:wordlist
+  //   /:words/:passphrases/:wordlist/stupid
 
+  // get parameters from router hash
+  const params = useParams();
+
+  // convert params to numbers when we need to, or set default values if not set
+  const wordsPerPassphrase = parseInt(
+    params.wordsPerPassphrase || defaults.words,
+    10
+  );
+  const numberOfPassphrases = parseInt(
+    params.numberOfPassphrases || defaults.lines,
+    10
+  );
+  const wordlist = params.wordlist || defaults.list;
+
+  // set route to window.history, based on params
+  const setHistory = (params) => {
+    const newState = {
+      wordsPerPassphrase,
+      numberOfPassphrases,
+      wordlist,
+      stupidMode,
+      ...params,
+    };
+
+    // set new hash path to window.history
+    const path = `/${newState.wordsPerPassphrase}/${
+      newState.numberOfPassphrases
+    }/${newState.wordlist}${newState.stupidMode === true ? '/stupid' : ''}`;
+    history.replace(path);
+  };
+
+  // reset to default parameters
   const handleReset = () => {
-    setWordsPerPassphrase(defaults.words);
-    setNumberOfPassphrases(defaults.lines);
-    setWordlist(defaults.list);
-    setStupidMode(false);
+    setHistory({
+      wordsPerPassphrase: defaults.words,
+      numberOfPassphrases: defaults.lines,
+      wordlist: defaults.list,
+      stupidMode: false,
+    });
   };
 
   let entropyBits = Math.floor(
@@ -41,16 +72,25 @@ const UI = () => {
       <div className="col inputs">
         <p>Number of words per passphrase</p>
         <NumberPicker
-          onChange={(val) => setWordsPerPassphrase(val)}
+          onChange={(wordsPerPassphrase) => {
+            setHistory({ wordsPerPassphrase });
+          }}
           value={wordsPerPassphrase}
         />
         <p>Number of passphrases</p>
         <NumberPicker
-          onChange={(val) => setNumberOfPassphrases(val)}
+          onChange={(numberOfPassphrases) => {
+            setHistory({ numberOfPassphrases });
+          }}
           value={numberOfPassphrases}
         />
         <p>Word list</p>
-        <WordListRadio value={wordlist} onChange={setWordlist} />
+        <WordListRadio
+          value={wordlist}
+          onChange={(wordlist) => {
+            setHistory({ wordlist });
+          }}
+        />
 
         <p>Stupid mode</p>
         <label htmlFor="stupid-enable">
@@ -59,8 +99,16 @@ const UI = () => {
             id="stupid-enable"
             checked={stupidMode}
             onChange={(e) => {
-              if (e.target.checked) setWordsPerPassphrase(2);
-              setStupidMode(e.target.checked);
+              if (e.target.checked) {
+                // turn on stupid mode
+                setHistory({
+                  stupidMode: e.target.checked,
+                  wordsPerPassphrase: 2,
+                });
+              } else {
+                // turn off stupid mode
+                setHistory({ stupidMode: e.target.checked });
+              }
             }}
           />{' '}
           Enable with 2 words
