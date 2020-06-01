@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import copy from 'copy-to-clipboard';
 import classNames from 'classnames';
-import dict from './words';
+import copy from 'copy-to-clipboard';
+import PropTypes from 'prop-types';
+import React from 'react';
 import CopiedToClipboard from './CopiedToClipboard';
+import dict from './words';
 
 // stupid mode is for use on web sites which enforce password complexity using preset rules
 // and forces users to create passwords which are hard to remember and easy to guess

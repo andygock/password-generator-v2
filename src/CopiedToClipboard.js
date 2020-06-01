@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
 
 const CopiedToClipboard = ({ text }) => {
   const [opacity, setOpacity] = React.useState(0);
