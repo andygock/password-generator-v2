@@ -7,12 +7,7 @@ import NumberPicker from './NumberPicker';
 import Output from './Output';
 import WordListRadio from './WordListRadio';
 import dict from './words';
-
-const defaults = {
-  words: 6,
-  lines: 20,
-  list: 'eff-long',
-};
+import config from './config';
 
 const UI = ({ stupidMode }) => {
   const history = useHistory();
@@ -26,14 +21,14 @@ const UI = ({ stupidMode }) => {
 
   // convert params to numbers when we need to, or set default values if not set
   const wordsPerPassphrase = parseInt(
-    params.wordsPerPassphrase || defaults.words,
+    params.wordsPerPassphrase || config.defaults.wordsPerPassphrase,
     10
   );
   const numberOfPassphrases = parseInt(
-    params.numberOfPassphrases || defaults.lines,
+    params.numberOfPassphrases || config.defaults.numberOfPassphrases,
     10
   );
-  const wordlist = params.wordlist || defaults.list;
+  const wordlist = params.wordlist || config.list.wordlist;
 
   // set route to window.history, based on params
   const setHistory = (params) => {
@@ -55,10 +50,10 @@ const UI = ({ stupidMode }) => {
   // reset to default parameters
   const handleReset = () => {
     setHistory({
-      wordsPerPassphrase: defaults.words,
-      numberOfPassphrases: defaults.lines,
-      wordlist: defaults.list,
-      stupidMode: false,
+      wordsPerPassphrase: config.defaults.wordsPerPassphrase,
+      numberOfPassphrases: config.defaults.numberOfPassphrases,
+      wordlist: config.defaults.wordlist,
+      stupidMode: config.defaults.stupidMode,
     });
   };
 
