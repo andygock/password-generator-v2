@@ -25,6 +25,12 @@ const App = () => {
           >
             <UI stupidMode={false} />
           </Route>
+          <Route exact path="/:wordsPerPassphrase/:numberOfPassphrases">
+            <UI stupidMode={false} />
+          </Route>
+          <Route exact path="/:wordsPerPassphrase">
+            <UI stupidMode={false} />
+          </Route>
           <Route
             exact
             path="/:wordsPerPassphrase/:numberOfPassphrases/:wordList/stupid"
