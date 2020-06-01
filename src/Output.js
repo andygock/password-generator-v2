@@ -10,6 +10,7 @@ import dict from './words';
 
 const capFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
+// return random number between 0 and (2^bits - 1)
 const randomNumber = (bits) => {
   const arr = new Uint16Array(1);
   const random = window.crypto.getRandomValues(arr);

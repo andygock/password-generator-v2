@@ -22,6 +22,7 @@ const CopiedToClipboard = ({ text }) => {
         opacity: opacity,
         backgroundColor: 'greenyellow',
         padding: '0.2rem',
+        marginLeft: '0.2rem',
       }}
     >
       Copied to clipboard
