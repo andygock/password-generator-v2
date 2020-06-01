@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
@@ -137,6 +138,14 @@ const UI = ({ stupidMode }) => {
       </div>
     </div>
   );
+};
+
+UI.propTypes = {
+  stupidMode: PropTypes.bool,
+};
+
+UI.defaultProps = {
+  stupidMode: false,
 };
 
 export default UI;
