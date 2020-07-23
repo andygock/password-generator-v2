@@ -22,7 +22,7 @@ const Footer = () => {
         <a href="https://gock.net/">Andy Gock</a>
       </p>
       <p>
-        <Link to="/dict">Dict</Link> | <Link to="/base64">Bas64</Link>
+        <Link to="/dict">Dict</Link> | <Link to="/base64">Base64</Link>
       </p>
     </footer>
   );

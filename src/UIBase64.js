@@ -60,7 +60,11 @@ const UIBase64 = () => {
         line to copy to clipboard.
       </p>
       <div className="base64-input">
-        <span className="generate" role="button" onClick={(e) => generate()}>
+        <span
+          className="base64-generate"
+          role="button"
+          onClick={(e) => generate()}
+        >
           ↻
         </span>
         <input

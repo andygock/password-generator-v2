@@ -62,7 +62,7 @@ const UI = ({ stupidMode }) => {
   if (stupidMode) entropyBits += 14;
 
   return (
-    <div className="container">
+    <div className="ui container">
       <div className="col inputs">
         <p>Number of words per passphrase</p>
         <NumberPicker

@@ -16,6 +16,7 @@ code {
 .output {
   font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
     monospace;
+  font-size: 1.2rem;
   line-height: 1.2rem;
   border: solid 1px lightgray;
   padding: 0.5rem;
@@ -85,17 +86,19 @@ a {
   text-decoration: none;
 }
 
-input,
-button,
-select,
-textarea {
-  font-family: inherit;
-  font-size: inherit;
-  padding: 0.4em;
-  margin: 0 0 0.5em 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 2px;
+.ui {
+  input,
+  button,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: inherit;
+    padding: 0.4em;
+    margin: 0 0 0.5em 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+  }
 }
 
 button:hover {
@@ -134,83 +137,86 @@ button:hover {
 table {
   padding: 0;
   border-collapse: collapse;
-}
 
-table tr {
-  border-top: 1px solid #cccccc;
-  background-color: white;
-  margin: 0;
-  padding: 0;
-}
+  tr {
+    border-top: 1px solid #cccccc;
+    background-color: white;
+    margin: 0;
+    padding: 0;
 
-table tr:nth-child(2n) {
-  background-color: #f8f8f8;
-}
+    &:nth-child(2n) {
+      background-color: #f8f8f8;
+    }
 
-table tr th {
-  font-weight: bold;
-  border: 1px solid #cccccc;
-  text-align: left;
-  margin: 0;
-  padding: 3px 13px;
-}
+    th {
+      font-weight: bold;
+      border: 1px solid #cccccc;
+      text-align: left;
+      margin: 0;
+      padding: 3px 13px;
+    }
 
-table tr td {
-  border: 1px solid #cccccc;
-  text-align: left;
-  margin: 0;
-  padding: 3px 13px;
-}
+    td {
+      border: 1px solid #cccccc;
+      text-align: left;
+      margin: 0;
+      padding: 3px 13px;
+    }
 
-table tr th :first-child,
-table tr td :first-child {
-  margin-top: 0;
-}
+    th :first-child,
+    td :first-child {
+      margin-top: 0;
+    }
 
-table tr th :last-child,
-table tr td :last-child {
-  margin-bottom: 0;
+    th :last-child,
+    td :last-child {
+      margin-bottom: 0;
+    }
+  }
 }
 
 th.time {
   width: 160px;
 }
 
-/* Base64 styling */
+/* Base64 UI styling */
+
 .base64 {
-  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
-    monospace;
   text-align: center;
-  font-size: 1.2rem;
-}
 
-.base64 .base64-output {
-  cursor: pointer;
-  margin: 1rem;
-}
+  .base64-output {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+      monospace;
+    text-align: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    margin: 1rem;
+  }
 
-.base64 .password::after {
-  content: '\A';
-  white-space: pre;
-}
+  .password {
+    &:after {
+      content: '\A';
+      white-space: pre;
+    }
+    &:hover {
+      background-color: lightgray;
+    }
+  }
 
-.base64 .password:hover {
-  background-color: lightgray;
-}
+  .base64-input {
+    display: flex;
+    justify-content: center;
+  }
 
-.base64 .base64-input {
-  display: flex;
-  justify-content: center;
-}
+  .base64-generate {
+    border: solid 1px lightgray;
+    padding: 0 0.5rem 0 0.5rem;
+    cursor: pointer;
+    user-select: none;
+    background-color: lightgray;
+  }
 
-.base64 .generate {
-  border: solid 1px lightgray;
-  padding: 0 0.5rem 0 0.5rem;
-  cursor: pointer;
-  user-select: none;
-  background-color: lightgray;
-}
-
-.base64 .generate:hover {
-  background-color: white;
+  .base64-generate:hover {
+    background-color: white;
+  }
 }
