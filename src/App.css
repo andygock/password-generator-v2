@@ -175,3 +175,42 @@ table tr td :last-child {
 th.time {
   width: 160px;
 }
+
+/* Base64 styling */
+.base64 {
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier,
+    monospace;
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.base64 .base64-output {
+  cursor: pointer;
+  margin: 1rem;
+}
+
+.base64 .password::after {
+  content: '\A';
+  white-space: pre;
+}
+
+.base64 .password:hover {
+  background-color: lightgray;
+}
+
+.base64 .base64-input {
+  display: flex;
+  justify-content: center;
+}
+
+.base64 .generate {
+  border: solid 1px lightgray;
+  padding: 0 0.5rem 0 0.5rem;
+  cursor: pointer;
+  user-select: none;
+  background-color: lightgray;
+}
+
+.base64 .generate:hover {
+  background-color: white;
+}

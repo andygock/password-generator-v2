@@ -3,6 +3,8 @@ import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
 import UI from './UI';
+import UIBase64 from './UIBase64';
+import Footer from './Footer';
 
 const App = () => {
   return (
@@ -16,7 +18,14 @@ const App = () => {
 
       <Router>
         <Switch>
+          <Route exact path="/base64">
+            <UIBase64 />
+          </Route>
+
           <Route exact path="/">
+            <UI />
+          </Route>
+          <Route exact path="/dict">
             <UI />
           </Route>
           <Route
@@ -25,10 +34,22 @@ const App = () => {
           >
             <UI stupidMode={false} />
           </Route>
+          <Route
+            exact
+            path="/dict/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
+          >
+            <UI stupidMode={false} />
+          </Route>
           <Route exact path="/:wordsPerPassphrase/:numberOfPassphrases">
             <UI stupidMode={false} />
           </Route>
+          <Route exact path="/dict/:wordsPerPassphrase/:numberOfPassphrases">
+            <UI stupidMode={false} />
+          </Route>
           <Route exact path="/:wordsPerPassphrase">
+            <UI stupidMode={false} />
+          </Route>
+          <Route exact path="/dict/:wordsPerPassphrase">
             <UI stupidMode={false} />
           </Route>
           <Route
@@ -37,29 +58,16 @@ const App = () => {
           >
             <UI stupidMode={true} />
           </Route>
-        </Switch>
-      </Router>
 
-      <footer>
-        <p>
-          Runs entirely in the web browser using{' '}
-          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API">
-            Web Crypto API
-          </a>{' '}
-          and{' '}
-          <a href="https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases">
-            EFF word lists
-          </a>
-          . Passphrases are not stored or transmitted. Source code is available
-          on{' '}
-          <a href="https://github.com/andygock/password-generator-v2">GitHub</a>{' '}
-          with MIT License.
-        </p>
-        <p>
-          &copy;
-          <a href="https://gock.net/">Andy Gock</a>
-        </p>
-      </footer>
+          <Route
+            exact
+            path="/dict/:wordsPerPassphrase/:numberOfPassphrases/:wordList/stupid"
+          >
+            <UI stupidMode={true} />
+          </Route>
+        </Switch>
+        <Footer />
+      </Router>
     </div>
   );
 };
