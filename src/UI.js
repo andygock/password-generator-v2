@@ -1,8 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import '../node_modules/normalize.css/normalize.css';
-import './App.css';
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';

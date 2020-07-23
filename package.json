@@ -3,9 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@testing-library/jest-dom": "^5.9.0",
-    "@testing-library/react": "^10.0.4",
-    "@testing-library/user-event": "^11.3.2",
     "base64-arraybuffer": "^0.2.0",
     "classnames": "^2.2.6",
     "copy-to-clipboard": "^3.3.1",
@@ -18,12 +15,9 @@
     "react-scripts": "3.4.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "serve": "http-server build",
-    "eslint": "eslint src/",
+    "start": "parcel public/index.html",
+    "build": "rm -rf dist && parcel build public/index.html --public-url ./",
+    "eslint": "eslint public/ src/",
     "pretty": "prettier --list-different --write ."
   },
   "eslintConfig": {
@@ -42,11 +36,22 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.0.0-0",
+    "@babel/plugin-proposal-class-properties": "^7.10.4",
+    "@babel/plugin-transform-runtime": "^7.10.1",
+    "@babel/preset-env": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
+    "@babel/runtime-corejs3": "^7.10.4",
+    "babel-eslint": "^10.1.0",
+    "cssnano": "^4.1.10",
+    "eslint": "^7.4.0",
     "eslint-config-prettier": "^6.11.0",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-react": "^7.20.0",
-    "eslint-plugin-react-hooks": "^4.0.2",
-    "prettier": "^2.0.5"
+    "eslint-config-react-app": "^5.2.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.6",
+    "prettier": "^2.0.5",
+    "sass": "^1.26.8"
   },
   "homepage": "."
 }

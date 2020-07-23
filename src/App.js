@@ -1,7 +1,7 @@
 import React from 'react';
 import { HashRouter as Router, Route, Switch } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
-import './App.css';
+import './App.scss';
 import UI from './UI';
 import UIBase64 from './UIBase64';
 import Footer from './Footer';

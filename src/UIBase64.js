@@ -2,7 +2,6 @@
 import React from 'react';
 import Base64 from 'base64-arraybuffer';
 import randomBytes from 'randombytes';
-import './UIBase64.css';
 
 const rows = 20;
 

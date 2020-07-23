@@ -31,7 +31,6 @@ module.exports = {
       'error',
       { arrow: true, return: true, declaration: true },
     ],
-    'react/prop-types': 'warn',
   },
   settings: {
     react: {
