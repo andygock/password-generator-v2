@@ -20,13 +20,9 @@ Development build and serve:
 
     yarn start
 
-Production build (files saved in `build/`):
+Production build (files saved in `dist/`):
 
     yarn build
-
-To serve `build/`. Requires global install of [http-server](https://www.npmjs.com/package/http-server).
-
-    yarn serve
 
 ## Use of hash routing
 
