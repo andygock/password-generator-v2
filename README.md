@@ -8,6 +8,8 @@ It's the second iteration of my [password generator](https://github.com/andygock
 
 - [Live demo hosted by Netlify](https://p4ss.netlify.app)
 
+Update: Option to generate Base64 passphrases as well, selection menu found under footer.
+
 ## Development process
 
 Install dependencies
@@ -48,3 +50,7 @@ The "stupid mode" is option to generate a less secure password with a mix of upp
     UnawakeFrosty1344#
 
 This might be useful for those web sites that have minimum password requirements which forces users to create passwords that are hard for humans to remember, but easy for computers to guess.
+
+## Credits
+
+- Fork me on GitHub ribbon by [Simon Whitaker](https://github.com/simonwhitaker/github-fork-ribbon-css)
