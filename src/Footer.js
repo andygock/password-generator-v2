@@ -19,7 +19,7 @@ const Footer = () => {
         👍
       </p>
       <p>
-        <Link to="/dict">Dictionary</Link> | <Link to="/base64">Base64</Link>
+        <Link to="/">Dictionary</Link> | <Link to="/base64">Base64</Link>
       </p>
     </footer>
   );

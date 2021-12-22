@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import Base64 from 'base64-arraybuffer';
+import { encode, decode } from 'base64-arraybuffer';
 import randomBytes from 'randombytes';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import OutputBase64 from './OutputBase64';
@@ -20,7 +20,7 @@ const UIBase64 = () => {
     const bytes = new Array(rows).fill(0).map((v) => randomBytes(sizeBytes));
     switch (mode) {
       case 'base64':
-        setOutput(bytes.map((a) => Base64.encode(a).replace(/=+$/, '')));
+        setOutput(bytes.map((a) => encode(a).replace(/=+$/, '')));
         break;
       default:
         break;
