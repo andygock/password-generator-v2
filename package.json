@@ -3,19 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "base64-arraybuffer": "^0.2.0",
-    "classnames": "^2.2.6",
+    "base64-arraybuffer": "^1.0.1",
+    "classnames": "^2.3.1",
     "copy-to-clipboard": "^3.3.1",
     "normalize.css": "^8.0.1",
-    "pretty-ms": "^7.0.0",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router": "^5.2.0",
-    "react-router-dom": "^5.2.0"
+    "parcel": "^2.0.1",
+    "postcss": "^8.4.5",
+    "pretty-ms": "^7.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router": "^6.2.1",
+    "react-router-dom": "^6.2.1"
   },
   "scripts": {
     "start": "parcel public/index.html",
-    "build": "rm -rf dist && parcel build public/index.html --public-url ./",
+    "build": "rimraf dist && parcel build public/index.html --public-url ./",
     "eslint": "eslint public/ src/",
     "pretty": "prettier --list-different --write ."
   },
@@ -35,23 +37,16 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.12.7",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/plugin-transform-runtime": "^7.12.1",
-    "@babel/preset-env": "^7.12.7",
-    "@babel/preset-react": "^7.12.7",
-    "@babel/runtime-corejs3": "^7.12.5",
-    "babel-eslint": "^10.1.0",
-    "cssnano": "^4.1.10",
-    "eslint": "^7.14.0",
-    "eslint-config-prettier": "^7.2.0",
-    "eslint-config-react-app": "^6.0.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "eslint-plugin-react": "^7.21.5",
-    "eslint-plugin-react-hooks": "^4.2.0",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "^2.2.0",
-    "sass": "^1.29.0"
+    "@parcel/transformer-sass": "^2.0.1",
+    "eslint": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^7.0.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "prettier": "^2.5.1",
+    "randombytes": "^2.1.0",
+    "rimraf": "^3.0.2"
   },
   "homepage": "."
 }

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import { useParams } from 'react-router-dom';
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';
@@ -9,14 +10,13 @@ import WordListRadio from './WordListRadio';
 import dict from './words';
 
 const UI = ({ stupidMode }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
+  const params = useParams();
 
   // route format:
+  //
   //   /:words/:passphrases/:wordList
   //   /:words/:passphrases/:wordList/stupid
-
-  // get parameters from router hash
-  const params = useParams();
 
   // convert params to numbers when we need to, or set default values if not set
   const wordsPerPassphrase = parseInt(
@@ -29,8 +29,9 @@ const UI = ({ stupidMode }) => {
   );
   const wordList = params.wordList || config.defaults.wordList;
 
-  // set route to window.history, based on params
-  const setHistory = (params) => {
+  // calculate new path, navigate to new path
+  const setParamsAndNavigate = (params) => {
+    // prioritise arguments, otherwise use params or app defaults set above
     const newState = {
       wordsPerPassphrase,
       numberOfPassphrases,
@@ -39,21 +40,18 @@ const UI = ({ stupidMode }) => {
       ...params,
     };
 
-    // set new hash path to window.history
-    const path = `/${newState.wordsPerPassphrase}/${
-      newState.numberOfPassphrases
-    }/${newState.wordList}${newState.stupidMode === true ? '/stupid' : ''}`;
-    history.replace(path);
+    // calculate new path string
+    const path = `${newState.stupidMode === true ? '/stupid' : ''}/${
+      newState.wordsPerPassphrase
+    }/${newState.numberOfPassphrases}/${newState.wordList}`;
+
+    // navigate to new hash path
+    navigate(path);
   };
 
   // reset to default parameters
   const handleReset = () => {
-    setHistory({
-      wordsPerPassphrase: config.defaults.wordsPerPassphrase,
-      numberOfPassphrases: config.defaults.numberOfPassphrases,
-      wordList: config.defaults.wordList,
-      stupidMode: config.defaults.stupidMode,
-    });
+    navigate('/');
   };
 
   let entropyBits = Math.floor(
@@ -67,14 +65,14 @@ const UI = ({ stupidMode }) => {
         <p>Number of words per passphrase</p>
         <NumberPicker
           onChange={(wordsPerPassphrase) => {
-            setHistory({ wordsPerPassphrase });
+            setParamsAndNavigate({ wordsPerPassphrase });
           }}
           value={wordsPerPassphrase}
         />
         <p>Number of passphrases</p>
         <NumberPicker
           onChange={(numberOfPassphrases) => {
-            setHistory({ numberOfPassphrases });
+            setParamsAndNavigate({ numberOfPassphrases });
           }}
           value={numberOfPassphrases}
         />
@@ -82,7 +80,7 @@ const UI = ({ stupidMode }) => {
         <WordListRadio
           value={wordList}
           onChange={(wordList) => {
-            setHistory({ wordList });
+            setParamsAndNavigate({ wordList });
           }}
         />
 
@@ -95,13 +93,13 @@ const UI = ({ stupidMode }) => {
             onChange={(e) => {
               if (e.target.checked) {
                 // turn on stupid mode
-                setHistory({
+                setParamsAndNavigate({
                   stupidMode: e.target.checked,
                   wordsPerPassphrase: 2,
                 });
               } else {
                 // turn off stupid mode
-                setHistory({ stupidMode: e.target.checked });
+                setParamsAndNavigate({ stupidMode: e.target.checked });
               }
             }}
           />{' '}

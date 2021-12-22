@@ -12,17 +12,25 @@ Update: Option to generate Base64 passphrases as well, selection menu found unde
 
 ## Development process
 
+Install [pnpm](https://pnpm.io/)
+
+    npm install -g pnpm
+
 Install dependencies
 
-    yarn
+    pnpm install
 
-Development build and serve:
+Start development server
 
-    yarn start
+    pnpm start
 
-Production build (files saved in `dist/`):
+Build for production into `dist/`
 
-    yarn build
+    pnpm build
+
+If required, use the following Netlify build command
+
+    pnpm build || ( npm install pnpm && pnpm build )
 
 ## Use of hash routing
 
@@ -31,7 +39,7 @@ This makes it bookmark-friendly with recallable user-selected parameters. The ha
     #/:words
     #/:words/:passphrases
     #/:words/:passphrases/:wordlist
-    #/:words/:passphrases/:wordlist/stupid
+    #/stupid/:words/:passphrases/:wordlist
 
 e.g
 
