@@ -1,10 +1,12 @@
 import React from 'react';
-import { HashRouter, Routes, Route, Switch } from 'react-router-dom';
+
+import { HashRouter, Routes, Route } from 'react-router-dom';
+
 import '../node_modules/normalize.css/normalize.css';
 import './App.scss';
+import Footer from './Footer';
 import UI from './UI';
 import UIBase64 from './UIBase64';
-import Footer from './Footer';
 
 const Hello = () => 'Hello';
 

@@ -1,6 +1,7 @@
+import React from 'react';
+
 import prettyMilliseconds from 'pretty-ms';
 import PropTypes from 'prop-types';
-import React from 'react';
 
 // list of hashes and hash cracking rates
 // benchmarked on Nvidia RTX 2080 FE

@@ -1,5 +1,7 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+
+import PropTypes from 'prop-types';
+
 import words from './words';
 
 const baseLog = (base, val) => Math.log(val) / Math.log(base);

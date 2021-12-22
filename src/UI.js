@@ -1,7 +1,9 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
+
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';

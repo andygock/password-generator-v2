@@ -21,8 +21,7 @@ module.exports = {
     ecmaVersion: 2018,
     sourceType: 'module',
   },
-  parser: 'babel-eslint',
-  plugins: ['react', 'react-hooks', 'prettier'],
+  plugins: ['react', 'react-hooks', 'prettier', 'import'],
   rules: {
     'no-unused-vars': 0,
     'react-hooks/rules-of-hooks': 'error',
@@ -30,6 +29,26 @@ module.exports = {
     'react/jsx-wrap-multilines': [
       'error',
       { arrow: true, return: true, declaration: true },
+    ],
+    'import/order': [
+      'error',
+      {
+        groups: ['builtin', 'external', 'internal', ['parent', 'sibling']],
+        pathGroups: [
+          {
+            pattern: 'react',
+            group: 'external',
+            position: 'before',
+          },
+        ],
+        pathGroupsExcludedImportTypes: ['react'],
+        'newlines-between': 'always',
+        alphabetize: {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+        warnOnUnassignedImports: true,
+      },
     ],
   },
   settings: {

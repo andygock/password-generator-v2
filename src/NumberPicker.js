@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types';
 import React from 'react';
+
+import PropTypes from 'prop-types';
 
 const buttonStyle = {
   margin: '0 0rem 0 0.2rem',

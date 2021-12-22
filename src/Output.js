@@ -1,7 +1,9 @@
+import React from 'react';
+
 import classNames from 'classnames';
 import copy from 'copy-to-clipboard';
 import PropTypes from 'prop-types';
-import React from 'react';
+
 import CopiedToClipboard from './CopiedToClipboard';
 import dict from './words';
 

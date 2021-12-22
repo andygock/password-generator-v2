@@ -1,10 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { encode, decode } from 'base64-arraybuffer';
+
+import { encode } from 'base64-arraybuffer';
 import randomBytes from 'randombytes';
+
+import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import OutputBase64 from './OutputBase64';
-import config from './config';
 
 const rows = 20;
 
