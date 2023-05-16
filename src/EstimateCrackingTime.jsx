@@ -10,10 +10,6 @@ import PropTypes from 'prop-types';
 
 const hash = [
   {
-    name: 'MySQL323',
-    rate: 123.4e9,
-  },
-  {
     name: 'NTLM',
     rate: 64989.1e6,
   },
@@ -33,7 +29,6 @@ const hash = [
     name: '3DES',
     rate: 1096.7e6,
   },
-
   {
     name: 'PDF 1.1-1.3, Office <= 2003',
     rate: 523.6e6,
@@ -58,6 +53,10 @@ const hash = [
     rate: 571400,
   },
   {
+    name: 'iTunes backup < 10.0',
+    rate: 251.4e3,
+  },
+  {
     name: 'FileVault 2, KeePass 1 and 2, Office 2010',
     rate: 152800,
   },
@@ -73,13 +72,25 @@ const hash = [
     name: 'bcrypt $2*$, Blowfish (Unix)',
     rate: 18485,
   },
-
   {
     name: 'VeraCrypt PBKDF2-HMAC-SHA512 + XTS 512 bit',
     rate: 1531,
   },
+  {
+    name: 'iTunes backup >= 10.0',
+    rate: 213,
+  },
 ];
 
+// as of 2023-05-17, the most powerful consumer GPU is the Nvidia RTX 4080
+// which is approx 6.5x faster than the RTX 2080
+
+// increase rate by 6.5x to estimate cracking time for RTX 4080
+hash.forEach((h) => {
+  h.rate *= 6.5;
+});
+
+// age of universe in milliseconds
 const msAgeOfUniverse = 13.8e9 * 86400 * 1000;
 
 const prettyTime = (ms) => {
@@ -99,7 +110,7 @@ const EstimateCrackingTime = ({ bits }) => {
       <h3 className="strong">
         Estimated cracking time ({bits} bits of entropy)
       </h3>
-      <p>With dictionary attack using a single RTX 2080 GPU.</p>
+      <p>With dictionary attack using a single RTX 4080 GPU.</p>
       <table>
         <thead>
           <tr>
