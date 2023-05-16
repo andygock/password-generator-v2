@@ -2,13 +2,22 @@
 import React from 'react';
 
 import { encode } from 'base64-arraybuffer';
-import randomBytes from 'randombytes';
-
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import OutputBase64 from './OutputBase64';
 
 const rows = 20;
+
+function randomBytes(sizeBytes) {
+  if (window.crypto && window.crypto.getRandomValues) {
+    const randomBytes = new Uint8Array(sizeBytes);
+
+    // https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues
+    return window.crypto.getRandomValues(randomBytes);
+  } else {
+    throw new Error('Web Crypto API not supported');
+  }
+}
 
 const UIBase64 = () => {
   // currently only supports Base64 strings, might add some other options later
@@ -20,6 +29,7 @@ const UIBase64 = () => {
 
   const generate = React.useCallback(() => {
     const bytes = new Array(rows).fill(0).map((v) => randomBytes(sizeBytes));
+
     switch (mode) {
       case 'base64':
         setOutput(bytes.map((a) => encode(a).replace(/=+$/, '')));
