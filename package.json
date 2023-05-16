@@ -1,55 +1,38 @@
 {
-  "name": "password-generator-v2",
-  "version": "0.1.0",
+  "name": "password-generator-v2b",
   "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "base64-arraybuffer": "^1.0.2",
     "classnames": "^2.3.1",
     "copy-to-clipboard": "^3.3.2",
     "normalize.css": "^8.0.1",
-    "parcel": "^2.7.0",
-    "postcss": "^8.4.16",
     "pretty-ms": "^8.0.0",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router": "^6.3.0",
-    "react-router-dom": "^6.3.0"
-  },
-  "scripts": {
-    "start": "parcel public/index.html",
-    "build": "rimraf dist && parcel build public/index.html --public-url ./",
-    "eslint": "eslint --fix public/ src/",
-    "pretty": "prettier --list-different --write ."
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@parcel/transformer-sass": "^2.7.0",
-    "buffer": "^6.0.3",
-    "eslint": "^8.23.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-config-react-app": "^7.0.1",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.8",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "^2.7.1",
     "process": "^0.11.10",
     "randombytes": "^2.1.0",
-    "rimraf": "^3.0.2"
+    "buffer": "^6.0.3",
+    "react-router-dom": "^6.3.0"
   },
-  "homepage": "."
+  "devDependencies": {
+    "@types/react": "^18.0.28",
+    "@types/react-dom": "^18.0.11",
+    "@vitejs/plugin-react": "^4.0.0",
+    "eslint": "^8.38.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.3.4",
+    "sass": "^1.62.1",
+    "vite": "^4.3.2"
+  }
 }
