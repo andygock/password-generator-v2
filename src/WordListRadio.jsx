@@ -9,6 +9,10 @@ const baseLog = (base, val) => Math.log(val) / Math.log(base);
 const WordListRadio = ({ value, onChange }) => {
   const wordListOptions = [
     {
+      text: 'Orchard Street Long',
+      id: 'orchard-street-long',
+    },
+    {
       text: 'EFF long word list',
       id: 'eff-long',
     },
@@ -19,10 +23,6 @@ const WordListRadio = ({ value, onChange }) => {
     {
       text: 'EFF short word list v2',
       id: 'eff-short2',
-    },
-    {
-      text: 'All combined',
-      id: 'all',
     },
   ];
 

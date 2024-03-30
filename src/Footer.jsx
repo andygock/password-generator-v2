@@ -12,12 +12,16 @@ const Footer = () => {
         // Runs entirely in the web browser using{' '}
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API">
           Web Crypto API
+        </a>
+        ,{' '}
+        <a href="https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases">
+          EFF
         </a>{' '}
         and{' '}
-        <a href="https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases">
-          EFF word lists
+        <a href="https://github.com/sts10/orchard-street-wordlists">
+          Orchard Street
         </a>{' '}
-        👍
+        word lists. 👍
       </p>
       <p>
         <Link to="/">Dictionary</Link> | <Link to="/base64">Base64</Link>

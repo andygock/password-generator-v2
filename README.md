@@ -12,7 +12,7 @@ Update: Option to generate Base64 passphrases as well, selection menu found unde
 
 ## Development process
 
-Install [pnpm](https://pnpm.io/)
+I used [pnpm](https://pnpm.io/) so I'll describe this workflow here, but you could use your own favourite package manager instead e.g npm, yarn etc.
 
     npm install -g pnpm
 
