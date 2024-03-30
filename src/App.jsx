@@ -5,6 +5,7 @@ import './App.css';
 import Footer from './Footer';
 import UI from './UI';
 import UIBase64 from './UIBase64';
+import CommandLine from './CommandLine';
 
 const App = () => {
   return (
@@ -37,6 +38,7 @@ const App = () => {
           />
           <Route exact path="/:wordsPerPassphrase" element={<UI />} />
         </Routes>
+        <CommandLine />
         <Footer />
       </HashRouter>
     </div>

@@ -21,7 +21,7 @@ const Footer = () => {
         <a href="https://github.com/sts10/orchard-street-wordlists">
           Orchard Street
         </a>{' '}
-        word lists. 👍
+        word lists.
       </p>
       <p>
         <Link to="/">Dictionary</Link> | <Link to="/base64">Base64</Link>

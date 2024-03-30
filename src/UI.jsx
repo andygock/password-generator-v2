@@ -109,14 +109,13 @@ const UI = ({ stupidMode }) => {
         </label>
 
         <p className="entropy">
-          Each passphrase have {entropyBits}{' '}
+          {entropyBits}{' '}
           <a href="https://en.wikipedia.org/wiki/Password_strength#Entropy_as_a_measure_of_password_strength">
-            bits of entropy.
-          </a>
+            bits of entropy
+          </a>{' '}
+          per passphrase.
         </p>
-        <p className="entropy">
-          Dictionary size is {dict[wordList].length} words.
-        </p>
+        <p className="entropy">Dictionary size: {dict[wordList].length}</p>
         <div>
           <button onClick={handleReset}>Reset to defaults</button>
         </div>

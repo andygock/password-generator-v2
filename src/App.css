@@ -122,6 +122,7 @@ button:hover {
 
 table {
   border-collapse: collapse;
+  margin: var(--padding) 0;
 }
 
 table tr {
@@ -183,4 +184,17 @@ table td {
 
 .grow {
   flex-grow: 10;
+}
+
+/* cli */
+
+code {
+  font-family: var(--font-family-code);
+  /* border: solid 1px var(--color-background); */
+  cursor: pointer;
+}
+
+pre {
+  padding: 0;
+  margin: 0;
 }

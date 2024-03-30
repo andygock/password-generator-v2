@@ -3,7 +3,7 @@ export default {
   defaults: {
     wordsPerPassphrase: 6,
     numberOfPassphrases: 20,
-    wordList: 'orchard-street-long',
+    wordList: 'eff-long',
     stupidMode: false,
     base64Bytes: 12,
   },
