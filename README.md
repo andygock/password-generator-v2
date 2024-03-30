@@ -57,4 +57,5 @@ This might be useful for those web sites that have minimum password requirements
 
 ## Credits
 
-- Fork me on GitHub ribbon by [Simon Whitaker](https://github.com/simonwhitaker/github-fork-ribbon-css)
+- [EFF Dice-Generated Passphrases](https://www.eff.org/dice)
+- [Orchard Street Wordlists](https://github.com/sts10/orchard-street-wordlists) by Sam Schlinkert

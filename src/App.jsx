@@ -39,14 +39,6 @@ const App = () => {
         </Routes>
         <Footer />
       </HashRouter>
-      <a
-        className="github-fork-ribbon right-bottom fixed"
-        href="https://github.com/andygock/password-generator-v2"
-        data-ribbon="Fork me on GitHub"
-        title="Fork me on GitHub"
-      >
-        Fork me on GitHub
-      </a>
     </div>
   );
 };
