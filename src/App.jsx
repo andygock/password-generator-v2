@@ -1,42 +1,10 @@
 import React from 'react';
-
-import { HashRouter, Routes, Route } from 'react-router-dom';
-
+import { HashRouter, Route, Routes } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
-import './App.scss';
+import './App.css';
 import Footer from './Footer';
 import UI from './UI';
 import UIBase64 from './UIBase64';
-
-const Hello = () => 'Hello';
-
-const App2 = () => {
-  return (
-    <div className="App">
-      <header>
-        <p>
-          <strong>Password Generator</strong> - Generate random passphrases in
-          the browser. Click line to copy passphrase to clipboard.
-        </p>
-      </header>
-
-      <HashRouter>
-        <Routes>
-          <Route path="/" element={<Hello />} />
-        </Routes>
-        <Footer />
-      </HashRouter>
-      <a
-        className="github-fork-ribbon right-bottom fixed"
-        href="https://github.com/andygock/password-generator-v2"
-        data-ribbon="Fork me on GitHub"
-        title="Fork me on GitHub"
-      >
-        Fork me on GitHub
-      </a>
-    </div>
-  );
-};
 
 const App = () => {
   return (

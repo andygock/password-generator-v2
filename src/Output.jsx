@@ -84,16 +84,6 @@ const Output = ({ list, words, lines, stupidMode }) => {
 
   return (
     <div>
-      <button
-        onClick={() => {
-          const passes = generate({ lines, words, wordArray: dict[list] });
-          generateStupidStringArray(lines);
-          setPassphrases(passes);
-          setCopied('');
-        }}
-      >
-        Regenerate
-      </button>
       <CopiedToClipboard text={copied} />
       <div className="output">
         {passphrases.map((row, rowNumber) => {
@@ -115,6 +105,16 @@ const Output = ({ list, words, lines, stupidMode }) => {
           );
         })}
       </div>
+      <button
+        onClick={() => {
+          const passes = generate({ lines, words, wordArray: dict[list] });
+          generateStupidStringArray(lines);
+          setPassphrases(passes);
+          setCopied('');
+        }}
+      >
+        Regenerate
+      </button>
     </div>
   );
 };

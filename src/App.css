@@ -1,0 +1,184 @@
+:root {
+  --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
+    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  --font-family-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo,
+    Courier, monospace;
+  --font-size-password: 1.8rem;
+  --color-background: lightgray;
+  --color-selected: greenyellow;
+  --padding: 0.4rem;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  font-size: 1.4rem;
+  margin: 0;
+  font-family: var(--font-family-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 1rem;
+  color: #333;
+}
+
+code {
+  font-family: var(--font-family-code);
+}
+
+.output {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-password);
+  border: solid 1px var(--color-background);
+  padding: var(--padding);
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  padding: 0 var(--padding);
+}
+
+.col-output {
+  flex: 2 0 auto;
+}
+
+.inputs p {
+  margin: var(--padding) 0 var(--padding) 0;
+}
+
+header {
+  padding-bottom: 1rem;
+}
+
+header p {
+  margin: 0;
+  text-align: left;
+}
+
+footer {
+  text-align: center;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+label {
+  display: block;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+}
+
+.ui input,
+.ui button,
+.ui select,
+.ui textarea {
+  padding: var(--padding);
+  margin: var(--padding) 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+}
+
+button:hover {
+  background-color: white;
+}
+
+.noselect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.selected {
+  background-color: var(--color-selected);
+}
+
+.pointer:hover {
+  background-color: var(--color-background);
+}
+
+.selected:hover {
+  background-color: var(--color-selected);
+}
+
+table {
+  border-collapse: collapse;
+}
+
+table tr {
+  border-top: 1px solid var(--color-background);
+  background-color: white;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+table th,
+table td {
+  border: 1px solid var(--color-background);
+  padding: var(--padding);
+}
+
+.base64 {
+  text-align: center;
+}
+
+.base64 .base64-output {
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-password);
+  text-align: center;
+  cursor: pointer;
+  margin: var(--padding);
+}
+
+.base64 .password:after {
+  content: '\A';
+  white-space: pre;
+}
+
+.base64 .password:hover {
+  background-color: var(--color-background);
+}
+
+.base64 .base64-input {
+  display: flex;
+  justify-content: center;
+}
+
+.base64 .base64-generate {
+  border: solid 1px var(--color-background);
+  padding: 0 var(--padding);
+  cursor: pointer;
+  user-select: none;
+  background-color: var(--color-background);
+}
+
+.base64 .base64-generate:hover {
+  background-color: white;
+}
+
+.flex {
+  display: flex;
+}
+
+.grow {
+  flex-grow: 10;
+}
