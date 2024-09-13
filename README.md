@@ -4,9 +4,7 @@ A passphrase / password generator running in the web browser using the [EFF word
 
 It's the second iteration of my [password generator](https://github.com/andygock/password-generator) web app using React. The original version was plain vanilla.
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/7eecd76e-39df-47db-84a1-26abaa5c93dd/deploy-status)](https://app.netlify.com/sites/p4ss/deploys)
-
-- [Live demo hosted by Netlify](https://p4ss.netlify.app)
+- [Live demo hosted by GitHub Pages](https://pass.gock.net/)
 
 Update: Option to generate Base64 passphrases as well, selection menu found under footer.
 
