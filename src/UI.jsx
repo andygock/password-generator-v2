@@ -1,9 +1,7 @@
-import React from 'react';
-
 import PropTypes from 'prop-types';
+import React from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
-
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';
@@ -21,7 +19,7 @@ function generatePath({
   // if no words, passphrases, or wordlist, assume defaults
   // setting default not supported yet
   const path = `${
-    mode === 'stupid' ? '/stupid' : ''
+    mode === 'preset1' ? '/preset1' : ''
   }/${wordsPerPassphrase}/${numberOfPassphrases}/${wordList}`;
   return path;
 }
@@ -52,18 +50,11 @@ const UI = ({ mode }) => {
       ...params,
     };
 
-    // calculate new path string
-    // /stupid/:words/:passphrases/:wordlist
     const path = generatePath(newState);
-
-    console.log('path', path);
+    // console.log('path', path);
 
     // navigate to new hash path
     navigate(path);
-  };
-
-  const handleChangePreset = (e) => {
-    // changing presets will navigate to a new path
   };
 
   // reset to default parameters
@@ -75,9 +66,10 @@ const UI = ({ mode }) => {
     Math.log(dict[wordList].length ** wordsPerPassphrase) / Math.log(2)
   );
 
-  if (mode === 'stupid') {
+  if (mode === 'preset1') {
     // the extra bits of entropy are for the digits and special characters
-    // 14 bits for the number, 1 bit for the special character
+    // 14 bits for the number
+    // 1 bit for the special character
     entropyBits += 15;
   }
 
@@ -129,18 +121,17 @@ const UI = ({ mode }) => {
         {/* presets */}
         <label htmlFor="preset-1">
           <input
-            title="2 words + up to 4 digits + 1 special character (not secure), used for some web sites that require this weak method"
             type="radio"
             id="preset-1"
             name="preset"
-            checked={mode === 'stupid'}
+            checked={mode === 'preset1'}
             onChange={(e) => {
               if (e.target.checked) {
-                setParamsAndNavigate({ mode: 'stupid' });
+                setParamsAndNavigate({ mode: 'preset1' });
               }
             }}
           />{' '}
-          Stupid mode (not secure)
+          Preset 1
         </label>
 
         {/* extra preset for words with capitalised first letter, spaces, and number plus special char */}

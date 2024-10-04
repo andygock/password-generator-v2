@@ -37,21 +37,13 @@ This makes it bookmark-friendly with recallable user-selected parameters. The ha
     #/:words
     #/:words/:passphrases
     #/:words/:passphrases/:wordlist
-    #/stupid/:words/:passphrases/:wordlist
+    #/preset1/:words/:passphrases/:wordlist
 
 e.g
 
     http://localhost:1234/#/4/10/eff-short1
 
 If no hash is present, default parameters are used.
-
-## Stupid mode
-
-The "stupid mode" is option to generate a less secure password with a mix of upper case, lower case, numbers ahd special characters.
-
-    UnawakeFrosty1344#
-
-This might be useful for those web sites that have minimum password requirements which forces users to create passwords that are hard for humans to remember, but easy for computers to guess.
 
 ## Credits
 

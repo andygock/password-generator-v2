@@ -1,14 +1,9 @@
-import React from 'react';
-
 import classNames from 'classnames';
 import copy from 'copy-to-clipboard';
 import PropTypes from 'prop-types';
-
+import React from 'react';
 import CopiedToClipboard from './CopiedToClipboard';
 import dict from './words';
-
-// stupid mode is for use on web sites which enforce password complexity using preset rules
-// and forces users to create passwords which are hard to remember and easy to guess
 
 const capFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -20,8 +15,9 @@ const randomNumber = (bits) => {
 };
 
 const randomSpecialChar = () => {
-  // special chars used for stupid mode, adds 1 bit of entropy
+  // 8 special chars used for preset1 mode, adds 1 bit of entropy
   const specialChars = '!?$#$&-.';
+
   const arr = new Uint16Array(1);
   const random = window.crypto.getRandomValues(arr);
   return specialChars.charAt(random % 8);
@@ -30,7 +26,7 @@ const randomSpecialChar = () => {
 const Output = ({ list, words, lines, mode }) => {
   const [copied, setCopied] = React.useState('');
   const [passphrases, setPassphrases] = React.useState([]);
-  const [stupidStrings, setStupidStrings] = React.useState([]);
+  const [presetStrings, setPresetStrings] = React.useState([]);
 
   const generate = ({ lines, words, wordArray }) => {
     const arr = new Uint32Array(lines * words);
@@ -53,27 +49,27 @@ const Output = ({ list, words, lines, mode }) => {
     return rows;
   };
 
-  const generateStupidString = (bits) => {
+  const generateNumbersAndSpecialChar = (bits) => {
     // append some numbers - adds bits of entropy
     // use (bits - 1), as we append randomSpecialChar() after which is 1 bit
     let rand = randomNumber(bits - 1);
 
-    // return stupid string e.g '3564.'
+    // return string e.g '3564%'
     return rand + randomSpecialChar();
   };
 
-  const generateStupidStringArray = (n) => {
+  const generateNumbersAndSpecialCharArray = (n) => {
     let res = [];
     for (let i = 0; i < n; i += 1) {
-      res.push(generateStupidString(14)); // number of bits to add
+      res.push(generateNumbersAndSpecialChar(14)); // number of bits to add
     }
-    setStupidStrings(res);
+    setPresetStrings(res);
   };
 
   // generate passwords on page load and prop changes
   React.useEffect(() => {
     const passes = generate({ lines, words, wordArray: dict[list] });
-    generateStupidStringArray(lines);
+    generateNumbersAndSpecialCharArray(lines);
     setPassphrases(passes);
     setCopied('');
   }, [list, words, lines]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -87,13 +83,13 @@ const Output = ({ list, words, lines, mode }) => {
       <CopiedToClipboard text={copied} />
       <div className="output">
         {passphrases.map((row, rowNumber) => {
-          // if in stupid mode
+          // if in preset1 mode
           // capitalise first letter of each word and add some special chars
-          // this adds 14 bits of entropy
           const pass =
-            mode === 'stupid'
-              ? row.map((s) => capFirstLetter(s)).join('') +
-                stupidStrings[rowNumber]
+            mode === 'preset1'
+              ? row.map((s) => capFirstLetter(s)).join(' ') +
+                ' ' +
+                presetStrings[rowNumber]
               : row.join(' ');
 
           return (
@@ -110,7 +106,7 @@ const Output = ({ list, words, lines, mode }) => {
       <button
         onClick={() => {
           const passes = generate({ lines, words, wordArray: dict[list] });
-          generateStupidStringArray(lines);
+          generateNumbersAndSpecialCharArray(lines);
           setPassphrases(passes);
           setCopied('');
         }}

@@ -4,7 +4,7 @@ export default {
     wordsPerPassphrase: 6,
     numberOfPassphrases: 20,
     wordList: 'eff-long',
-    stupidMode: false,
+    mode: 'normal',
     base64Bytes: 12,
   },
 };

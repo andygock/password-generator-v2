@@ -2,10 +2,10 @@ import React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
+import CommandLine from './CommandLine';
 import Footer from './Footer';
 import UI from './UI';
 import UIBase64 from './UIBase64';
-import CommandLine from './CommandLine';
 
 const App = () => {
   return (
@@ -23,8 +23,8 @@ const App = () => {
           <Route exact path="/base64" element={<UIBase64 />} />
           <Route
             exact
-            path="/stupid/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
-            element={<UI mode="stupid" />}
+            path="/preset1/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
+            element={<UI mode="preset1" />}
           />
           <Route
             exact
