@@ -16,11 +16,11 @@ export default function CommandLine() {
             </td>
           </tr>
           <tr>
-            <td>PowerShell</td>
+            <td>PowerShell*</td>
             <td>
               <pre
                 dangerouslySetInnerHTML={{
-                  __html: `-join ((48..57) + (65..90) + (97..122) | Get-Random -Count 16 | % {[char]$_})`,
+                  __html: `$pwd=-join ((48..57) + (65..90) + (97..122) | Get-Random -Count 16 | % {[char]$_});$pwd|Set-Clipboard;$pwd`,
                 }}
               />
             </td>
@@ -57,8 +57,22 @@ const passphrase = crypto.randomBytes(16).toString('hex');`,
               />
             </td>
           </tr>
+
+          {/* cmd */}
+          <tr>
+            <td>Windows CMD*</td>
+            <td>
+              <pre
+                dangerouslySetInnerHTML={{
+                  __html: `powershell -Command "$pwd=-join ((48..57) + (65..90) + (97..122) | Get-Random -Count 16 | % {[char]$_});$pwd|Set-Clipboard;$pwd"`,
+                }}
+              />
+            </td>
+          </tr>
         </tbody>
       </table>
+      * PowerShell and Windows CMD commands copy the password to the clipboard
+      and also echo to console.
     </div>
   );
 }
