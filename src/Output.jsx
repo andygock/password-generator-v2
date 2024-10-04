@@ -27,7 +27,7 @@ const randomSpecialChar = () => {
   return specialChars.charAt(random % 8);
 };
 
-const Output = ({ list, words, lines, stupidMode }) => {
+const Output = ({ list, words, lines, mode }) => {
   const [copied, setCopied] = React.useState('');
   const [passphrases, setPassphrases] = React.useState([]);
   const [stupidStrings, setStupidStrings] = React.useState([]);
@@ -90,10 +90,12 @@ const Output = ({ list, words, lines, stupidMode }) => {
           // if in stupid mode
           // capitalise first letter of each word and add some special chars
           // this adds 14 bits of entropy
-          const pass = stupidMode
-            ? row.map((s) => capFirstLetter(s)).join('') +
-              stupidStrings[rowNumber]
-            : row.join(' ');
+          const pass =
+            mode === 'stupid'
+              ? row.map((s) => capFirstLetter(s)).join('') +
+                stupidStrings[rowNumber]
+              : row.join(' ');
+
           return (
             <div
               key={rowNumber}
@@ -123,7 +125,7 @@ Output.propTypes = {
   list: PropTypes.string,
   words: PropTypes.number,
   lines: PropTypes.number,
-  stupidMode: PropTypes.bool,
+  mode: PropTypes.string,
 };
 
 export default Output;

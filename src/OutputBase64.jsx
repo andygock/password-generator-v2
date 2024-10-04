@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import CopiedToClipboard from './CopiedToClipboard';
 
-const OutputBase64 = ({ values }) => {
+const OutputBase64 = ({ values = [] }) => {
   const [copiedText, setCopiedText] = React.useState('');
 
   // copy string to clipboard
@@ -38,10 +38,6 @@ const OutputBase64 = ({ values }) => {
 
 OutputBase64.propTypes = {
   values: PropTypes.arrayOf(PropTypes.string),
-};
-
-OutputBase64.defaultProps = {
-  values: [],
 };
 
 export default OutputBase64;

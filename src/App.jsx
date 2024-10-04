@@ -24,17 +24,17 @@ const App = () => {
           <Route
             exact
             path="/stupid/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
-            element={<UI stupidMode />}
+            element={<UI mode="stupid" />}
           />
           <Route
             exact
             path="/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
-            element={<UI />}
+            element={<UI mode="normal" />}
           />
           <Route
             exact
             path="/:wordsPerPassphrase/:numberOfPassphrases"
-            element={<UI />}
+            element={<UI mode="normal" />}
           />
           <Route exact path="/:wordsPerPassphrase" element={<UI />} />
         </Routes>

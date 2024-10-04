@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-
 import PropTypes from 'prop-types';
 
-const CopiedToClipboard = ({ text }) => {
+const CopiedToClipboard = ({ text = '' }) => {
   const [opacity, setOpacity] = React.useState(0);
 
   useEffect(() => {
@@ -34,7 +33,5 @@ const CopiedToClipboard = ({ text }) => {
 CopiedToClipboard.propTypes = {
   text: PropTypes.string.isRequired,
 };
-
-CopiedToClipboard.defaultProps = {};
 
 export default CopiedToClipboard;

@@ -7,7 +7,13 @@ const buttonStyle = {
 };
 
 // state is managed by parent
-const NumberPicker = ({ onChange, min, max, value, ...otherProps }) => {
+const NumberPicker = ({
+  onChange = () => null,
+  min = 0,
+  max,
+  value,
+  ...otherProps
+}) => {
   const handleChange = (val) => {
     const newVal = typeof val === 'number' ? val : parseInt(val);
 
@@ -52,11 +58,6 @@ NumberPicker.propTypes = {
   max: PropTypes.number,
   value: PropTypes.number.isRequired,
   onChange: PropTypes.func,
-};
-
-NumberPicker.defaultProps = {
-  min: 0,
-  onChange: () => null,
 };
 
 export default NumberPicker;

@@ -6,7 +6,7 @@ import words from './words';
 
 const baseLog = (base, val) => Math.log(val) / Math.log(base);
 
-const WordListRadio = ({ value, onChange }) => {
+const WordListRadio = ({ value, onChange = () => null }) => {
   const wordListOptions = [
     {
       text: 'Orchard Street Long',
@@ -55,10 +55,6 @@ const WordListRadio = ({ value, onChange }) => {
 WordListRadio.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func,
-};
-
-WordListRadio.defaultProps = {
-  onChange: () => null,
 };
 
 export default WordListRadio;

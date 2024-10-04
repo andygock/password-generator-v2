@@ -11,14 +11,24 @@ import Output from './Output';
 import WordListRadio from './WordListRadio';
 import dict from './words';
 
-const UI = ({ stupidMode }) => {
+// calculate path based on parameters
+function generatePath({
+  wordsPerPassphrase = 6,
+  numberOfPassphrases = 20,
+  wordList = 'eff-long',
+  mode = 'normal',
+}) {
+  // if no words, passphrases, or wordlist, assume defaults
+  // setting default not supported yet
+  const path = `${
+    mode === 'stupid' ? '/stupid' : ''
+  }/${wordsPerPassphrase}/${numberOfPassphrases}/${wordList}`;
+  return path;
+}
+
+const UI = ({ mode }) => {
   const navigate = useNavigate();
   const params = useParams();
-
-  // route format:
-  //
-  //   /:words/:passphrases/:wordList
-  //   /:words/:passphrases/:wordList/stupid
 
   // convert params to numbers when we need to, or set default values if not set
   const wordsPerPassphrase = parseInt(
@@ -38,17 +48,22 @@ const UI = ({ stupidMode }) => {
       wordsPerPassphrase,
       numberOfPassphrases,
       wordList,
-      stupidMode,
+      mode,
       ...params,
     };
 
     // calculate new path string
-    const path = `${newState.stupidMode === true ? '/stupid' : ''}/${
-      newState.wordsPerPassphrase
-    }/${newState.numberOfPassphrases}/${newState.wordList}`;
+    // /stupid/:words/:passphrases/:wordlist
+    const path = generatePath(newState);
+
+    console.log('path', path);
 
     // navigate to new hash path
     navigate(path);
+  };
+
+  const handleChangePreset = (e) => {
+    // changing presets will navigate to a new path
   };
 
   // reset to default parameters
@@ -59,7 +74,12 @@ const UI = ({ stupidMode }) => {
   let entropyBits = Math.floor(
     Math.log(dict[wordList].length ** wordsPerPassphrase) / Math.log(2)
   );
-  if (stupidMode) entropyBits += 14;
+
+  if (mode === 'stupid') {
+    // the extra bits of entropy are for the digits and special characters
+    // 14 bits for the number, 1 bit for the special character
+    entropyBits += 15;
+  }
 
   return (
     <div className="ui container">
@@ -71,6 +91,7 @@ const UI = ({ stupidMode }) => {
           }}
           value={wordsPerPassphrase}
         />
+
         <p>Number of passphrases</p>
         <NumberPicker
           onChange={(numberOfPassphrases) => {
@@ -78,6 +99,7 @@ const UI = ({ stupidMode }) => {
           }}
           value={numberOfPassphrases}
         />
+
         <p>Word list</p>
         <WordListRadio
           value={wordList}
@@ -86,27 +108,45 @@ const UI = ({ stupidMode }) => {
           }}
         />
 
-        <p>Stupid mode</p>
-        <label htmlFor="stupid-enable">
+        <p>Presets</p>
+
+        {/* option for no presets */}
+        <label htmlFor="preset-none">
           <input
-            type="checkbox"
-            id="stupid-enable"
-            checked={stupidMode}
+            type="radio"
+            id="preset-none"
+            name="preset"
+            checked={mode === 'normal'}
             onChange={(e) => {
               if (e.target.checked) {
-                // turn on stupid mode
-                setParamsAndNavigate({
-                  stupidMode: e.target.checked,
-                  wordsPerPassphrase: 2,
-                });
-              } else {
-                // turn off stupid mode
-                setParamsAndNavigate({ stupidMode: e.target.checked });
+                setParamsAndNavigate({ mode: 'normal' });
               }
             }}
           />{' '}
-          Enable with 2 words
+          None
         </label>
+
+        {/* presets */}
+        <label htmlFor="preset-1">
+          <input
+            title="2 words + up to 4 digits + 1 special character (not secure), used for some web sites that require this weak method"
+            type="radio"
+            id="preset-1"
+            name="preset"
+            checked={mode === 'stupid'}
+            onChange={(e) => {
+              if (e.target.checked) {
+                setParamsAndNavigate({ mode: 'stupid' });
+              }
+            }}
+          />{' '}
+          Stupid mode (not secure)
+        </label>
+
+        {/* extra preset for words with capitalised first letter, spaces, and number plus special char */}
+        {/* designed for certain web sites that ask for this */}
+        {/* routes to /#/custom1/{a}/{b}/{dict} */}
+        {/* TODO */}
 
         <p className="entropy">
           {entropyBits}{' '}
@@ -126,7 +166,7 @@ const UI = ({ stupidMode }) => {
           words={wordsPerPassphrase}
           lines={numberOfPassphrases}
           list={wordList}
-          stupidMode={stupidMode}
+          mode={mode}
         />
       </div>
 
@@ -138,11 +178,7 @@ const UI = ({ stupidMode }) => {
 };
 
 UI.propTypes = {
-  stupidMode: PropTypes.bool,
-};
-
-UI.defaultProps = {
-  stupidMode: false,
+  mode: PropTypes.string,
 };
 
 export default UI;
