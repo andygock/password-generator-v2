@@ -80,10 +80,7 @@ const EstimateCrackingTime = ({ bits, type = 'dictionary' }) => {
   return (
     <div className="crack-time">
       <h3>Estimated cracking time ({bits} bits of entropy)</h3>
-      <p>
-        With {type} attack using a single RTX 4090 GPU when exact keyspace is
-        known.
-      </p>
+      <p>With {type} attack using a single RTX 4090 GPU.</p>
       <table>
         <thead>
           <tr>

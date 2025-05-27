@@ -26,6 +26,7 @@ const OutputWords = ({ list, words, lines, mode }) => {
   const [copied, setCopied] = React.useState('');
   const [passphrases, setPassphrases] = React.useState([]);
   const [presetStrings, setPresetStrings] = React.useState([]);
+  const [copyNotify, setCopyNotify] = React.useState(false);
 
   const generate = ({ lines, words, wordArray }) => {
     const arr = new Uint32Array(lines * words);
@@ -74,7 +75,15 @@ const OutputWords = ({ list, words, lines, mode }) => {
   }, [list, words, lines]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCopy = (text) => (e) => {
-    if (copy(text)) setCopied(text);
+    if (copy(text)) {
+      setCopied(text);
+
+      // copy notification
+      setCopyNotify(true);
+      setTimeout(() => {
+        setCopyNotify(false);
+      }, 500);
+    }
   };
 
   return (
@@ -111,6 +120,7 @@ const OutputWords = ({ list, words, lines, mode }) => {
       >
         Regenerate
       </button>
+      {copyNotify && <div className="notify">Copied</div>}
     </div>
   );
 };

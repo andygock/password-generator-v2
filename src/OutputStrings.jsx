@@ -5,9 +5,18 @@ import React from 'react';
 
 const OutputStrings = ({ values = [] }) => {
   const [copied, setCopied] = React.useState('');
+  const [copyNotify, setCopyNotify] = React.useState(false);
 
   const handleCopy = (text) => (e) => {
-    if (copy(text)) setCopied(text);
+    if (copy(text)) {
+      setCopied(text);
+
+      // copy notification
+      setCopyNotify(true);
+      setTimeout(() => {
+        setCopyNotify(false);
+      }, 500);
+    }
   };
 
   return (
@@ -25,6 +34,7 @@ const OutputStrings = ({ values = [] }) => {
           </div>
         ))}
       </div>
+      {copyNotify && <div className="notify">Copied</div>}
     </div>
   );
 };

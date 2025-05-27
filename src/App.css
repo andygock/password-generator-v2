@@ -117,7 +117,7 @@ input[type='radio'] {
   display: flex;
   flex-direction: column;
   padding: var(--padding);
-  border: solid 1px var(--color-background);
+  /* border: solid 1px var(--color-background); */
   gap: var(--padding);
 }
 
@@ -260,4 +260,17 @@ button.copied {
   background-color: var(--color-selected);
   border: solid 1px var(--color-selected);
   color: black;
+}
+
+/* copy notification */
+.notify {
+  position: fixed;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: var(--color-selected);
+  color: black;
+  padding: 1rem;
+  border-radius: 2px;
+  z-index: 1000;
+  transition: opacity 0.3s ease-in-out;
 }
