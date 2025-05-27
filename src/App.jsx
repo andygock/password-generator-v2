@@ -1,11 +1,10 @@
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
-import CommandLineGenerator from './CommandLineGenerator';
-import Footer from './Footer';
 import DictionaryGenerator from './DictionaryGenerator';
-import StringGenerator from './StringGenerator';
+import Footer from './Footer';
 import Menu from './Menu';
+import StringGenerator from './StringGenerator';
 
 const App = () => {
   return (
@@ -21,7 +20,6 @@ const App = () => {
         <Routes>
           <Route exact path="/" element={<DictionaryGenerator />} />
           <Route exact path="/string" element={<StringGenerator />} />
-          <Route exact path="/cli" element={<CommandLineGenerator />} />
           <Route
             exact
             path="/preset1/:wordsPerPassphrase/:numberOfPassphrases/:wordList"

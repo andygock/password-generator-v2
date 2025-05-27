@@ -5,6 +5,6 @@ export default {
     numberOfPassphrases: 20,
     wordList: 'eff-long',
     mode: 'normal',
-    base64Bytes: 12,
+    passwordBytes: 16,
   },
 };

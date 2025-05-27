@@ -2,7 +2,6 @@ import classNames from 'classnames';
 import copy from 'copy-to-clipboard';
 import PropTypes from 'prop-types';
 import React from 'react';
-import CopiedToClipboard from './CopiedToClipboard';
 import dict from './words';
 
 const capFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -80,7 +79,6 @@ const OutputWords = ({ list, words, lines, mode }) => {
 
   return (
     <div>
-      <CopiedToClipboard text={copied} />
       <div className="output">
         {passphrases.map((row, rowNumber) => {
           // if in preset1 mode

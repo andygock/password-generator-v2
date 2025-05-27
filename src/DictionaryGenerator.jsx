@@ -75,7 +75,7 @@ const DictionaryGenerator = ({ mode }) => {
   return (
     <div className="ui container">
       <div className="col inputs">
-        <p>Number of words per passphrase</p>
+        <h3>Number of words per passphrase</h3>
         <NumberPicker
           onChange={(wordsPerPassphrase) => {
             setParamsAndNavigate({ wordsPerPassphrase });
@@ -83,7 +83,7 @@ const DictionaryGenerator = ({ mode }) => {
           value={wordsPerPassphrase}
         />
 
-        <p>Number of passphrases</p>
+        <h3>Number of passphrases</h3>
         <NumberPicker
           onChange={(numberOfPassphrases) => {
             setParamsAndNavigate({ numberOfPassphrases });
@@ -91,7 +91,7 @@ const DictionaryGenerator = ({ mode }) => {
           value={numberOfPassphrases}
         />
 
-        <p>Word list</p>
+        <h3>Word list</h3>
         <WordListRadio
           value={wordList}
           onChange={(wordList) => {
@@ -99,7 +99,7 @@ const DictionaryGenerator = ({ mode }) => {
           }}
         />
 
-        <p>Presets</p>
+        <h3>Presets</h3>
 
         {/* option for no presets */}
         <label htmlFor="preset-none">

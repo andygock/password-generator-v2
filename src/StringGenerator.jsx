@@ -5,6 +5,8 @@ import EstimateCrackingTime from './EstimateCrackingTime';
 import OutputStrings from './OutputStrings';
 import { CHARSETS } from './charsets';
 import CharsetSelector from './CharsetSelector';
+import PasswordSizeSlider from './PasswordSizeSlider';
+import CommandLine from './CommandLine';
 
 const rows = 20;
 
@@ -23,7 +25,7 @@ const StringGenerator = () => {
   // Support multiple charsets, not just Base64
   const [charsetKey, setCharsetKey] = React.useState('websafe');
   const [sizeBytes, setSizeBytes] = React.useState(
-    config.defaults.base64Bytes || 10
+    config.defaults?.passwordBytes ?? 10
   );
   const [output, setOutput] = React.useState([]);
 
@@ -65,54 +67,34 @@ const StringGenerator = () => {
   }, [sizeBytes, charsetKey, generate]);
 
   return (
-    <div className="ui container">
-      <div className="col inputs">
-        <CharsetSelector
-          charsets={CHARSETS}
-          selectedKey={charsetKey}
-          onChange={setCharsetKey}
-          style={{ marginBottom: '1em' }}
-          hideLabel={false}
-        />
-        <div>
-          <span role="button" onClick={(e) => generate()}>
-            ↻
-          </span>
-          <input
-            type="range"
-            min="8"
-            max="30"
-            value={sizeBytes}
-            onChange={(e) => {
-              setSizeBytes(parseInt(e.target.value, 10));
-            }}
+    <div>
+      <div className="ui container">
+        <div className="col inputs">
+          <PasswordSizeSlider sizeBytes={sizeBytes} onChange={setSizeBytes} />
+          <CharsetSelector
+            charsets={CHARSETS}
+            selectedKey={charsetKey}
+            onChange={setCharsetKey}
+            hideLabel={true}
           />
-          <span className="bits">
-            {sizeBytes * 8 < 100 && <>&nbsp;</>}
-            {sizeBytes * 8}
-            &nbsp;
-            <a href="https://en.wikipedia.org/wiki/Password_strength">bits</a>
-          </span>
         </div>
-        <div>
-          <strong>Charset:</strong> {selectedCharset.label} (
-          {selectedCharset.charset.length} chars)
-          <span>{selectedCharset.description}</span>
+        <div className="col col-output">
+          <OutputStrings values={output} />
+          <button
+            onClick={() => {
+              setOutput([]);
+              generate();
+            }}
+          >
+            Regenerate
+          </button>
+        </div>
+        <div className="col col-crack-time">
+          <EstimateCrackingTime bits={sizeBytes * 8} type="brute force" />
         </div>
       </div>
-      <div className="col col-output">
-        <OutputStrings values={output} />
-        <button
-          onClick={() => {
-            setOutput([]);
-            generate();
-          }}
-        >
-          Regenerate
-        </button>
-      </div>
-      <div className="col col-crack-time">
-        <EstimateCrackingTime bits={sizeBytes * 8} />
+      <div className="command-line">
+        <CommandLine charsetKey={charsetKey} bits={sizeBytes * 8} />
       </div>
     </div>
   );

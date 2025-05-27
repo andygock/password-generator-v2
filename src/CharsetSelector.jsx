@@ -1,29 +1,25 @@
-function CharsetSelector({
-  charsets,
-  selectedKey,
-  onChange,
-  style,
-  hideLabel,
-}) {
+function CharsetSelector({ charsets, selectedKey, onChange, hideLabel }) {
+  // get selected charset based on selectedKey
+  const selectedCharset = charsets.find((c) => c.key === selectedKey);
   return (
-    <div style={style || { marginBottom: '1em' }}>
-      {!hideLabel && <strong>Charset:</strong>}
+    <div>
+      <p>Character Set</p>
       {charsets.map((c) => (
-        <label key={c.key} style={{ marginLeft: '1em', cursor: 'pointer' }}>
+        <label key={c.key}>
           <input
             type="radio"
             name="charset"
             value={c.key}
             checked={selectedKey === c.key}
             onChange={() => onChange(c.key)}
-            style={{ marginRight: 4 }}
           />
-          {c.label}{' '}
-          <span style={{ color: '#888', fontSize: '0.95em' }}>
-            ({c.charset.length} chars)
-          </span>
+          {c.label} <span>({c.charset.length} chars)</span>
         </label>
       ))}
+      <div>
+        <div className="heading">Key space</div>
+        <div className="keyspace">{selectedCharset.charset}</div>
+      </div>
     </div>
   );
 }

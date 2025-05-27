@@ -43,7 +43,7 @@ const WordListRadio = ({ value, onChange = () => null }) => {
               name="word-list"
               checked={value === id}
               onChange={handleChange}
-            />{' '}
+            />
             {text} ({wordCount}, 2<sup>{baseLog(2, wordCount).toFixed(1)}</sup>)
           </label>
         );

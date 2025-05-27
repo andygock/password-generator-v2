@@ -6,6 +6,7 @@
     sans-serif;
   --font-family-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo,
     Courier, monospace;
+  --font-size: 1.4rem;
   --font-size-password: 1.8rem;
   --color-background: lightgray;
   --color-selected: greenyellow;
@@ -17,7 +18,7 @@ html {
 }
 
 body {
-  font-size: 1.4rem;
+  font-size: var(--font-size);
   margin: 0;
   font-family: var(--font-family-base);
   -webkit-font-smoothing: antialiased;
@@ -28,18 +29,78 @@ body {
 
 code {
   font-family: var(--font-family-code);
+  background-color: #ddd;
 }
 
-.output {
-  font-family: var(--font-family-code);
-  font-size: var(--font-size-password);
-  border: solid 1px var(--color-background);
-  padding: var(--padding);
+a {
+  text-decoration: none;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+}
+
+label {
+  display: block;
+  cursor: pointer;
+}
+
+button,
+input,
+button,
+select,
+textarea {
+  padding: var(--padding);
+  margin: var(--padding) 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+p {
+  margin: var(--padding) 0 var(--padding) 0;
+  font-weight: normal;
+}
+
+.inputs h3,
+.heading {
+  margin: var(--padding) 0 var(--padding) 0;
+  font-weight: normal;
+  font-size: var(--font-size);
+}
+
+.crack-time h3 {
+  margin-top: 0;
+}
+
+button:hover {
+  background-color: white;
+}
+
+input[type='radio'] {
+  width: auto;
+  margin-right: 0.5rem;
+}
+
+/* layout */
 
 .container {
   display: flex;
   flex-wrap: wrap;
+}
+
+.output {
+  border: solid 1px var(--color-background);
+  padding: var(--padding);
+  font-family: var(--font-family-code);
+  font-size: var(--font-size-password);
+  text-align: left;
 }
 
 .col {
@@ -50,16 +111,35 @@ code {
   flex: 2 0 auto;
 }
 
-/* 
-.inputs {
-  width: 300px;
-} */
+/* inputs */
 
-.inputs p {
-  margin: var(--padding) 0 var(--padding) 0;
+.inputs {
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding);
+  border: solid 1px var(--color-background);
+  gap: var(--padding);
 }
 
-/* headers and menu */
+.inputs input[type='range'] {
+  vertical-align: middle;
+}
+
+.inputs .bits {
+  margin-left: 0.5rem;
+}
+
+.keyspace {
+  display: block;
+  font-family: var(--font-family-code);
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-width: 20ch;
+  background: #ddd;
+}
+
+/* headers, footers and menu */
+
 header {
   display: flex;
   justify-content: space-between;
@@ -97,34 +177,10 @@ footer {
   text-align: center;
 }
 
+/* helpers */
+
 .strong {
   font-weight: bold;
-}
-
-label {
-  display: block;
-  cursor: pointer;
-}
-
-a {
-  text-decoration: none;
-}
-
-button,
-.ui input,
-.ui button,
-.ui select,
-.ui textarea {
-  padding: var(--padding);
-  margin: var(--padding) 0;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: white;
 }
 
 .noselect {
@@ -152,7 +208,12 @@ button:hover {
   background-color: var(--color-selected);
 }
 
-/* table is mostly used for the estimated cracking time table */
+.crack-time {
+  max-width: 600px;
+}
+
+/* estimated cracking time section */
+
 table {
   border-collapse: collapse;
   margin: var(--padding) 0;
@@ -173,23 +234,22 @@ table td {
   padding: var(--padding);
 }
 
-.output {
-  font-family: var(--font-family-code);
-  font-size: var(--font-size-password);
-  text-align: left;
+/* cli output */
+.cli {
+  width: 100%;
 }
 
-/* cli */
-
-code {
+.cli code {
   font-family: var(--font-family-code);
-  /* border: solid 1px var(--color-background); */
   cursor: pointer;
 }
 
-pre {
+.cli pre {
   padding: 0;
   margin: 0;
+  overflow-x: auto;
+  white-space: pre;
+  max-width: 120ch;
 }
 
 button.copy {
@@ -200,8 +260,4 @@ button.copied {
   background-color: var(--color-selected);
   border: solid 1px var(--color-selected);
   color: black;
-}
-
-h2 {
-  text-align: center;
 }
