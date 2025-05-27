@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
-import React from 'react';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';
-import Output from './Output';
+import OutputWords from './OutputWords';
 import WordListRadio from './WordListRadio';
 import dict from './words';
 
@@ -24,7 +23,7 @@ function generatePath({
   return path;
 }
 
-const UI = ({ mode }) => {
+const DictionaryGenerator = ({ mode }) => {
   const navigate = useNavigate();
   const params = useParams();
 
@@ -153,7 +152,7 @@ const UI = ({ mode }) => {
       </div>
 
       <div className="col col-output">
-        <Output
+        <OutputWords
           words={wordsPerPassphrase}
           lines={numberOfPassphrases}
           list={wordList}
@@ -168,8 +167,8 @@ const UI = ({ mode }) => {
   );
 };
 
-UI.propTypes = {
+DictionaryGenerator.propTypes = {
   mode: PropTypes.string,
 };
 
-export default UI;
+export default DictionaryGenerator;

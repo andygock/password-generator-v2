@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
 import React from 'react';
-
 import { Link } from 'react-router-dom';
 
 const Footer = () => {
@@ -22,9 +21,6 @@ const Footer = () => {
           Orchard Street
         </a>{' '}
         word lists.
-      </p>
-      <p>
-        <Link to="/">Dictionary</Link> | <Link to="/base64">Base64</Link>
       </p>
     </footer>
   );

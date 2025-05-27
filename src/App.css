@@ -50,17 +50,47 @@ code {
   flex: 2 0 auto;
 }
 
+/* 
+.inputs {
+  width: 300px;
+} */
+
 .inputs p {
   margin: var(--padding) 0 var(--padding) 0;
 }
 
+/* headers and menu */
 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding-bottom: 1rem;
 }
 
 header p {
   margin: 0;
   text-align: left;
+}
+
+/* make menu links look like buttons */
+header a {
+  display: inline-block;
+  padding: var(--padding);
+  background-color: var(--color-background);
+  border: solid 1px var(--color-background);
+  border-radius: 2px;
+  color: black;
+  margin-left: var(--padding);
+}
+
+header a:hover {
+  background-color: white;
+}
+
+header a.active {
+  background-color: var(--color-selected);
+  border-color: var(--color-selected);
+  color: black;
 }
 
 footer {
@@ -80,6 +110,7 @@ a {
   text-decoration: none;
 }
 
+button,
 .ui input,
 .ui button,
 .ui select,
@@ -89,6 +120,7 @@ a {
   box-sizing: border-box;
   border: 1px solid #ccc;
   border-radius: 2px;
+  cursor: pointer;
 }
 
 button:hover {
@@ -120,6 +152,7 @@ button:hover {
   background-color: var(--color-selected);
 }
 
+/* table is mostly used for the estimated cracking time table */
 table {
   border-collapse: collapse;
   margin: var(--padding) 0;
@@ -140,50 +173,10 @@ table td {
   padding: var(--padding);
 }
 
-.base64 {
-  text-align: center;
-}
-
-.base64 .base64-output {
+.output {
   font-family: var(--font-family-code);
   font-size: var(--font-size-password);
-  text-align: center;
-  cursor: pointer;
-  margin: var(--padding);
-}
-
-.base64 .password:after {
-  content: '\A';
-  white-space: pre;
-}
-
-.base64 .password:hover {
-  background-color: var(--color-background);
-}
-
-.base64 .base64-input {
-  display: flex;
-  justify-content: center;
-}
-
-.base64 .base64-generate {
-  border: solid 1px var(--color-background);
-  padding: 0 var(--padding);
-  cursor: pointer;
-  user-select: none;
-  background-color: var(--color-background);
-}
-
-.base64 .base64-generate:hover {
-  background-color: white;
-}
-
-.flex {
-  display: flex;
-}
-
-.grow {
-  flex-grow: 10;
+  text-align: left;
 }
 
 /* cli */
@@ -197,4 +190,18 @@ code {
 pre {
   padding: 0;
   margin: 0;
+}
+
+button.copy {
+  width: 10ch;
+}
+
+button.copied {
+  background-color: var(--color-selected);
+  border: solid 1px var(--color-selected);
+  color: black;
+}
+
+h2 {
+  text-align: center;
 }

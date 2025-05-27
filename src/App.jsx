@@ -1,44 +1,48 @@
-import React from 'react';
 import { HashRouter, Route, Routes } from 'react-router-dom';
 import '../node_modules/normalize.css/normalize.css';
 import './App.css';
-import CommandLine from './CommandLine';
+import CommandLineGenerator from './CommandLineGenerator';
 import Footer from './Footer';
-import UI from './UI';
-import UIBase64 from './UIBase64';
+import DictionaryGenerator from './DictionaryGenerator';
+import StringGenerator from './StringGenerator';
+import Menu from './Menu';
 
 const App = () => {
   return (
     <div className="App">
-      <header>
-        <p>
-          <strong>Password Generator</strong> - Generate random passphrases in
-          the browser. Click line to copy passphrase to clipboard.
-        </p>
-      </header>
-
       <HashRouter>
+        <header>
+          <div>
+            <strong>Password Generator</strong> - Generate random passphrases in
+            the browser. Click line to copy passphrase to clipboard.
+          </div>
+          <Menu />
+        </header>
         <Routes>
-          <Route exact path="/" element={<UI />} />
-          <Route exact path="/base64" element={<UIBase64 />} />
+          <Route exact path="/" element={<DictionaryGenerator />} />
+          <Route exact path="/string" element={<StringGenerator />} />
+          <Route exact path="/cli" element={<CommandLineGenerator />} />
           <Route
             exact
             path="/preset1/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
-            element={<UI mode="preset1" />}
+            element={<DictionaryGenerator mode="preset1" />}
           />
           <Route
             exact
             path="/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
-            element={<UI mode="normal" />}
+            element={<DictionaryGenerator mode="normal" />}
           />
           <Route
             exact
             path="/:wordsPerPassphrase/:numberOfPassphrases"
-            element={<UI mode="normal" />}
+            element={<DictionaryGenerator mode="normal" />}
           />
-          <Route exact path="/:wordsPerPassphrase" element={<UI />} />
+          <Route
+            exact
+            path="/:wordsPerPassphrase"
+            element={<DictionaryGenerator />}
+          />
         </Routes>
-        <CommandLine />
         <Footer />
       </HashRouter>
     </div>

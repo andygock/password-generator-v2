@@ -23,7 +23,7 @@ const randomSpecialChar = () => {
   return specialChars.charAt(random % 8);
 };
 
-const Output = ({ list, words, lines, mode }) => {
+const OutputWords = ({ list, words, lines, mode }) => {
   const [copied, setCopied] = React.useState('');
   const [passphrases, setPassphrases] = React.useState([]);
   const [presetStrings, setPresetStrings] = React.useState([]);
@@ -117,11 +117,11 @@ const Output = ({ list, words, lines, mode }) => {
   );
 };
 
-Output.propTypes = {
+OutputWords.propTypes = {
   list: PropTypes.string,
   words: PropTypes.number,
   lines: PropTypes.number,
   mode: PropTypes.string,
 };
 
-export default Output;
+export default OutputWords;
