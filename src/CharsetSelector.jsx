@@ -1,4 +1,4 @@
-function CharsetSelector({ charsets, selectedKey, onChange, hideLabel }) {
+function CharsetSelector({ charsets, selectedKey, onChange }) {
   // get selected charset based on selectedKey
   const selectedCharset = charsets.find((c) => c.key === selectedKey);
   return (

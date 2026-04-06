@@ -157,6 +157,7 @@ export default function CommandLine({ charsetKey, bits }) {
       setTimeout(() => setCopiedRow(null), 1200);
     } catch (e) {
       // fallback or error handling
+      console.error('Failed to copy command:', e);
     }
   };
 

@@ -71,9 +71,9 @@ const OutputWords = ({ list, words, lines, mode }) => {
     generateNumbersAndSpecialCharArray(lines);
     setPassphrases(passes);
     setCopied('');
-  }, [list, words, lines]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [list, words, lines]);
 
-  const handleCopy = (text) => (e) => {
+  const handleCopy = (text) => () => {
     if (copy(text)) {
       setCopied(text);
 

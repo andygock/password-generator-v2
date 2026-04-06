@@ -6,7 +6,7 @@ const OutputStrings = ({ values = [] }) => {
   const [copied, setCopied] = React.useState('');
   const [copyNotify, setCopyNotify] = React.useState(false);
 
-  const handleCopy = (text) => (e) => {
+  const handleCopy = (text) => () => {
     if (copy(text)) {
       setCopied(text);
 

@@ -47,7 +47,7 @@ const StringGenerator = () => {
     let values;
     if (charsetKey === 'base64') {
       // Use base64-arraybuffer for base64
-      const bytes = new Array(rows).fill(0).map((v) => randomBytes(sizeBytes));
+      const bytes = new Array(rows).fill(0).map(() => randomBytes(sizeBytes));
       values = bytes.map((a) => encode(a).replace(/=+$/, ''));
     } else {
       // For other charsets, generate random string of appropriate length
