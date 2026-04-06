@@ -61,13 +61,24 @@ export function generateWordRows({ lines, words, wordArray }) {
 }
 
 export function randomNumber(bits) {
-  const arr = new Uint32Array(1);
-  window.crypto.getRandomValues(arr);
-  return arr[0] % Math.pow(2, bits);
+  // Return an integer in [0, 2^bits - 1].
+  // Cap bits between 1 and 32 for safe 32-bit generation.
+  const safeBits = Math.min(Math.max(1, Number(bits) || 0), 32);
+  const max = Math.pow(2, safeBits);
+  const RANGE = 4294967296; // 2^32
+  const threshold = Math.floor(RANGE / max) * max;
+  const outArr = new Uint32Array(1);
+  while (true) {
+    window.crypto.getRandomValues(outArr);
+    const v = outArr[0] >>> 0;
+    if (v < threshold) return v % max;
+    // otherwise retry
+  }
 }
 
 export function randomSpecialChar() {
-  const specialChars = '!?$#$&-.';
+  // de-duplicated special characters; can be made configurable later
+  const specialChars = '!?$#&-.';
   const arr = new Uint8Array(1);
   window.crypto.getRandomValues(arr);
   return specialChars.charAt(arr[0] % specialChars.length);

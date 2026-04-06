@@ -37,25 +37,28 @@ export default function CommandLine({ charsetKey, bits }) {
   const commandTemplates = [
     {
       language: 'Bash',
-      getCommand: (bytes, charsetKey) => {
+      getCommand: (bytes, charsetKey, selCharset, bitsArg) => {
+        const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `openssl rand -hex ${bytes}`;
         }
         if (charsetKey === 'base62') {
           return `tr -dc 'A-Za-z0-9' < /dev/urandom | head -c ${Math.ceil(
-            bits / Math.log2(62)
+            bitsToUse / Math.log2(62)
           )}`;
         }
         // use escaped charset for safety (handles any single quotes)
-        return `tr -dc '${escapeSingleQuotes(selectedCharset.charset)}' < /dev/urandom | head -c ${Math.ceil(
-          bits / Math.log2(selectedCharset.charset.length)
+        const cs = selCharset?.charset || selectedCharset.charset;
+        return `tr -dc '${escapeSingleQuotes(cs)}' < /dev/urandom | head -c ${Math.ceil(
+          bitsToUse / Math.log2(cs.length)
         )}`;
       },
       explanation: `Generates a random password using OpenSSL or tr/urandom depending on charset.`,
     },
     {
       language: 'PowerShell*',
-      getCommand: (bytes, charsetKey) => {
+      getCommand: (bytes, charsetKey, selCharset, bitsArg) => {
+        const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `$pwd=-join ((48..57)+(97..102)|Get-Random -Count ${
             bytes * 2
@@ -63,61 +66,67 @@ export default function CommandLine({ charsetKey, bits }) {
         }
         if (charsetKey === 'base62') {
           return `$chars=(48..57)+(65..90)+(97..122);$pwd=-join ($chars|Get-Random -Count ${Math.ceil(
-            bits / Math.log2(62)
+            bitsToUse / Math.log2(62)
           )}|%{[char]$_});\n$pwd|Set-Clipboard;\n$pwd`;
         }
         // fallback: use explicit charset characters (escaped where necessary)
-        return `$chars=@(${JSON.stringify(selectedCharset.charset)
+        const cs = selCharset?.charset || selectedCharset.charset;
+        return `$chars=@(${JSON.stringify(cs)
           .slice(1, -1)
           .split('')
           .map((ch) => `'${ch.replace(/'/g, "'\"'\"'")}'`)
           .join(',')});$pwd=-join ($chars|Get-Random -Count ${Math.ceil(
-          bits / Math.log2(selectedCharset.charset.length)
+          bitsToUse / Math.log2(cs.length)
         )});\n$pwd|Set-Clipboard;\n$pwd`;
       },
       explanation: `Generates a random password in PowerShell and copies it to the clipboard.`,
     },
     {
       language: 'Python',
-      getCommand: (bytes, charsetKey) => {
+      getCommand: (bytes, charsetKey, selCharset, bitsArg) => {
+        const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `import secrets\npassphrase = secrets.token_hex(${bytes})`;
         }
-        return `import secrets\ncharset = ${JSON.stringify(
-          selectedCharset.charset
-        )}\npassphrase = ''.join(secrets.choice(charset) for _ in range(${Math.ceil(
-          bits / Math.log2(selectedCharset.charset.length)
+        const cs = selCharset?.charset || selectedCharset.charset;
+        return `import secrets\ncharset = ${JSON.stringify(cs)}\npassphrase = ''.join(secrets.choice(charset) for _ in range(${Math.ceil(
+          bitsToUse / Math.log2(cs.length)
         )}))`;
       },
       explanation: `Generates a random password in Python.`,
     },
     {
       language: 'Node.js',
-      getCommand: (bytes, charsetKey) => {
+      getCommand: (bytes, charsetKey, selCharset, bitsArg) => {
+        const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `const crypto = require('crypto');\nconst passphrase = crypto.randomBytes(${bytes}).toString('hex');`;
         }
-        return `const charset = ${JSON.stringify(selectedCharset.charset)};\nconst crypto = require('crypto');\nconst passphrase = Array.from(crypto.randomBytes(${Math.ceil(
-          bits / Math.log2(selectedCharset.charset.length)
+        const cs = selCharset?.charset || selectedCharset.charset;
+        return `const charset = ${JSON.stringify(cs)};\nconst crypto = require('crypto');\nconst passphrase = Array.from(crypto.randomBytes(${Math.ceil(
+          bitsToUse / Math.log2(cs.length)
         )}), b => charset[b % charset.length]).join('');`;
       },
       explanation: `Generates a random password in Node.js.`,
     },
     {
       language: 'Browser JS',
-      getCommand: (bytes, charsetKey) => {
+      getCommand: (bytes, charsetKey, selCharset, bitsArg) => {
+        const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `window.crypto.getRandomValues(new Uint8Array(${bytes})).reduce((memo, i) => memo + ('0' + i.toString(16)).slice(-2), '')`;
         }
-        return `const charset = ${JSON.stringify(selectedCharset.charset)};\nwindow.crypto.getRandomValues(new Uint8Array(${Math.ceil(
-          bits / Math.log2(selectedCharset.charset.length)
+        const cs = selCharset?.charset || selectedCharset.charset;
+        return `const charset = ${JSON.stringify(cs)};\nwindow.crypto.getRandomValues(new Uint8Array(${Math.ceil(
+          bitsToUse / Math.log2(cs.length)
         )})).reduce((a, i) => a + charset[i % charset.length], '')`;
       },
       explanation: `Generates a random password in browser JavaScript.`,
     },
     {
       language: 'Windows CMD*',
-      getCommand: (bytes, charsetKey) => {
+      getCommand: (bytes, charsetKey, selCharset, bitsArg) => {
+        const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `powershell -Command "$pwd=-join ((48..57)+(97..102)|Get-Random -Count ${
             bytes * 2
@@ -125,18 +134,17 @@ export default function CommandLine({ charsetKey, bits }) {
         }
         if (charsetKey === 'base62') {
           return `powershell -Command "$chars=(48..57)+(65..90)+(97..122);$pwd=-join ($chars|Get-Random -Count ${Math.ceil(
-            bits / Math.log2(62)
+            bitsToUse / Math.log2(62)
           )}|%{[char]$_});$pwd|Set-Clipboard;$pwd"`;
         }
         // fallback: build chars array safely
-        return `powershell -Command "$chars=@(${JSON.stringify(
-          selectedCharset.charset
-        )
+        const cs = selCharset?.charset || selectedCharset.charset;
+        return `powershell -Command "$chars=@(${JSON.stringify(cs)
           .slice(1, -1)
           .split('')
           .map((ch) => `'${ch.replace(/'/g, "'\"'\"'")}'`)
           .join(',')});$pwd=-join ($chars|Get-Random -Count ${Math.ceil(
-          bits / Math.log2(selectedCharset.charset.length)
+          bitsToUse / Math.log2(cs.length)
         )});$pwd|Set-Clipboard;$pwd"`;
       },
       explanation: `Runs a PowerShell command from Windows CMD to generate a random password and copy it to the clipboard.`,
@@ -183,7 +191,12 @@ export default function CommandLine({ charsetKey, bits }) {
         </thead>
         <tbody>
           {commandTemplates.map((row, idx) => {
-            const command = row.getCommand(bytes, charsetKey);
+            const command = row.getCommand(
+              bytes,
+              charsetKey,
+              selectedCharset,
+              bits
+            );
             return (
               <tr key={row.language}>
                 <td>{row.language}</td>

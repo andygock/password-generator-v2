@@ -21,8 +21,9 @@ const StringGenerator = () => {
   );
   const [output, setOutput] = React.useState([]);
 
-  // Find selected charset
-  const selectedCharset = CHARSETS.find((c) => c.key === charsetKey);
+  // Find selected charset with fallback
+  const selectedCharset =
+    CHARSETS.find((c) => c.key === charsetKey) || CHARSETS[0];
 
   // Generate random string for a given charset (shared helper)
 
