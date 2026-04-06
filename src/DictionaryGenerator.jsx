@@ -170,7 +170,9 @@ const DictionaryGenerator = ({ mode }) => {
         </p>
         <p className="entropy">Dictionary size: {dict[wordList].length}</p>
         <div>
-          <button onClick={handleReset}>Reset to defaults</button>
+          <button type="button" onClick={handleReset}>
+            Reset to defaults
+          </button>
         </div>
       </div>
 

@@ -65,6 +65,7 @@ const StringGenerator = () => {
         <div className="col col-output">
           <OutputStrings values={output} />
           <button
+            type="button"
             onClick={() => {
               setOutput([]);
               generate();

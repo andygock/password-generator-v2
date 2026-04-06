@@ -11,7 +11,7 @@ const OutputWords = ({ list, words, lines, mode }) => {
   const [copied, setCopied] = React.useState('');
   const [passphrases, setPassphrases] = React.useState([]);
   const [presetStrings, setPresetStrings] = React.useState([]);
-  const [copyNotify, setCopyNotify] = React.useState(false);
+  const [copyNotify, setCopyNotify] = React.useState('');
   const copyTimeoutRef = React.useRef(null);
 
   const generate = ({ lines, words, wordArray }) =>
@@ -54,19 +54,21 @@ const OutputWords = ({ list, words, lines, mode }) => {
   }, [list, words, lines]);
 
   const handleCopy = (text) => () => {
-    if (copy(text)) {
+    const ok = copy(text);
+    if (ok) {
       setCopied(text);
-
-      // copy notification
-      setCopyNotify(true);
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
-      copyTimeoutRef.current = setTimeout(() => {
-        setCopyNotify(false);
-        copyTimeoutRef.current = null;
-      }, 500);
+      setCopyNotify('Copied');
+    } else {
+      setCopyNotify('Copy failed');
     }
+
+    if (copyTimeoutRef.current) {
+      clearTimeout(copyTimeoutRef.current);
+    }
+    copyTimeoutRef.current = setTimeout(() => {
+      setCopyNotify('');
+      copyTimeoutRef.current = null;
+    }, 500);
   };
 
   React.useEffect(() => {
@@ -91,18 +93,21 @@ const OutputWords = ({ list, words, lines, mode }) => {
                 presetStrings[rowNumber]
               : row.join(' ');
 
+          const key = pass || `r-${rowNumber}`;
           return (
-            <div
-              key={rowNumber}
+            <button
+              type="button"
+              key={key}
               className={classNames('pointer', { selected: pass === copied })}
               onClick={handleCopy(pass)}
             >
               {pass}
-            </div>
+            </button>
           );
         })}
       </div>
       <button
+        type="button"
         onClick={() => {
           const clamp = (v, min, max) =>
             Math.max(min, Math.min(max, Number(v) || min));
@@ -129,7 +134,11 @@ const OutputWords = ({ list, words, lines, mode }) => {
       >
         Regenerate
       </button>
-      {copyNotify && <div className="notify">Copied</div>}
+      {copyNotify && (
+        <div className="notify" aria-live="polite">
+          {copyNotify}
+        </div>
+      )}
     </div>
   );
 };

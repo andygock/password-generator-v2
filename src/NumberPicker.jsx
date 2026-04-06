@@ -31,6 +31,7 @@ const NumberPicker = ({
         {...otherProps}
       />
       <button
+        type="button"
         style={buttonStyle}
         onClick={() => {
           handleChange(Number(value) - 1);
@@ -39,6 +40,7 @@ const NumberPicker = ({
         &darr;
       </button>
       <button
+        type="button"
         style={buttonStyle}
         onClick={() => {
           handleChange(Number(value) + 1);

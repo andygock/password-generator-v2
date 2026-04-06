@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { CHARSETS } from './charsets';
 
-function CopyButton({ onCopy, copied }) {
+function CopyButton({ text, onCopy, copied }) {
   return (
     <button
+      type="button"
       className={`copy ${copied ? 'copied' : ''}`}
-      aria-label="Copy command"
+      aria-label={text ? `Copy command: ${text.slice(0, 40)}` : 'Copy command'}
       onClick={onCopy}
-      tabIndex={0}
     >
       {copied ? 'Copied' : 'Copy'}
     </button>

@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 
 :root {
-  --font-family-base: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI',
-    'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  --font-family-code: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo,
-    Courier, monospace;
+  --font-family-base:
+    'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  --font-family-code:
+    'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
   --font-size: 1.4rem;
   --font-size-password: 1.8rem;
   --color-background: lightgray;
@@ -101,6 +101,20 @@ input[type='radio'] {
   font-family: var(--font-family-code);
   font-size: var(--font-size-password);
   text-align: left;
+}
+
+/* Ensure interactive passphrase items keep the previous block layout
+   while remaining accessible buttons (remove native button chrome) */
+.output button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 0.2rem 0;
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .col {
