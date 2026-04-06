@@ -2,6 +2,7 @@ import classNames from 'classnames';
 import copy from 'copy-to-clipboard';
 import React from 'react';
 import dict from './words';
+import config from './config';
 import { generateWordRows, randomNumber, randomSpecialChar } from './random';
 
 const capFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
@@ -32,8 +33,21 @@ const OutputWords = ({ list, words, lines, mode }) => {
 
   // generate passwords on page load and prop changes
   React.useEffect(() => {
-    const passes = generate({ lines, words, wordArray: dict[list] });
-    generateNumbersAndSpecialCharArray(lines);
+    const clamp = (v, min, max) =>
+      Math.max(min, Math.min(max, Number(v) || min));
+    const safeWords = clamp(
+      words,
+      config.limits.wordsPerPassphrase.min,
+      config.limits.wordsPerPassphrase.max
+    );
+    const safeLines = clamp(
+      lines,
+      config.limits.numberOfPassphrases.min,
+      config.limits.numberOfPassphrases.max
+    );
+    const wordArray = dict[list] || dict[config.defaults.wordList] || [];
+    const passes = generate({ lines: safeLines, words: safeWords, wordArray });
+    generateNumbersAndSpecialCharArray(safeLines);
     setPassphrases(passes);
     setCopied('');
   }, [list, words, lines]);
@@ -76,8 +90,25 @@ const OutputWords = ({ list, words, lines, mode }) => {
       </div>
       <button
         onClick={() => {
-          const passes = generate({ lines, words, wordArray: dict[list] });
-          generateNumbersAndSpecialCharArray(lines);
+          const clamp = (v, min, max) =>
+            Math.max(min, Math.min(max, Number(v) || min));
+          const safeWords = clamp(
+            words,
+            config.limits.wordsPerPassphrase.min,
+            config.limits.wordsPerPassphrase.max
+          );
+          const safeLines = clamp(
+            lines,
+            config.limits.numberOfPassphrases.min,
+            config.limits.numberOfPassphrases.max
+          );
+          const wordArray = dict[list] || dict[config.defaults.wordList] || [];
+          const passes = generate({
+            lines: safeLines,
+            words: safeWords,
+            wordArray,
+          });
+          generateNumbersAndSpecialCharArray(safeLines);
           setPassphrases(passes);
           setCopied('');
         }}

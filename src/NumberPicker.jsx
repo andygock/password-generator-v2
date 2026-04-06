@@ -11,28 +11,29 @@ const NumberPicker = ({
   ...otherProps
 }) => {
   const handleChange = (val) => {
-    const newVal = typeof val === 'number' ? val : parseInt(val);
-
-    // check limits
-    if (isNaN(newVal)) return;
-    if (newVal < min) return;
-    if (max && newVal > max) return;
-
-    onChange(newVal); // make callback
+    const parsed = typeof val === 'number' ? val : Number(val);
+    if (!Number.isFinite(parsed)) return;
+    let newVal = Math.trunc(parsed);
+    if (newVal < min) newVal = min;
+    if (typeof max === 'number' && newVal > max) newVal = max;
+    onChange(newVal);
   };
 
   return (
     <div>
       <input
-        type="text"
+        type="number"
         value={value}
+        min={min}
+        max={max}
+        step={1}
         onChange={(e) => handleChange(e.target.value)}
         {...otherProps}
       />
       <button
         style={buttonStyle}
         onClick={() => {
-          handleChange(value - 1);
+          handleChange(Number(value) - 1);
         }}
       >
         &darr;
@@ -40,7 +41,7 @@ const NumberPicker = ({
       <button
         style={buttonStyle}
         onClick={() => {
-          handleChange(value + 1);
+          handleChange(Number(value) + 1);
         }}
       >
         &uarr;

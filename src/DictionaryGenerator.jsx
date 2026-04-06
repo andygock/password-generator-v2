@@ -27,15 +27,35 @@ const DictionaryGenerator = ({ mode }) => {
   const params = useParams();
 
   // convert params to numbers when we need to, or set default values if not set
-  const wordsPerPassphrase = parseInt(
-    params.wordsPerPassphrase || config.defaults.wordsPerPassphrase,
-    10
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+  const rawWp = params.wordsPerPassphrase
+    ? parseInt(params.wordsPerPassphrase, 10)
+    : NaN;
+  let wordsPerPassphrase = Number.isFinite(rawWp)
+    ? rawWp
+    : config.defaults.wordsPerPassphrase;
+  wordsPerPassphrase = clamp(
+    wordsPerPassphrase,
+    config.limits.wordsPerPassphrase.min,
+    config.limits.wordsPerPassphrase.max
   );
-  const numberOfPassphrases = parseInt(
-    params.numberOfPassphrases || config.defaults.numberOfPassphrases,
-    10
+
+  const rawNp = params.numberOfPassphrases
+    ? parseInt(params.numberOfPassphrases, 10)
+    : NaN;
+  let numberOfPassphrases = Number.isFinite(rawNp)
+    ? rawNp
+    : config.defaults.numberOfPassphrases;
+  numberOfPassphrases = clamp(
+    numberOfPassphrases,
+    config.limits.numberOfPassphrases.min,
+    config.limits.numberOfPassphrases.max
   );
-  const wordList = params.wordList || config.defaults.wordList;
+
+  const wordList = dict[params.wordList]
+    ? params.wordList
+    : config.defaults.wordList;
 
   // calculate new path, navigate to new path
   const setParamsAndNavigate = (params) => {
@@ -60,9 +80,9 @@ const DictionaryGenerator = ({ mode }) => {
     navigate('/');
   };
 
-  let entropyBits = Math.floor(
-    Math.log(dict[wordList].length ** wordsPerPassphrase) / Math.log(2)
-  );
+  const dictArray = dict[wordList] || dict[config.defaults.wordList] || [];
+  const dictLen = dictArray.length || 1;
+  let entropyBits = Math.floor(wordsPerPassphrase * Math.log2(dictLen));
 
   if (mode === 'preset1') {
     // the extra bits of entropy are for the digits and special characters

@@ -8,19 +8,41 @@ export function randomBytes(sizeBytes) {
 }
 
 export function getRandomString(length, charset) {
-  const arr = new Uint8Array(length);
-  window.crypto.getRandomValues(arr);
-  const chars = new Array(length);
-  for (let i = 0; i < length; ++i) {
-    chars[i] = charset[arr[i] % charset.length];
+  if (!charset || charset.length === 0) return '';
+  const out = [];
+  const charLen = charset.length;
+  // rejection sampling threshold for unbiased selection from bytes (0-255)
+  const threshold = Math.floor(256 / charLen) * charLen;
+  while (out.length < length) {
+    const pool = new Uint8Array(Math.min(1024, (length - out.length) * 4));
+    window.crypto.getRandomValues(pool);
+    for (let i = 0; i < pool.length && out.length < length; i++) {
+      const v = pool[i];
+      if (v < threshold) {
+        out.push(charset[v % charLen]);
+      }
+    }
   }
-  return chars.join('');
+  return out.join('');
 }
 
 export function randomIndices(count, max) {
-  const arr = new Uint32Array(count);
-  window.crypto.getRandomValues(arr);
-  return Array.from(arr).map((v) => v % max);
+  if (max <= 0) return [];
+  const out = [];
+  // Use rejection sampling to avoid modulo bias for 32-bit values
+  const RANGE = 4294967296; // 2^32
+  const threshold = Math.floor(RANGE / max) * max;
+  while (out.length < count) {
+    const pool = new Uint32Array(Math.min(1024, count - out.length));
+    window.crypto.getRandomValues(pool);
+    for (let i = 0; i < pool.length && out.length < count; i++) {
+      const v = pool[i] >>> 0;
+      if (v < threshold) {
+        out.push(v % max);
+      }
+    }
+  }
+  return out;
 }
 
 export function generateWordRows({ lines, words, wordArray }) {
