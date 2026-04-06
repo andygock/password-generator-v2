@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import copy from 'copy-to-clipboard';
-import PropTypes from 'prop-types';
 import React from 'react';
 import dict from './words';
 
@@ -123,13 +122,6 @@ const OutputWords = ({ list, words, lines, mode }) => {
       {copyNotify && <div className="notify">Copied</div>}
     </div>
   );
-};
-
-OutputWords.propTypes = {
-  list: PropTypes.string,
-  words: PropTypes.number,
-  lines: PropTypes.number,
-  mode: PropTypes.string,
 };
 
 export default OutputWords;

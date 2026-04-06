@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 const buttonStyle = {
   margin: '0 0rem 0 0.2rem',
 };
@@ -49,13 +47,6 @@ const NumberPicker = ({
       </button>
     </div>
   );
-};
-
-NumberPicker.propTypes = {
-  min: PropTypes.number,
-  max: PropTypes.number,
-  value: PropTypes.number.isRequired,
-  onChange: PropTypes.func,
 };
 
 export default NumberPicker;

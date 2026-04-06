@@ -1,5 +1,4 @@
 import prettyMilliseconds from 'pretty-ms';
-import PropTypes from 'prop-types';
 
 // list of hashes and hash cracking rates
 // NVIDIA GeForce RTX 4090, 23808/24208 MB (6052 MB allocatable), 128MCU
@@ -103,11 +102,6 @@ const EstimateCrackingTime = ({ bits, type = 'dictionary' }) => {
       </table>
     </div>
   );
-};
-
-EstimateCrackingTime.propTypes = {
-  // bits of entropy
-  bits: PropTypes.number,
 };
 
 export default EstimateCrackingTime;

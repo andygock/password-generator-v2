@@ -1,6 +1,5 @@
 import classNames from 'classnames';
 import copy from 'copy-to-clipboard';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const OutputStrings = ({ values = [] }) => {
@@ -37,10 +36,6 @@ const OutputStrings = ({ values = [] }) => {
       {copyNotify && <div className="notify">Copied</div>}
     </div>
   );
-};
-
-OutputStrings.propTypes = {
-  values: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default OutputStrings;

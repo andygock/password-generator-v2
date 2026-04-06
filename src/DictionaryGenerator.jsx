@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router';
 import { useParams } from 'react-router-dom';
 import config from './config';
@@ -165,10 +164,6 @@ const DictionaryGenerator = ({ mode }) => {
       </div>
     </div>
   );
-};
-
-DictionaryGenerator.propTypes = {
-  mode: PropTypes.string,
 };
 
 export default DictionaryGenerator;
