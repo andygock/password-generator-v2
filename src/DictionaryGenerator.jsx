@@ -9,16 +9,16 @@ import dict from './words';
 
 // calculate path based on parameters
 function generatePath({
-  wordsPerPassphrase = 6,
-  numberOfPassphrases = 20,
-  wordList = 'eff-long',
-  mode = 'normal',
+  wordsPerPassphrase,
+  numberOfPassphrases,
+  wordList,
+  mode,
 }) {
   // if no words, passphrases, or wordlist, assume defaults
-  // setting default not supported yet
-  const path = `${
-    mode === 'preset1' ? '/preset1' : ''
-  }/${wordsPerPassphrase}/${numberOfPassphrases}/${wordList}`;
+  const wp = wordsPerPassphrase ?? config.defaults.wordsPerPassphrase;
+  const np = numberOfPassphrases ?? config.defaults.numberOfPassphrases;
+  const wl = wordList ?? config.defaults.wordList;
+  const path = `${mode === 'preset1' ? '/preset1' : ''}/${wp}/${np}/${wl}`;
   return path;
 }
 
@@ -80,6 +80,8 @@ const DictionaryGenerator = ({ mode }) => {
             setParamsAndNavigate({ wordsPerPassphrase });
           }}
           value={wordsPerPassphrase}
+          min={config.limits.wordsPerPassphrase.min}
+          max={config.limits.wordsPerPassphrase.max}
         />
 
         <h3>Number of passphrases</h3>
@@ -88,6 +90,8 @@ const DictionaryGenerator = ({ mode }) => {
             setParamsAndNavigate({ numberOfPassphrases });
           }}
           value={numberOfPassphrases}
+          min={config.limits.numberOfPassphrases.min}
+          max={config.limits.numberOfPassphrases.max}
         />
 
         <h3>Word list</h3>

@@ -2,24 +2,9 @@ import classNames from 'classnames';
 import copy from 'copy-to-clipboard';
 import React from 'react';
 import dict from './words';
+import { generateWordRows, randomNumber, randomSpecialChar } from './random';
 
 const capFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-
-// return random number between 0 and (2^bits - 1)
-const randomNumber = (bits) => {
-  const arr = new Uint16Array(1);
-  const random = window.crypto.getRandomValues(arr);
-  return random[0] % Math.pow(2, bits);
-};
-
-const randomSpecialChar = () => {
-  // 8 special chars used for preset1 mode, adds 1 bit of entropy
-  const specialChars = '!?$#$&-.';
-
-  const arr = new Uint16Array(1);
-  const random = window.crypto.getRandomValues(arr);
-  return specialChars.charAt(random % 8);
-};
 
 const OutputWords = ({ list, words, lines, mode }) => {
   const [copied, setCopied] = React.useState('');
@@ -27,33 +12,13 @@ const OutputWords = ({ list, words, lines, mode }) => {
   const [presetStrings, setPresetStrings] = React.useState([]);
   const [copyNotify, setCopyNotify] = React.useState(false);
 
-  const generate = ({ lines, words, wordArray }) => {
-    const arr = new Uint32Array(lines * words);
-    const random = window.crypto
-      .getRandomValues(arr)
-      .map((v) => v % wordArray.length);
-
-    // generate passphrases
-    let index = 0;
-    const rows = [];
-    for (let row = 0; row < lines; row++) {
-      const line = [];
-      for (let n = 0; n < words; n++) {
-        line.push(wordArray[random[index]]);
-        index += 1;
-      }
-      rows.push(line);
-    }
-
-    return rows;
-  };
+  const generate = ({ lines, words, wordArray }) =>
+    generateWordRows({ lines, words, wordArray });
 
   const generateNumbersAndSpecialChar = (bits) => {
     // append some numbers - adds bits of entropy
     // use (bits - 1), as we append randomSpecialChar() after which is 1 bit
-    let rand = randomNumber(bits - 1);
-
-    // return string e.g '3564%'
+    const rand = randomNumber(bits - 1);
     return rand + randomSpecialChar();
   };
 

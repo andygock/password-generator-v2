@@ -30,7 +30,7 @@ const WordListRadio = ({ value, onChange = () => null }) => {
   return (
     <>
       {wordListOptions.map(({ text, id }) => {
-        const wordCount = words[id].length;
+        const wordCount = words[id] ? words[id].length : 0;
         return (
           <label key={id}>
             <input
@@ -40,7 +40,15 @@ const WordListRadio = ({ value, onChange = () => null }) => {
               checked={value === id}
               onChange={handleChange}
             />
-            {text} ({wordCount}, 2<sup>{baseLog(2, wordCount).toFixed(1)}</sup>)
+            {text} ({wordCount}
+            {wordCount > 0 ? (
+              <>
+                , 2<sup>{baseLog(2, wordCount).toFixed(1)}</sup>
+              </>
+            ) : (
+              ', —'
+            )}
+            )
           </label>
         );
       })}

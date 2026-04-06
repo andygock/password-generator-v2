@@ -18,25 +18,21 @@ const App = () => {
           <Menu />
         </header>
         <Routes>
-          <Route exact path="/" element={<DictionaryGenerator />} />
-          <Route exact path="/string" element={<StringGenerator />} />
+          <Route path="/" element={<DictionaryGenerator />} />
+          <Route path="/string" element={<StringGenerator />} />
           <Route
-            exact
             path="/preset1/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
             element={<DictionaryGenerator mode="preset1" />}
           />
           <Route
-            exact
             path="/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
             element={<DictionaryGenerator mode="normal" />}
           />
           <Route
-            exact
             path="/:wordsPerPassphrase/:numberOfPassphrases"
             element={<DictionaryGenerator mode="normal" />}
           />
           <Route
-            exact
             path="/:wordsPerPassphrase"
             element={<DictionaryGenerator />}
           />

@@ -1,3 +1,5 @@
+import config from './config';
+
 export default function PasswordSizeSlider({
   sizeBytes,
   onChange,
@@ -27,8 +29,8 @@ export default function PasswordSizeSlider({
       <input
         id="size-bytes-range"
         type="range"
-        min={4}
-        max={64}
+        min={config.limits.passwordBytes.min}
+        max={config.limits.passwordBytes.max}
         step={1}
         value={sizeBytes}
         onChange={handleBitSizeChange}

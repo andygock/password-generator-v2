@@ -7,23 +7,15 @@ import { CHARSETS } from './charsets';
 import CharsetSelector from './CharsetSelector';
 import PasswordSizeSlider from './PasswordSizeSlider';
 import CommandLine from './CommandLine';
+import { randomBytes, getRandomString } from './random';
 
-const rows = 20;
-
-function randomBytes(sizeBytes) {
-  if (window.crypto && window.crypto.getRandomValues) {
-    const randomBytes = new Uint8Array(sizeBytes);
-
-    // https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues
-    return window.crypto.getRandomValues(randomBytes);
-  } else {
-    throw new Error('Web Crypto API not supported');
-  }
-}
+const rows = config.defaults.numberOfPassphrases;
 
 const StringGenerator = () => {
   // Support multiple charsets, not just Base64
-  const [charsetKey, setCharsetKey] = React.useState('websafe');
+  const [charsetKey, setCharsetKey] = React.useState(
+    config.defaults?.charsetKey || 'websafe'
+  );
   const [sizeBytes, setSizeBytes] = React.useState(
     config.defaults?.passwordBytes ?? 10
   );
@@ -32,16 +24,7 @@ const StringGenerator = () => {
   // Find selected charset
   const selectedCharset = CHARSETS.find((c) => c.key === charsetKey);
 
-  // Generate random string for a given charset
-  function getRandomString(length, charset) {
-    const arr = new Uint8Array(length);
-    window.crypto.getRandomValues(arr);
-    const chars = [];
-    for (let i = 0; i < length; ++i) {
-      chars.push(charset[arr[i] % charset.length]);
-    }
-    return chars.join('');
-  }
+  // Generate random string for a given charset (shared helper)
 
   const generate = React.useCallback(() => {
     let values;
