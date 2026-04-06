@@ -85,11 +85,10 @@ const OutputWords = ({ list, words, lines, mode }) => {
       <div className="output">
         {passphrases.map((row, rowNumber) => {
           // if in preset1 mode
-          // capitalise first letter of each word and add some special chars
+          // capitalise first letter of each word, no spaces, and add some special chars
           const pass =
             mode === 'preset1'
-              ? row.map((s) => capFirstLetter(s)).join(' ') +
-                ' ' +
+              ? row.map((s) => capFirstLetter(s)).join('') +
                 presetStrings[rowNumber]
               : row.join(' ');
 
