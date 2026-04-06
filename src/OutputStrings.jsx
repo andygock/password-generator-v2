@@ -5,6 +5,7 @@ import React from 'react';
 const OutputStrings = ({ values = [] }) => {
   const [copied, setCopied] = React.useState('');
   const [copyNotify, setCopyNotify] = React.useState(false);
+  const copyTimeoutRef = React.useRef(null);
 
   const handleCopy = (text) => () => {
     if (copy(text)) {
@@ -12,11 +13,25 @@ const OutputStrings = ({ values = [] }) => {
 
       // copy notification
       setCopyNotify(true);
-      setTimeout(() => {
+      // clear previous timeout, schedule hide
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+      copyTimeoutRef.current = setTimeout(() => {
         setCopyNotify(false);
+        copyTimeoutRef.current = null;
       }, 500);
     }
   };
+
+  React.useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div>

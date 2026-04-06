@@ -12,6 +12,7 @@ const OutputWords = ({ list, words, lines, mode }) => {
   const [passphrases, setPassphrases] = React.useState([]);
   const [presetStrings, setPresetStrings] = React.useState([]);
   const [copyNotify, setCopyNotify] = React.useState(false);
+  const copyTimeoutRef = React.useRef(null);
 
   const generate = ({ lines, words, wordArray }) =>
     generateWordRows({ lines, words, wordArray });
@@ -58,11 +59,24 @@ const OutputWords = ({ list, words, lines, mode }) => {
 
       // copy notification
       setCopyNotify(true);
-      setTimeout(() => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+      }
+      copyTimeoutRef.current = setTimeout(() => {
         setCopyNotify(false);
+        copyTimeoutRef.current = null;
       }, 500);
     }
   };
+
+  React.useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { CHARSETS } from './charsets';
 
 function CopyButton({ onCopy, copied }) {
@@ -21,9 +21,15 @@ export default function CommandLine({ charsetKey, bits }) {
   // Helper to get bytes from bits
   const bytes = Math.ceil(bits / 8);
 
-  // Find selected charset (fallback to first)
-  const selectedCharset =
-    CHARSETS.find((c) => c.key === charsetKey) || CHARSETS[0];
+  // Find selected charset (fallback to first, then to safe default)
+  const selectedCharset = CHARSETS.find((c) => c.key === charsetKey) ||
+    CHARSETS[0] || {
+      key: 'fallback',
+      label: 'Charset',
+      charset: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+    };
+
+  const copyTimeoutRef = React.useRef(null);
 
   const escapeSingleQuotes = (s) => (s || '').replace(/'/g, "'\"'\"'");
 
@@ -142,12 +148,25 @@ export default function CommandLine({ charsetKey, bits }) {
     try {
       await navigator.clipboard.writeText(cmd);
       setCopiedRow(idx);
-      setTimeout(() => setCopiedRow(null), 1200);
+      if (copyTimeoutRef.current) clearTimeout(copyTimeoutRef.current);
+      copyTimeoutRef.current = setTimeout(() => {
+        setCopiedRow(null);
+        copyTimeoutRef.current = null;
+      }, 1200);
     } catch (e) {
       // fallback or error handling
       console.error('Failed to copy command:', e);
     }
   };
+
+  React.useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        clearTimeout(copyTimeoutRef.current);
+        copyTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   return (
     <div className="cli">
