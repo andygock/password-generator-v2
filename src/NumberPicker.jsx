@@ -1,7 +1,3 @@
-const buttonStyle = {
-  margin: '0 0rem 0 0.2rem',
-};
-
 // state is managed by parent
 const NumberPicker = ({
   onChange = () => null,
@@ -32,19 +28,23 @@ const NumberPicker = ({
       />
       <button
         type="button"
-        style={buttonStyle}
+        className="stepper"
+        disabled={Number(value) <= min}
         onClick={() => {
           handleChange(Number(value) - 1);
         }}
+        aria-label="Decrease value"
       >
         &darr;
       </button>
       <button
         type="button"
-        style={buttonStyle}
+        className="stepper"
+        disabled={typeof max === 'number' && Number(value) >= max}
         onClick={() => {
           handleChange(Number(value) + 1);
         }}
+        aria-label="Increase value"
       >
         &uarr;
       </button>

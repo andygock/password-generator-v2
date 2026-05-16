@@ -1,18 +1,16 @@
 import classNames from 'classnames';
-import copy from 'copy-to-clipboard';
 import React from 'react';
 import dict from './words';
 import config from './config';
 import { generateWordRows, randomNumber, randomSpecialChar } from './random';
+import useCopyFeedback from './useCopyFeedback';
 
 const capFirstLetter = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
 const OutputWords = ({ list, words, lines, mode }) => {
-  const [copied, setCopied] = React.useState('');
   const [passphrases, setPassphrases] = React.useState([]);
   const [presetStrings, setPresetStrings] = React.useState([]);
-  const [copyNotify, setCopyNotify] = React.useState('');
-  const copyTimeoutRef = React.useRef(null);
+  const { copied, copyNotify, copyText, resetCopied } = useCopyFeedback();
 
   const generate = ({ lines, words, wordArray }) =>
     generateWordRows({ lines, words, wordArray });
@@ -50,47 +48,21 @@ const OutputWords = ({ list, words, lines, mode }) => {
     const passes = generate({ lines: safeLines, words: safeWords, wordArray });
     generateNumbersAndSpecialCharArray(safeLines);
     setPassphrases(passes);
-    setCopied('');
+    resetCopied();
   }, [list, words, lines]);
 
-  const handleCopy = (text) => () => {
-    const ok = copy(text);
-    if (ok) {
-      setCopied(text);
-      setCopyNotify('Copied');
-    } else {
-      setCopyNotify('Copy failed');
-    }
+  const formatPassphrase = (row, rowNumber) =>
+    mode === 'preset1'
+      ? row.map((s) => capFirstLetter(s)).join('') + presetStrings[rowNumber]
+      : row.join(' ');
 
-    if (copyTimeoutRef.current) {
-      clearTimeout(copyTimeoutRef.current);
-    }
-    copyTimeoutRef.current = setTimeout(() => {
-      setCopyNotify('');
-      copyTimeoutRef.current = null;
-    }, 500);
-  };
-
-  React.useEffect(() => {
-    return () => {
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-        copyTimeoutRef.current = null;
-      }
-    };
-  }, []);
+  const handleCopy = (text) => () => copyText(text, 'Passphrase copied');
 
   return (
     <div>
       <div className="output">
         {passphrases.map((row, rowNumber) => {
-          // if in preset1 mode
-          // capitalise first letter of each word, no spaces, and add some special chars
-          const pass =
-            mode === 'preset1'
-              ? row.map((s) => capFirstLetter(s)).join('') +
-                presetStrings[rowNumber]
-              : row.join(' ');
+          const pass = formatPassphrase(row, rowNumber);
 
           const key = pass || `r-${rowNumber}`;
           return (
@@ -99,6 +71,7 @@ const OutputWords = ({ list, words, lines, mode }) => {
               key={key}
               className={classNames('pointer', { selected: pass === copied })}
               onClick={handleCopy(pass)}
+              aria-label={`Copy passphrase ${rowNumber + 1}`}
             >
               {pass}
             </button>
@@ -128,7 +101,7 @@ const OutputWords = ({ list, words, lines, mode }) => {
           });
           generateNumbersAndSpecialCharArray(safeLines);
           setPassphrases(passes);
-          setCopied('');
+          resetCopied();
         }}
       >
         Regenerate

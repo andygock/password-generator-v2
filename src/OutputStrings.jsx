@@ -1,38 +1,9 @@
 import classNames from 'classnames';
-import copy from 'copy-to-clipboard';
-import React from 'react';
+import useCopyFeedback from './useCopyFeedback';
 
 const OutputStrings = ({ values = [] }) => {
-  const [copied, setCopied] = React.useState('');
-  const [copyNotify, setCopyNotify] = React.useState('');
-  const copyTimeoutRef = React.useRef(null);
-
-  const handleCopy = (text) => () => {
-    const ok = copy(text);
-    if (ok) {
-      setCopied(text);
-      setCopyNotify('Copied');
-    } else {
-      setCopyNotify('Copy failed');
-    }
-
-    if (copyTimeoutRef.current) {
-      clearTimeout(copyTimeoutRef.current);
-    }
-    copyTimeoutRef.current = setTimeout(() => {
-      setCopyNotify('');
-      copyTimeoutRef.current = null;
-    }, 500);
-  };
-
-  React.useEffect(() => {
-    return () => {
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-        copyTimeoutRef.current = null;
-      }
-    };
-  }, []);
+  const { copied, copyNotify, copyText } = useCopyFeedback();
+  const handleCopy = (text) => () => copyText(text, 'Password copied');
 
   return (
     <div>
@@ -44,6 +15,7 @@ const OutputStrings = ({ values = [] }) => {
               type="button"
               key={key}
               onClick={handleCopy(pass)}
+              aria-label={`Copy password ${index + 1}`}
               className={classNames('pointer', {
                 selected: pass === copied,
               })}

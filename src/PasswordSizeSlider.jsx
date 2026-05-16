@@ -12,7 +12,7 @@ export default function PasswordSizeSlider({
   return (
     <div>
       <label htmlFor="size-bytes-range" className="heading">
-        Password Length
+        Entropy
         <span className="bits">
           {sizeBytes * 8 < 100 && <>&nbsp;</>}
           {sizeBytes * 8}

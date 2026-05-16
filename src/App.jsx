@@ -12,8 +12,8 @@ const App = () => {
       <HashRouter>
         <header>
           <div>
-            <strong>🔑 Password Generator</strong> - Generate random passphrases
-            in the browser. Click line to copy passphrase to clipboard.
+            <strong>Password Generator</strong> - Generate random passphrases
+            in the browser. Click a line to copy it.
           </div>
           <Menu />
         </header>

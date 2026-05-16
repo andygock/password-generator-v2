@@ -10,7 +10,10 @@
   --font-size-password: 1.8rem;
   --color-background: lightgray;
   --color-selected: greenyellow;
+  --color-focus: #111;
+  --color-muted: #666;
   --padding: 0.4rem;
+  --space: 0.5rem;
 }
 
 html {
@@ -52,7 +55,6 @@ label {
 
 button,
 input,
-button,
 select,
 textarea {
   padding: var(--padding);
@@ -61,6 +63,20 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 2px;
   cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
 }
 
 p {
@@ -93,6 +109,9 @@ input[type='radio'] {
 .container {
   display: flex;
   flex-wrap: wrap;
+  column-gap: var(--space);
+  row-gap: var(--padding);
+  align-items: flex-start;
 }
 
 .output {
@@ -100,7 +119,9 @@ input[type='radio'] {
   padding: var(--padding);
   font-family: var(--font-family-code);
   font-size: var(--font-size-password);
+  line-height: 1.2;
   text-align: left;
+  overflow-wrap: anywhere;
 }
 
 /* Ensure interactive passphrase items keep the previous block layout
@@ -111,18 +132,24 @@ input[type='radio'] {
   text-align: left;
   background: none;
   border: none;
-  padding: 0.2rem 0;
+  padding: 0 0.2rem;
   margin: 0;
   font-family: inherit;
   font-size: inherit;
+  line-height: inherit;
 }
 
 .col {
-  padding: 0 var(--padding);
+  padding: 0;
 }
 
 .col-output {
-  flex: 2 0 auto;
+  flex: 2 1 32rem;
+  min-width: min(100%, 28rem);
+}
+
+.col-crack-time {
+  flex: 1 1 28rem;
 }
 
 /* inputs */
@@ -130,9 +157,10 @@ input[type='radio'] {
 .inputs {
   display: flex;
   flex-direction: column;
-  padding: var(--padding);
+  padding: 0;
   /* border: solid 1px var(--color-background); */
   gap: var(--padding);
+  flex: 0 1 24rem;
 }
 
 .inputs input[type='range'] {
@@ -150,6 +178,7 @@ input[type='radio'] {
   word-break: break-all;
   max-width: 20ch;
   background: #ddd;
+  padding: var(--padding);
 }
 
 /* headers, footers and menu */
@@ -158,7 +187,8 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 1rem;
+  gap: var(--space);
+  padding-bottom: var(--space);
 }
 
 header p {
@@ -189,6 +219,7 @@ header a.active {
 
 footer {
   text-align: center;
+  margin-top: var(--padding);
 }
 
 /* helpers */
@@ -222,6 +253,15 @@ footer {
   background-color: var(--color-selected);
 }
 
+.muted {
+  color: var(--color-muted);
+}
+
+.stepper {
+  min-width: 3rem;
+  margin-left: 0.2rem;
+}
+
 .crack-time {
   max-width: 600px;
 }
@@ -230,7 +270,11 @@ footer {
 
 table {
   border-collapse: collapse;
-  margin: var(--padding) 0;
+  margin: 0.2rem 0;
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
 }
 
 table tr {
@@ -251,6 +295,10 @@ table td {
 /* cli output */
 .cli {
   width: 100%;
+}
+
+.cli h3 {
+  margin: var(--padding) 0;
 }
 
 .cli code {
@@ -287,4 +335,39 @@ button.copied {
   border-radius: 2px;
   z-index: 1000;
   transition: opacity 0.3s ease-in-out;
+}
+
+@media (max-width: 720px) {
+  body {
+    padding: var(--padding);
+  }
+
+  header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  header a {
+    margin-left: 0;
+    margin-right: var(--padding);
+  }
+
+  .container {
+    display: block;
+  }
+
+  .inputs,
+  .col-output,
+  .col-crack-time {
+    width: 100%;
+  }
+
+  .col-output,
+  .col-crack-time {
+    margin-top: var(--padding);
+  }
+
+  .output {
+    font-size: 1.6rem;
+  }
 }

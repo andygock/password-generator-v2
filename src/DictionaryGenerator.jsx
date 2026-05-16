@@ -94,7 +94,7 @@ const DictionaryGenerator = ({ mode }) => {
   return (
     <div className="ui container">
       <div className="col inputs">
-        <h3>Number of words per passphrase</h3>
+        <h3>Words per passphrase</h3>
         <NumberPicker
           onChange={(wordsPerPassphrase) => {
             setParamsAndNavigate({ wordsPerPassphrase });
@@ -153,7 +153,7 @@ const DictionaryGenerator = ({ mode }) => {
               }
             }}
           />{' '}
-          Preset 1
+          Capitalized + number + symbol
         </label>
 
         {/* extra preset for words with capitalised first letter, spaces, and number plus special char */}

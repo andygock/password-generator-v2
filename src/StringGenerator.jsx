@@ -24,6 +24,7 @@ const StringGenerator = () => {
   // Find selected charset with fallback
   const selectedCharset =
     CHARSETS.find((c) => c.key === charsetKey) || CHARSETS[0];
+  const generatedLength = output[0]?.length || 0;
 
   // Generate random string for a given charset (shared helper)
 
@@ -61,6 +62,7 @@ const StringGenerator = () => {
             onChange={setCharsetKey}
             hideLabel={true}
           />
+          <p className="muted">Generated length: {generatedLength} characters</p>
         </div>
         <div className="col col-output">
           <OutputStrings values={output} />
