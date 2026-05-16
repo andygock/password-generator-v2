@@ -268,6 +268,27 @@ footer {
 
 /* estimated cracking time section */
 
+.compute-switch {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space);
+  padding: var(--padding);
+  margin: var(--padding) 0;
+  border: 1px solid var(--color-background);
+  border-radius: 2px;
+}
+
+.compute-switch legend {
+  padding: 0 var(--padding);
+  color: var(--color-muted);
+}
+
+.compute-switch label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: var(--space);
+}
+
 table {
   border-collapse: collapse;
   margin: 0.2rem 0;

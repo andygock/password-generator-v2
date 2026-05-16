@@ -273,9 +273,29 @@ const prettyTime = (ms) => {
   });
 };
 
+const computeProfiles = [
+  {
+    key: 'single-5090',
+    label: 'Single RTX 5090',
+    multiplier: 1,
+    description: 'Uses the listed single-GPU RTX 5090 hashcat benchmark rates.',
+  },
+  {
+    key: 'world-compute',
+    label: 'All compute in the world',
+    multiplier: 100_000_000,
+    description:
+      'Hypothetical estimate using 100,000,000 times the single RTX 5090 hash rate. Requires roughly 60 GW of electrical power (40 to 50 large nuclear reactors).',
+  },
+];
+
 // cracking table
 const EstimateCrackingTime = ({ bits, type = 'dictionary' }) => {
   const [tooltip, setTooltip] = useState(null);
+  const [computeProfileKey, setComputeProfileKey] = useState('single-5090');
+  const computeProfile =
+    computeProfiles.find(({ key }) => key === computeProfileKey) ??
+    computeProfiles[0];
 
   const showTooltip = (description) => {
     setTooltip(description);
@@ -288,7 +308,30 @@ const EstimateCrackingTime = ({ bits, type = 'dictionary' }) => {
   return (
     <div className="crack-time">
       <h3>Estimated cracking time ({bits} bits of entropy)</h3>
-      <p>With {type} attack using a single RTX 5090 GPU.</p>
+      <p>
+        With {type} attack using {computeProfile.label.toLowerCase()}.
+      </p>
+      <fieldset className="compute-switch">
+        <legend>Compute</legend>
+        {computeProfiles.map(({ key, label, description }) => (
+          <label
+            key={key}
+            onMouseEnter={() => showTooltip(description)}
+            onMouseLeave={hideTooltip}
+            onFocus={() => showTooltip(description)}
+            onBlur={hideTooltip}
+          >
+            <input
+              type="radio"
+              name="compute-profile"
+              value={key}
+              checked={computeProfileKey === key}
+              onChange={() => setComputeProfileKey(key)}
+            />
+            {label}
+          </label>
+        ))}
+      </fieldset>
       <table>
         <thead>
           <tr>
@@ -299,7 +342,9 @@ const EstimateCrackingTime = ({ bits, type = 'dictionary' }) => {
         <tbody>
           {hash.map(({ name, links, rate }) => {
             // calculate estimated crack time
-            const ms = bits > 0 ? (1000 * 0.5 * Math.pow(2, bits)) / rate : 0;
+            const adjustedRate = rate * computeProfile.multiplier;
+            const ms =
+              bits > 0 ? (1000 * 0.5 * Math.pow(2, bits)) / adjustedRate : 0;
             return (
               <tr key={name}>
                 <td>
