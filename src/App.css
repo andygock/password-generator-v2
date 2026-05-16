@@ -292,6 +292,35 @@ table td {
   padding: var(--padding);
 }
 
+.hash-link {
+  color: #0645ad;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.hash-link:hover,
+.hash-link:focus-visible {
+  color: #0b0080;
+}
+
+.hash-tooltip {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 1000;
+  width: min(34rem, 75vw);
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #bbb;
+  border-radius: 2px;
+  background: #111;
+  color: white;
+  font-size: 1.2rem;
+  line-height: 1.35;
+  white-space: normal;
+  box-shadow: 0 0.2rem 0.8rem rgb(0 0 0 / 20%);
+  pointer-events: none;
+}
+
 /* cli output */
 .cli {
   width: 100%;
