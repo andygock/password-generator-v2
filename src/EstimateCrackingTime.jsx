@@ -308,11 +308,11 @@ const EstimateCrackingTime = ({ bits, type = 'dictionary' }) => {
   return (
     <div className="crack-time">
       <h3>Estimated cracking time ({bits} bits of entropy)</h3>
-      <p>
-        With {type} attack using {computeProfile.label.toLowerCase()}.
-      </p>
       <fieldset className="compute-switch">
-        <legend>Compute</legend>
+        <legend>
+          {String(type).charAt(0).toUpperCase() + String(type).slice(1)} attack
+          using
+        </legend>
         {computeProfiles.map(({ key, label, description }) => (
           <label
             key={key}
