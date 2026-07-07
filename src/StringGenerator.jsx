@@ -20,6 +20,7 @@ const StringGenerator = () => {
     config.defaults?.passwordBytes ?? 10
   );
   const [output, setOutput] = React.useState([]);
+  const [error, setError] = React.useState('');
 
   // Find selected charset with fallback
   const selectedCharset =
@@ -29,22 +30,28 @@ const StringGenerator = () => {
   // Generate random string for a given charset (shared helper)
 
   const generate = React.useCallback(() => {
-    let values;
-    if (charsetKey === 'base64') {
-      // Use base64-arraybuffer for base64
-      const bytes = new Array(rows).fill(0).map(() => randomBytes(sizeBytes));
-      values = bytes.map((a) => encode(a).replace(/=+$/, ''));
-    } else {
-      // For other charsets, generate random string of appropriate length
-      // 1 char per ~log2(charset.length) bits
-      const charsNeeded = Math.ceil(
-        (sizeBytes * 8) / Math.log2(selectedCharset.charset.length)
-      );
-      values = new Array(rows)
-        .fill(0)
-        .map(() => getRandomString(charsNeeded, selectedCharset.charset));
+    try {
+      let values;
+      if (charsetKey === 'base64') {
+        // Use base64-arraybuffer for base64
+        const bytes = new Array(rows).fill(0).map(() => randomBytes(sizeBytes));
+        values = bytes.map((a) => encode(a).replace(/=+$/, ''));
+      } else {
+        // For other charsets, generate random string of appropriate length
+        // 1 char per ~log2(charset.length) bits
+        const charsNeeded = Math.ceil(
+          (sizeBytes * 8) / Math.log2(selectedCharset.charset.length)
+        );
+        values = new Array(rows)
+          .fill(0)
+          .map(() => getRandomString(charsNeeded, selectedCharset.charset));
+      }
+      setError('');
+      setOutput(values);
+    } catch (e) {
+      setOutput([]);
+      setError(e instanceof Error ? e.message : 'Unable to generate password');
     }
-    setOutput(values);
   }, [charsetKey, sizeBytes, selectedCharset]);
 
   React.useEffect(() => {
@@ -65,6 +72,11 @@ const StringGenerator = () => {
           <p className="muted">Generated length: {generatedLength} characters</p>
         </div>
         <div className="col col-output">
+          {error && (
+            <div className="notify" role="alert">
+              {error}
+            </div>
+          )}
           <OutputStrings values={output} />
           <button
             type="button"

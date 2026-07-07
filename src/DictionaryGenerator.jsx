@@ -5,6 +5,7 @@ import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';
 import OutputWords from './OutputWords';
 import WordListRadio from './WordListRadio';
+import { presetExtraEntropyBits } from './random';
 import dict from './words';
 
 // calculate path based on parameters
@@ -85,10 +86,7 @@ const DictionaryGenerator = ({ mode }) => {
   let entropyBits = Math.floor(wordsPerPassphrase * Math.log2(dictLen));
 
   if (mode === 'preset1') {
-    // the extra bits of entropy are for the digits and special characters
-    // 14 bits for the number
-    // 1 bit for the special character
-    entropyBits += 15;
+    entropyBits += presetExtraEntropyBits();
   }
 
   return (

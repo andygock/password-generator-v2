@@ -1,6 +1,9 @@
 function CharsetSelector({ charsets, selectedKey, onChange }) {
   // get selected charset based on selectedKey
-  const selectedCharset = charsets.find((c) => c.key === selectedKey);
+  const selectedCharset = charsets.find((c) => c.key === selectedKey) ||
+    charsets[0] || {
+      charset: '',
+    };
   return (
     <div>
       <p>Character Set</p>

@@ -1,10 +1,17 @@
 // Randomness helpers (shared)
-export function randomBytes(sizeBytes) {
+export const PRESET_NUMBER_BITS = 14;
+export const PRESET_SPECIAL_CHARS = '!?$#&-.';
+
+function getCrypto() {
   if (window.crypto && window.crypto.getRandomValues) {
-    const buf = new Uint8Array(sizeBytes);
-    return window.crypto.getRandomValues(buf);
+    return window.crypto;
   }
   throw new Error('Web Crypto API not supported');
+}
+
+export function randomBytes(sizeBytes) {
+  const buf = new Uint8Array(sizeBytes);
+  return getCrypto().getRandomValues(buf);
 }
 
 export function getRandomString(length, charset) {
@@ -15,7 +22,7 @@ export function getRandomString(length, charset) {
   const threshold = Math.floor(256 / charLen) * charLen;
   while (out.length < length) {
     const pool = new Uint8Array(Math.min(1024, (length - out.length) * 4));
-    window.crypto.getRandomValues(pool);
+    getCrypto().getRandomValues(pool);
     for (let i = 0; i < pool.length && out.length < length; i++) {
       const v = pool[i];
       if (v < threshold) {
@@ -34,7 +41,7 @@ export function randomIndices(count, max) {
   const threshold = Math.floor(RANGE / max) * max;
   while (out.length < count) {
     const pool = new Uint32Array(Math.min(1024, count - out.length));
-    window.crypto.getRandomValues(pool);
+    getCrypto().getRandomValues(pool);
     for (let i = 0; i < pool.length && out.length < count; i++) {
       const v = pool[i] >>> 0;
       if (v < threshold) {
@@ -69,7 +76,7 @@ export function randomNumber(bits) {
   const threshold = Math.floor(RANGE / max) * max;
   const outArr = new Uint32Array(1);
   while (true) {
-    window.crypto.getRandomValues(outArr);
+    getCrypto().getRandomValues(outArr);
     const v = outArr[0] >>> 0;
     if (v < threshold) return v % max;
     // otherwise retry
@@ -78,8 +85,13 @@ export function randomNumber(bits) {
 
 export function randomSpecialChar() {
   // de-duplicated special characters; can be made configurable later
-  const specialChars = '!?$#&-.';
-  const arr = new Uint8Array(1);
-  window.crypto.getRandomValues(arr);
-  return specialChars.charAt(arr[0] % specialChars.length);
+  return PRESET_SPECIAL_CHARS.charAt(
+    randomIndices(1, PRESET_SPECIAL_CHARS.length)[0]
+  );
+}
+
+export function presetExtraEntropyBits() {
+  return Math.floor(
+    PRESET_NUMBER_BITS + Math.log2(PRESET_SPECIAL_CHARS.length)
+  );
 }
