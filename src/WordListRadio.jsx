@@ -1,27 +1,8 @@
-import words from './words';
+import { WORD_LIST_OPTIONS } from './words';
 
 const baseLog = (base, val) => Math.log(val) / Math.log(base);
 
 const WordListRadio = ({ value, onChange = () => null }) => {
-  const wordListOptions = [
-    {
-      text: 'Orchard Street Long',
-      id: 'orchard-street-long',
-    },
-    {
-      text: 'EFF long word list',
-      id: 'eff-long',
-    },
-    {
-      text: 'EFF short word list v1',
-      id: 'eff-short1',
-    },
-    {
-      text: 'EFF short word list v2',
-      id: 'eff-short2',
-    },
-  ];
-
   const handleChange = (e) => {
     const id = e.target.id;
     onChange(id);
@@ -29,8 +10,7 @@ const WordListRadio = ({ value, onChange = () => null }) => {
 
   return (
     <>
-      {wordListOptions.map(({ text, id }) => {
-        const wordCount = words[id] ? words[id].length : 0;
+      {WORD_LIST_OPTIONS.map(({ text, id, count: wordCount }) => {
         return (
           <label key={id}>
             <input

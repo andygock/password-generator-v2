@@ -47,6 +47,8 @@ export default function CommandLine({ charsetKey, bits }) {
     )};\nconst length = ${length};\nconst threshold = Math.floor(256 / charset.length) * charset.length;\nlet passphrase = '';\nwhile (passphrase.length < length) {\n  const bytes = new Uint8Array(length - passphrase.length);\n  window.crypto.getRandomValues(bytes);\n  for (const b of bytes) {\n    if (b < threshold) passphrase += charset[b % charset.length];\n    if (passphrase.length === length) break;\n  }\n}`;
   const getPowerShellHexCommand = (bytes) =>
     `$rng=[System.Security.Cryptography.RandomNumberGenerator]::Create();$bytes=New-Object byte[] ${bytes};$rng.GetBytes($bytes);$rng.Dispose();\n$pwd=($bytes|ForEach-Object{$_.ToString('x2')}) -join '';\n$pwd|Set-Clipboard;\n$pwd`;
+  const getPowerShellBase64Command = (bytes) =>
+    `$rng=[System.Security.Cryptography.RandomNumberGenerator]::Create();$bytes=New-Object byte[] ${bytes};$rng.GetBytes($bytes);$rng.Dispose();\n$pwd=[Convert]::ToBase64String($bytes).TrimEnd('=');\n$pwd|Set-Clipboard;\n$pwd`;
   const getPowerShellCharsetCommand = (charsExpression, length) =>
     `$chars=${charsExpression};$length=${length};$pwd=-join (1..$length|ForEach-Object{$chars[[System.Security.Cryptography.RandomNumberGenerator]::GetInt32($chars.Count)]});\n$pwd|Set-Clipboard;\n$pwd`;
 
@@ -58,6 +60,9 @@ export default function CommandLine({ charsetKey, bits }) {
         const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `openssl rand -hex ${bytes}`;
+        }
+        if (charsetKey === 'base64') {
+          return `openssl rand -base64 ${bytes} | tr -d '\\n='`;
         }
         if (charsetKey === 'base62') {
           return `tr -dc 'A-Za-z0-9' < /dev/urandom | head -c ${Math.ceil(
@@ -78,6 +83,9 @@ export default function CommandLine({ charsetKey, bits }) {
         const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return getPowerShellHexCommand(bytes);
+        }
+        if (charsetKey === 'base64') {
+          return getPowerShellBase64Command(bytes);
         }
         if (charsetKey === 'base62') {
           return getPowerShellCharsetCommand(
@@ -103,6 +111,9 @@ export default function CommandLine({ charsetKey, bits }) {
         if (charsetKey === 'hex') {
           return `import secrets\npassphrase = secrets.token_hex(${bytes})`;
         }
+        if (charsetKey === 'base64') {
+          return `import base64, secrets\npassphrase = base64.b64encode(secrets.token_bytes(${bytes})).decode().rstrip('=')`;
+        }
         const cs = selCharset?.charset || selectedCharset.charset;
         return `import secrets\ncharset = ${JSON.stringify(cs)}\npassphrase = ''.join(secrets.choice(charset) for _ in range(${Math.ceil(
           bitsToUse / Math.log2(cs.length)
@@ -116,6 +127,9 @@ export default function CommandLine({ charsetKey, bits }) {
         const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `const crypto = require('crypto');\nconst passphrase = crypto.randomBytes(${bytes}).toString('hex');`;
+        }
+        if (charsetKey === 'base64') {
+          return `const crypto = require('crypto');\nconst passphrase = crypto.randomBytes(${bytes}).toString('base64').replace(/=+$/, '');`;
         }
         const cs = selCharset?.charset || selectedCharset.charset;
         return getNodeCharsetCommand(
@@ -134,6 +148,9 @@ export default function CommandLine({ charsetKey, bits }) {
         if (charsetKey === 'hex') {
           return `window.crypto.getRandomValues(new Uint8Array(${bytes})).reduce((memo, i) => memo + ('0' + i.toString(16)).slice(-2), '')`;
         }
+        if (charsetKey === 'base64') {
+          return `btoa(String.fromCharCode(...window.crypto.getRandomValues(new Uint8Array(${bytes})))).replace(/=+$/, '')`;
+        }
         const cs = selCharset?.charset || selectedCharset.charset;
         return getBrowserCharsetCommand(
           cs,
@@ -150,6 +167,9 @@ export default function CommandLine({ charsetKey, bits }) {
         const bitsToUse = Number(bitsArg) || bits;
         if (charsetKey === 'hex') {
           return `powershell -Command "${getPowerShellHexCommand(bytes).replace(/\n/g, '')}"`;
+        }
+        if (charsetKey === 'base64') {
+          return `powershell -Command "${getPowerShellBase64Command(bytes).replace(/\n/g, '')}"`;
         }
         if (charsetKey === 'base62') {
           return `powershell -Command "${getPowerShellCharsetCommand(

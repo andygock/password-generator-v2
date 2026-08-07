@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
@@ -5,7 +6,7 @@ import NumberPicker from './NumberPicker';
 import OutputWords from './OutputWords';
 import WordListRadio from './WordListRadio';
 import { presetExtraEntropyBits } from './random';
-import dict from './words';
+import { getWordListOption, loadWordList } from './words';
 
 // calculate path based on parameters
 function generatePath({
@@ -26,6 +27,8 @@ const DictionaryGenerator = ({ mode }) => {
   const navigate = useNavigate();
   const params = useParams();
   const activeMode = mode ?? config.defaults.mode;
+  const [loadedWordList, setLoadedWordList] = useState(null);
+  const [wordListError, setWordListError] = useState('');
 
   // convert params to numbers when we need to, or set default values if not set
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
@@ -54,9 +57,32 @@ const DictionaryGenerator = ({ mode }) => {
     config.limits.numberOfPassphrases.max
   );
 
-  const wordList = dict[params.wordList]
+  const wordList = getWordListOption(params.wordList)
     ? params.wordList
     : config.defaults.wordList;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    loadWordList(wordList)
+      .then((words) => {
+        if (!cancelled) {
+          setLoadedWordList({ id: wordList, words });
+          setWordListError('');
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setWordListError(
+            error instanceof Error ? error.message : 'Unable to load word list'
+          );
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [wordList]);
 
   // calculate new path, navigate to new path
   const setParamsAndNavigate = (params) => {
@@ -81,8 +107,10 @@ const DictionaryGenerator = ({ mode }) => {
     navigate('/');
   };
 
-  const dictArray = dict[wordList] || dict[config.defaults.wordList] || [];
-  const dictLen = dictArray.length || 1;
+  const wordListOption = getWordListOption(wordList);
+  const dictLen = wordListOption?.count || 1;
+  const wordArray =
+    loadedWordList?.id === wordList ? loadedWordList.words : null;
   let entropyBits = Math.floor(wordsPerPassphrase * Math.log2(dictLen));
 
   if (activeMode === 'preset1') {
@@ -166,7 +194,7 @@ const DictionaryGenerator = ({ mode }) => {
           </a>{' '}
           per passphrase.
         </p>
-        <p className="entropy">Dictionary size: {dict[wordList].length}</p>
+        <p className="entropy">Dictionary size: {dictLen}</p>
         <div>
           <button type="button" onClick={handleReset}>
             Reset to defaults
@@ -175,12 +203,20 @@ const DictionaryGenerator = ({ mode }) => {
       </div>
 
       <div className="col col-output">
-        <OutputWords
-          words={wordsPerPassphrase}
-          lines={numberOfPassphrases}
-          list={wordList}
-          mode={activeMode}
-        />
+        {wordListError ? (
+          <div className="notify" role="alert">
+            {wordListError}
+          </div>
+        ) : wordArray ? (
+          <OutputWords
+            words={wordsPerPassphrase}
+            lines={numberOfPassphrases}
+            wordArray={wordArray}
+            mode={activeMode}
+          />
+        ) : (
+          <p>Loading word list…</p>
+        )}
       </div>
 
       <div className="col col-crack-time">

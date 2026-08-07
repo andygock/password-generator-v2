@@ -33,6 +33,7 @@ export default [
       ...js.configs.recommended.rules,
       ...react.configs.flat.recommended.rules,
       ...react.configs.flat['jsx-runtime'].rules,
+      ...reactHooks.configs.flat.recommended.rules,
       'react/prop-types': 'off',
       'react-refresh/only-export-components': 'warn',
       'no-unused-vars': 'warn',

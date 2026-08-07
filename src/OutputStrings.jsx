@@ -9,11 +9,10 @@ const OutputStrings = ({ values = [] }) => {
     <div>
       <div className="output">
         {values.map((pass, index) => {
-          const key = pass || `i-${index}`;
           return (
             <button
               type="button"
-              key={key}
+              key={index}
               onClick={handleCopy(pass)}
               aria-label={`Copy password ${index + 1}`}
               className={classNames('pointer', {
