@@ -18,7 +18,7 @@ const App = () => {
           <Menu />
         </header>
         <Routes>
-          <Route path="/" element={<DictionaryGenerator />} />
+          <Route path="/" element={<DictionaryGenerator mode="normal" />} />
           <Route path="/string" element={<StringGenerator />} />
           <Route
             path="/preset1/:wordsPerPassphrase/:numberOfPassphrases/:wordList"
@@ -34,7 +34,7 @@ const App = () => {
           />
           <Route
             path="/:wordsPerPassphrase"
-            element={<DictionaryGenerator />}
+            element={<DictionaryGenerator mode="normal" />}
           />
         </Routes>
         <Footer />

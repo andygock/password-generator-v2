@@ -1,5 +1,4 @@
-import { useNavigate } from 'react-router';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';
@@ -26,6 +25,7 @@ function generatePath({
 const DictionaryGenerator = ({ mode }) => {
   const navigate = useNavigate();
   const params = useParams();
+  const activeMode = mode ?? config.defaults.mode;
 
   // convert params to numbers when we need to, or set default values if not set
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
@@ -65,7 +65,7 @@ const DictionaryGenerator = ({ mode }) => {
       wordsPerPassphrase,
       numberOfPassphrases,
       wordList,
-      mode,
+      mode: activeMode,
       ...params,
     };
 
@@ -85,7 +85,7 @@ const DictionaryGenerator = ({ mode }) => {
   const dictLen = dictArray.length || 1;
   let entropyBits = Math.floor(wordsPerPassphrase * Math.log2(dictLen));
 
-  if (mode === 'preset1') {
+  if (activeMode === 'preset1') {
     entropyBits += presetExtraEntropyBits();
   }
 
@@ -128,7 +128,7 @@ const DictionaryGenerator = ({ mode }) => {
             type="radio"
             id="preset-none"
             name="preset"
-            checked={mode === 'normal'}
+            checked={activeMode === 'normal'}
             onChange={(e) => {
               if (e.target.checked) {
                 setParamsAndNavigate({ mode: 'normal' });
@@ -144,7 +144,7 @@ const DictionaryGenerator = ({ mode }) => {
             type="radio"
             id="preset-1"
             name="preset"
-            checked={mode === 'preset1'}
+            checked={activeMode === 'preset1'}
             onChange={(e) => {
               if (e.target.checked) {
                 setParamsAndNavigate({ mode: 'preset1' });
@@ -179,7 +179,7 @@ const DictionaryGenerator = ({ mode }) => {
           words={wordsPerPassphrase}
           lines={numberOfPassphrases}
           list={wordList}
-          mode={mode}
+          mode={activeMode}
         />
       </div>
 

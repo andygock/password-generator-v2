@@ -261,7 +261,8 @@ const hash = [
   },
 ];
 // age of universe in milliseconds
-const msAgeOfUniverse = 13.8e9 * 86400 * 1000;
+const MILLISECONDS_PER_YEAR = 365.2425 * 24 * 60 * 60 * 1000;
+const msAgeOfUniverse = 13.8e9 * MILLISECONDS_PER_YEAR;
 
 const prettyTime = (ms) => {
   if (ms > msAgeOfUniverse) return '> age of universe';
