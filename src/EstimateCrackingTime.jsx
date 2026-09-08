@@ -59,15 +59,14 @@ export default memo(function EstimateCrackingTime({
           ))}
         </fieldset>
         <p className={ui.muted}>
-          Average time to try half the search space. Rates vary with password
-          length and hash settings.{' '}
+          Average half-search time. Rates vary by hardware and hash settings.{' '}
           <a href={BENCHMARK_SOURCE} target="_blank" rel="noopener noreferrer">
             Benchmark source ↗
           </a>
         </p>
       </div>
       <div className={ui.tableScroll}>
-        <table className={ui.table}>
+        <table className={`${ui.table} ${styles.table}`}>
           <thead>
             <tr>
               <th>
@@ -85,17 +84,26 @@ export default memo(function EstimateCrackingTime({
             {benchmarks.map(({ name, links, rate }) => (
               <tr key={name}>
                 <td>
-                  {links.map(({ label, url }, index) => (
+                  {links.map(({ label, url, description }, index) => (
                     <span key={label}>
                       {index > 0 && ', '}
-                      <a
-                        className={styles.hash}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Tooltip
+                        label={`About ${label}`}
+                        align={index > 0 ? 'right' : 'left'}
+                        placement="top"
+                        trigger={
+                          <a
+                            className={styles.hash}
+                            href={url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {label}
+                          </a>
+                        }
                       >
-                        {label}
-                      </a>
+                        {description}
+                      </Tooltip>
                     </span>
                   ))}
                 </td>

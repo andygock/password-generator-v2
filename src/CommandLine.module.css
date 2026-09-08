@@ -17,13 +17,18 @@
   overflow-wrap: anywhere;
   margin: 0;
   font-size: 11px;
-  line-height: 1.65;
+  line-height: 1.45;
   min-width: 180px;
 }
 .language {
   white-space: nowrap;
-  width: 90px;
+  width: 80px;
 }
 .copy {
-  width: 72px;
+  width: 60px;
+}
+.copy button {
+  width: 52px;
+  min-height: 22px;
+  padding-inline: var(--space-1);
 }

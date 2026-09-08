@@ -19,7 +19,7 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-2);
-  min-height: 48px;
+  min-height: 34px;
   padding: var(--space-2) var(--space-3);
   border-bottom: 1px solid var(--border);
 }
@@ -34,12 +34,12 @@
 .stack {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 .field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 .label,
 .field legend {
@@ -50,7 +50,7 @@
   display: flex;
   align-items: baseline;
   gap: var(--space-2);
-  padding: var(--space-1) 0;
+  padding: 1px 0;
   cursor: pointer;
 }
 .optionText {
@@ -68,7 +68,8 @@
   padding: 1px 6px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  font: 11px var(--font-mono);
+  font-size: 11px;
+  line-height: 1.35;
   color: var(--muted-foreground);
   white-space: nowrap;
 }
@@ -93,9 +94,9 @@
   gap: var(--space-1);
 }
 .metric strong {
-  font-family: var(--font-mono);
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 550;
+  font-variant-numeric: tabular-nums;
 }
 .keyspace {
   display: block;
@@ -103,14 +104,25 @@
   padding: var(--space-2);
   background: var(--muted);
   border-radius: var(--radius);
-  font: 11px/1.6 var(--font-mono);
+  font: 11px/1.4 var(--font-sans);
 }
 .feedback {
-  min-height: 28px;
-  padding: var(--space-1) var(--space-3);
+  position: fixed;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  z-index: 20;
+  max-width: min(360px, calc(100vw - 16px));
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-sm);
   font-size: 12px;
   color: var(--muted-foreground);
   overflow-wrap: anywhere;
+}
+.feedback:empty {
+  display: none;
 }
 .error {
   color: var(--destructive);
@@ -138,7 +150,7 @@
 }
 .table th,
 .table td {
-  padding: 7px var(--space-3);
+  padding: 3px var(--space-3);
   border-bottom: 1px solid var(--border);
   vertical-align: top;
 }

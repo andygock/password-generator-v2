@@ -56,7 +56,7 @@ export default function App() {
             <span className={styles.mark} aria-hidden="true">
               #
             </span>
-            <div>
+            <div className={styles.brandText}>
               <h1>Password Generator</h1>
               <p className={styles.subtitle}>
                 Local generation. Cryptographic randomness.

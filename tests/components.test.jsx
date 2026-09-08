@@ -328,4 +328,12 @@ it('shows a compact cracking table with generic benchmark help and world compute
   expect(
     estimate.querySelector('[aria-label="How world compute is estimated"]')
   ).not.toBeNull();
+  const ntlm = Array.from(estimate.querySelectorAll('a')).find(
+    (link) => link.textContent === 'NTLM'
+  );
+  const algorithmTooltip = document.getElementById(
+    ntlm.getAttribute('aria-describedby')
+  );
+  expect(algorithmTooltip.getAttribute('role')).toBe('tooltip');
+  expect(algorithmTooltip.textContent).toContain('legacy Microsoft');
 });

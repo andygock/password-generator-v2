@@ -41,12 +41,12 @@
   --radius: 6px;
   --radius-sm: 4px;
   --shadow-sm: 0 1px 2px #00000008;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --control-height: 30px;
+  --space-1: 2px;
+  --space-2: 4px;
+  --space-3: 8px;
+  --space-4: 12px;
+  --space-5: 16px;
+  --control-height: 26px;
   --settings-column-width: 220px;
   --estimate-column-width: 330px;
 }
@@ -57,7 +57,7 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  line-height: 1.5;
+  line-height: 1.35;
 }
 button,
 input,
@@ -138,7 +138,6 @@ fieldset {
 legend {
   padding: 0;
 }
-code,
 pre {
   font-family: var(--font-mono);
 }

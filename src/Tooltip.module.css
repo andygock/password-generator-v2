@@ -40,8 +40,14 @@
   left: auto;
 }
 
+.above .content {
+  top: auto;
+  bottom: calc(100% + var(--space-2));
+}
+
 .tooltip:hover .content,
-.trigger:focus-visible + .content {
+.trigger:focus-visible + .content,
+.target:focus-visible + .content {
   display: block;
 }
 
