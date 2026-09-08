@@ -25,7 +25,10 @@ export default memo(function EstimateCrackingTime({
   const [hashTooltip, setHashTooltip] = useState('');
   const profile = computeProfiles.find(({ key }) => key === computeProfileKey);
   return (
-    <section className={ui.panel} aria-label="Cracking estimates">
+    <section
+      className={`${ui.panel} ${styles.estimatePanel}`}
+      aria-label="Cracking estimates"
+    >
       <div className={ui.panelHeader}>
         <h2>Offline cracking estimate</h2>
         <span className={ui.badge}>{formatEntropy(bits)} bits</span>
