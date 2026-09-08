@@ -1,47 +1,65 @@
-import copy from 'copy-to-clipboard';
-import React from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-export default function useCopyFeedback({ timeout = 1500 } = {}) {
-  const [copied, setCopied] = React.useState('');
-  const [copyNotify, setCopyNotify] = React.useState('');
-  const copyTimeoutRef = React.useRef(null);
+export default function useCopyFeedback({ timeout = 1500, resetKey } = {}) {
+  const [feedback, setFeedback] = useState(null);
+  const timer = useRef(null);
+  const request = useRef(0);
 
-  const copyText = React.useCallback(
-    (text, message = 'Copied') => {
-      const ok = copy(text);
-      if (ok) {
-        setCopied(text);
-        setCopyNotify(message);
-      } else {
-        setCopyNotify('Copy failed');
-      }
+  if (feedback && feedback.key !== resetKey) setFeedback(null);
 
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-      }
+  const resetCopied = useCallback(() => {
+    request.current += 1;
+    clearTimeout(timer.current);
+    setFeedback(null);
+  }, []);
 
-      copyTimeoutRef.current = setTimeout(() => {
-        setCopyNotify('');
-        copyTimeoutRef.current = null;
-      }, timeout);
-
-      return ok;
+  useEffect(
+    () => () => {
+      // Ignore pending clipboard writes after navigation, regeneration or unmount.
+      request.current += 1;
+      clearTimeout(timer.current);
     },
-    [timeout]
+    [resetKey]
   );
 
-  const resetCopied = React.useCallback(() => {
-    setCopied('');
-  }, []);
-
-  React.useEffect(() => {
-    return () => {
-      if (copyTimeoutRef.current) {
-        clearTimeout(copyTimeoutRef.current);
-        copyTimeoutRef.current = null;
+  const copyText = useCallback(
+    async (text, message = 'Copied') => {
+      const currentRequest = ++request.current;
+      clearTimeout(timer.current);
+      let ok = false;
+      try {
+        // Call directly from the user gesture. Never open a blocking prompt or
+        // infer success from a manual copy action we cannot observe.
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(text);
+          ok = true;
+        }
+      } catch {
+        // Manual selection remains available when permission is denied.
       }
-    };
-  }, []);
+      if (currentRequest !== request.current) return false;
+      setFeedback({
+        key: resetKey,
+        copied: ok ? text : '',
+        message: ok
+          ? message
+          : 'Automatic copy unavailable. Select the text and copy it manually.',
+      });
+      // Failure instructions persist until another action or new output.
+      if (ok)
+        timer.current = setTimeout(() => {
+          setFeedback((value) => (value ? { ...value, message: '' } : null));
+        }, timeout);
+      return ok;
+    },
+    [resetKey, timeout]
+  );
 
-  return { copied, copyNotify, copyText, resetCopied };
+  const current = feedback?.key === resetKey ? feedback : null;
+  return {
+    copied: current?.copied || '',
+    copyNotify: current?.message || '',
+    copyText,
+    resetCopied,
+  };
 }

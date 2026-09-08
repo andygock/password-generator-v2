@@ -1,0 +1,5 @@
+# esbuild uses the platform binary installed by pnpm; no install-time download
+# or fallback package-manager invocation is needed.
+minimumReleaseAge: 10080
+allowBuilds:
+  esbuild: false

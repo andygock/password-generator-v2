@@ -1,19 +1,16 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useMatch } from 'react-router-dom';
+import styles from './App.module.css';
 
-function Menu() {
-  const location = useLocation();
-  const isStringInterface = location.pathname.endsWith('/string');
+export default function Menu() {
+  const isString = useMatch('/string');
   return (
-    <nav className="menu">
-      Mode:
-      <Link to="/" className={!isStringInterface ? 'active' : ''}>
+    <nav className={styles.menu} aria-label="Generator mode">
+      <Link to="/" aria-current={!isString ? 'page' : undefined}>
         Dictionary
       </Link>
-      <Link to="/string" className={isStringInterface ? 'active' : ''}>
+      <Link to="/string" aria-current={isString ? 'page' : undefined}>
         String
       </Link>
     </nav>
   );
 }
-
-export default Menu;

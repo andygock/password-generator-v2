@@ -1,30 +1,29 @@
-function CharsetSelector({ charsets, selectedKey, onChange }) {
-  // get selected charset based on selectedKey
-  const selectedCharset = charsets.find((c) => c.key === selectedKey) ||
-    charsets[0] || {
-      charset: '',
-    };
+import ui from './ui.module.css';
+
+export default function CharsetSelector({ charsets, selectedKey, onChange }) {
+  const selected =
+    charsets.find((charset) => charset.key === selectedKey) || charsets[0];
   return (
-    <div>
-      <p>Character Set</p>
-      {charsets.map((c) => (
-        <label key={c.key}>
+    <fieldset className={ui.field}>
+      <legend>Character set</legend>
+      {charsets.map((charset) => (
+        <label key={charset.key} className={ui.option}>
           <input
             type="radio"
             name="charset"
-            value={c.key}
-            checked={selectedKey === c.key}
-            onChange={() => onChange(c.key)}
+            value={charset.key}
+            checked={selectedKey === charset.key}
+            onChange={() => onChange(charset.key)}
           />
-          {c.label} <span>({c.charset.length} chars)</span>
+          <span className={ui.optionText}>
+            <span>{charset.label}</span>
+            <span className={ui.muted}>{charset.charset.length}</span>
+          </span>
         </label>
       ))}
-      <div>
-        <div className="heading">Key space</div>
-        <div className="keyspace">{selectedCharset.charset}</div>
-      </div>
-    </div>
+      <code className={ui.keyspace} aria-label="Available characters">
+        {selected?.charset}
+      </code>
+    </fieldset>
   );
 }
-
-export default CharsetSelector;

@@ -1,0 +1,175 @@
+/* Reusable panel, field and table primitives keep density consistent. */
+.layout {
+  display: grid;
+  grid-template-columns: 238px minmax(300px, 1fr) minmax(330px, 0.85fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+.panel {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  overflow: hidden;
+}
+.panelHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+.panelHeader h2 {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.body {
+  padding: var(--space-3);
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.label,
+.field legend {
+  font-weight: 550;
+  margin-bottom: var(--space-1);
+}
+.option {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  padding: var(--space-1) 0;
+  cursor: pointer;
+}
+.optionText {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.muted {
+  color: var(--muted-foreground);
+  font-size: 12px;
+}
+.badge {
+  display: inline-flex;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font: 11px var(--font-mono);
+  color: var(--muted-foreground);
+  white-space: nowrap;
+}
+.primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--primary);
+}
+.primary:hover {
+  background: var(--primary-hover);
+}
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-3);
+}
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+.metric strong {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 500;
+}
+.keyspace {
+  display: block;
+  overflow-wrap: anywhere;
+  padding: var(--space-2);
+  background: var(--muted);
+  border-radius: var(--radius);
+  font: 11px/1.6 var(--font-mono);
+}
+.feedback {
+  min-height: 28px;
+  padding: var(--space-1) var(--space-3);
+  font-size: 12px;
+  color: var(--muted-foreground);
+  overflow-wrap: anywhere;
+}
+.error {
+  color: var(--destructive);
+  padding: var(--space-3);
+}
+.actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.tableScroll {
+  overflow-x: auto;
+  max-width: 100%;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+.table th {
+  color: var(--muted-foreground);
+  font-weight: 500;
+  background: var(--muted);
+}
+.table th,
+.table td {
+  padding: 7px var(--space-3);
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.table tbody tr:hover {
+  background: var(--background);
+}
+@media (max-width: 1150px) {
+  .layout {
+    grid-template-columns: 225px minmax(0, 1fr);
+  }
+  .layout > :last-child {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 640px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .layout > :last-child {
+    grid-column: auto;
+  }
+}
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}

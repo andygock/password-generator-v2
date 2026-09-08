@@ -1,5 +1,4 @@
-import React from 'react';
-import { encode } from 'base64-arraybuffer';
+import { Navigate, useSearchParams } from 'react-router-dom';
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import OutputStrings from './OutputStrings';
@@ -7,96 +6,117 @@ import { CHARSETS } from './charsets';
 import CharsetSelector from './CharsetSelector';
 import PasswordSizeSlider from './PasswordSizeSlider';
 import CommandLine from './CommandLine';
-import { randomBytes, getRandomString } from './random';
+import { generateStrings } from './stringGeneration';
+import useGeneratedValues from './useGeneratedValues';
+import { normaliseStringParams } from './routeParams';
+import { formatEntropy, stringMetrics } from './entropy';
+import ui from './ui.module.css';
 
 const rows = config.defaults.numberOfPassphrases;
 
-const StringGenerator = () => {
-  // Support multiple charsets, not just Base64
-  const [charsetKey, setCharsetKey] = React.useState(
-    config.defaults?.charsetKey || 'websafe'
+function StringOutput({ sizeBytes, charset }) {
+  const { values, error, regenerate } = useGeneratedValues(() =>
+    generateStrings({ rows, sizeBytes, charset })
   );
-  const [sizeBytes, setSizeBytes] = React.useState(
-    config.defaults?.passwordBytes ?? 10
+
+  return (
+    <section className={ui.panel} aria-label="Passwords">
+      <div className={ui.panelHeader}>
+        <h2>
+          Passwords <span className={ui.badge}>{rows}</span>
+        </h2>
+        <button type="button" className={ui.primary} onClick={regenerate}>
+          Regenerate
+        </button>
+      </div>
+      {error && (
+        <p className={ui.error} role="alert">
+          {error}
+        </p>
+      )}
+      <OutputStrings values={values} />
+    </section>
   );
-  const [output, setOutput] = React.useState([]);
-  const [error, setError] = React.useState('');
+}
 
-  // Find selected charset with fallback
-  const selectedCharset =
-    CHARSETS.find((c) => c.key === charsetKey) || CHARSETS[0];
-  const generatedLength = output[0]?.length || 0;
+export default function StringGenerator() {
+  const [params, setParams] = useSearchParams();
+  const { sizeBytes, charsetKey } = normaliseStringParams(params);
+  const charset = CHARSETS.find(({ key }) => key === charsetKey);
+  const { length, bits } = stringMetrics(sizeBytes, charset);
 
-  // Generate random string for a given charset (shared helper)
-
-  const generate = React.useCallback(() => {
-    try {
-      let values;
-      if (charsetKey === 'base64') {
-        // Use base64-arraybuffer for base64
-        const bytes = new Array(rows).fill(0).map(() => randomBytes(sizeBytes));
-        values = bytes.map((a) => encode(a).replace(/=+$/, ''));
-      } else {
-        // For other charsets, generate random string of appropriate length
-        // 1 char per ~log2(charset.length) bits
-        const charsNeeded = Math.ceil(
-          (sizeBytes * 8) / Math.log2(selectedCharset.charset.length)
-        );
-        values = new Array(rows)
-          .fill(0)
-          .map(() => getRandomString(charsNeeded, selectedCharset.charset));
-      }
-      setError('');
-      setOutput(values);
-    } catch (e) {
-      setOutput([]);
-      setError(e instanceof Error ? e.message : 'Unable to generate password');
-    }
-  }, [charsetKey, sizeBytes, selectedCharset]);
-
-  React.useEffect(() => {
-    generate();
-  }, [sizeBytes, charsetKey, generate]);
+  const nextParams = (values) => {
+    const next = new URLSearchParams(params);
+    for (const [key, value] of Object.entries(values))
+      next.set(key, String(value));
+    return next;
+  };
+  const malformed =
+    (params.has('bytes') && params.get('bytes') !== String(sizeBytes)) ||
+    (params.has('charset') && params.get('charset') !== charsetKey);
+  if (malformed)
+    return (
+      <Navigate
+        to={`/string?${nextParams({ bytes: sizeBytes, charset: charsetKey })}`}
+        replace
+      />
+    );
 
   return (
     <div>
-      <div className="ui container">
-        <div className="col inputs">
-          <PasswordSizeSlider sizeBytes={sizeBytes} onChange={setSizeBytes} />
-          <CharsetSelector
-            charsets={CHARSETS}
-            selectedKey={charsetKey}
-            onChange={setCharsetKey}
-            hideLabel={true}
-          />
-          <p className="muted">Generated length: {generatedLength} characters</p>
-        </div>
-        <div className="col col-output">
-          {error && (
-            <div className="notify" role="alert">
-              {error}
+      <div className={ui.layout}>
+        <section className={ui.panel} aria-label="String settings">
+          <div className={ui.panelHeader}>
+            <h2>Configuration</h2>
+            <span className={ui.badge}>String</span>
+          </div>
+          <div className={`${ui.body} ${ui.stack}`}>
+            <PasswordSizeSlider
+              sizeBytes={sizeBytes}
+              onChange={(bytes) =>
+                setParams(nextParams({ bytes }), { replace: true })
+              }
+            />
+            <CharsetSelector
+              charsets={CHARSETS}
+              selectedKey={charsetKey}
+              onChange={(charset) => setParams(nextParams({ charset }))}
+            />
+            <div className={ui.metrics}>
+              <div className={ui.metric}>
+                <span className={ui.muted}>Actual entropy</span>
+                <strong>
+                  {formatEntropy(bits)} <small>bits</small>
+                </strong>
+              </div>
+              <div className={ui.metric}>
+                <span className={ui.muted}>Length</span>
+                <strong>
+                  {length} <small>chars</small>
+                </strong>
+              </div>
             </div>
-          )}
-          <OutputStrings values={output} />
-          <button
-            type="button"
-            onClick={() => {
-              setOutput([]);
-              generate();
-            }}
-          >
-            Regenerate
-          </button>
-        </div>
-        <div className="col col-crack-time">
-          <EstimateCrackingTime bits={sizeBytes * 8} type="brute force" />
-        </div>
+            <p className={ui.muted}>
+              Whole characters meet or exceed your entropy target. Base64
+              encodes random bytes.
+            </p>
+            <button type="button" onClick={() => setParams({})}>
+              Reset to defaults
+            </button>
+            <p className={ui.muted}>
+              Bookmark this page to save your settings.
+            </p>
+          </div>
+        </section>
+        {/* A new configuration cannot display or copy the previous passwords. */}
+        <StringOutput
+          key={`${charsetKey}:${sizeBytes}`}
+          sizeBytes={sizeBytes}
+          charset={charset}
+        />
+        <EstimateCrackingTime bits={bits} type="brute force" />
       </div>
-      <div className="command-line">
-        <CommandLine charsetKey={charsetKey} bits={sizeBytes * 8} />
-      </div>
+      <CommandLine charsetKey={charsetKey} bits={sizeBytes * 8} />
     </div>
   );
-};
-
-export default StringGenerator;
+}

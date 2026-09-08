@@ -6,29 +6,48 @@ It's the second iteration of my [password generator](https://github.com/andygock
 
 - [Live demo hosted on Vercel](https://pass.gock.net/)
 
-Update: Option to generate Base64 passphrases as well, selection menu found under footer.
+The String mode supports hexadecimal, Base62, Web Safe, Human Friendly and Base64 passwords, with equivalent generation commands for several shells and languages.
 
 ## Development process
 
-I used [pnpm](https://pnpm.io/) so I'll describe this workflow here, but you could use your own favourite package manager instead e.g npm, yarn etc.
-
-    npm install -g pnpm
-
-Install dependencies
+Use Node.js 22.12 or later and pnpm. Install pnpm using its official installation instructions, then run:
 
     pnpm install
+    pnpm dev
 
-Start development server
-
-    pnpm start
-
-Build for production into `dist/`
+Build for production into `dist/` and preview locally:
 
     pnpm build
+    pnpm preview
 
-If required, use the following Netlify build command
+Run lint and focused unit/component tests:
 
-    pnpm build || ( npm install pnpm && pnpm build )
+    pnpm lint
+    pnpm test
+
+Tests cover random sampling, dictionary integrity, command generation, URL validation, loading recovery and clipboard feedback. Windows command execution checks run on Windows and skip on other platforms. Tests do not open a browser or modify the system clipboard.
+
+Regression coverage also includes out-of-order clipboard responses, manual selection, mode-level error recovery, cached dictionary retries, String bookmarks, batched generation and actual entropy calculations.
+
+For static hosting, use `pnpm build` as the build command and `dist` as the output directory. Preserve your pnpm minimumReleaseAge configuration when installing or updating dependencies.
+
+## Generation and estimates
+
+Random values come from Web Crypto, with rejection sampling for uniform character and word selection. Dictionary assets are checked for the expected size and unique words before use. Invalid bookmark parameters are replaced with canonical values; valid short bookmarks remain supported.
+
+Validated dictionaries are cached as immutable arrays; failed loads are evicted for retry. Preset suffixes and String batches minimise crypto requests. Generated values are kept only in component memory and are never included in bookmarks.
+
+Cracking times are average offline guessing estimates for uniformly generated passwords. The table links to its benchmark source and identifies the measured settings. Actual rates depend on the hash settings, hardware and password length; the large compute profile is a hypothetical multiplier. Character-based generation rounds up to a whole number of characters, so its actual entropy can slightly exceed the selected target.
+
+Estimates use unrounded actual entropy. Base64 entropy comes from its input bytes, since its final character can carry fewer than six random bits.
+
+## Interface and styling
+
+The compact neutral interface uses shadcn-style semantic CSS variables. `src/App.css` owns shared tokens, element defaults and self-hosted Geist/Geist Mono font faces. `src/ui.module.css` provides shared panel, field and table styles; component-specific layout lives in adjacent CSS Modules. No external font service is contacted.
+
+Passwords are labelled read-only fields with separate Copy buttons. Focusing a field selects its text for manual copying. Native clipboard failures show persistent instructions; pending copy results cannot restore feedback for replaced passwords. Generation commands appear in the expandable **Generate elsewhere** section.
+
+Each generator mode has an independent error-boundary lifecycle, so a failed mode does not block navigation to the other mode. Reload remains available to recover stale deployment assets.
 
 ## Use of hash routing
 
@@ -38,6 +57,7 @@ This makes it bookmark-friendly with recallable user-selected parameters. The ha
     #/:words/:passphrases
     #/:words/:passphrases/:wordlist
     #/preset1/:words/:passphrases/:wordlist
+    #/string?bytes=16&charset=websafe
 
 e.g
 
@@ -45,7 +65,10 @@ e.g
 
 If no hash is present, default parameters are used.
 
+String mode accepts `bytes` from 1 to 64 and `charset` values `hex`, `base62`, `websafe`, `human` or `base64`. Slider edits replace the current history entry to avoid adding an entry for every movement. Bookmarks restore settings and generate fresh passwords.
+
 ## Credits
 
 - [EFF Dice-Generated Passphrases](https://www.eff.org/dice)
 - [Orchard Street Wordlists](https://github.com/sts10/orchard-street-wordlists) by Sam Schlinkert
+- [Geist and Geist Mono](https://vercel.com/font) by Vercel, distributed through Fontsource under the SIL Open Font License. Font licences are included in `public/fonts/`.

@@ -1,27 +1,23 @@
-/* eslint-disable react/jsx-no-comment-textnodes */
+import styles from './App.module.css';
 
-const Footer = () => {
+export default function Footer() {
   return (
-    <footer>
-      <p>
-        &copy; <a href="https://gock.net/">Andy Gock</a> //{' '}
-        <a href="https://github.com/andygock/password-generator-v2">GitHub</a>{' '}
-        // Runs entirely in the web browser using{' '}
+    <footer className={styles.footer}>
+      <span>
+        Generated on your device with{' '}
         <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Crypto_API">
-          Web Crypto API
+          Web Crypto
         </a>
-        ,{' '}
-        <a href="https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases">
-          EFF
-        </a>{' '}
-        and{' '}
+        . Passwords are never sent to a server.
+      </span>
+      <span>
+        <a href="https://www.eff.org/dice">EFF</a> ·{' '}
         <a href="https://github.com/sts10/orchard-street-wordlists">
           Orchard Street
         </a>{' '}
-        word lists.
-      </p>
+        · <a href="https://github.com/andygock/password-generator-v2">Source</a>{' '}
+        · © <a href="https://gock.net/">Andy Gock</a>
+      </span>
     </footer>
   );
-};
-
-export default Footer;
+}

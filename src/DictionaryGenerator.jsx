@@ -1,229 +1,113 @@
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import config from './config';
 import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';
-import OutputWords from './OutputWords';
+import WordListOutput from './WordListOutput';
 import WordListRadio from './WordListRadio';
 import { presetExtraEntropyBits } from './random';
-import { getWordListOption, loadWordList } from './words';
+import { getWordListOption } from './words';
+import { formatEntropy } from './entropy';
+import {
+  generatePath,
+  normaliseParams,
+  needsCanonicalPath,
+} from './routeParams';
+import ui from './ui.module.css';
 
-// calculate path based on parameters
-function generatePath({
-  wordsPerPassphrase,
-  numberOfPassphrases,
-  wordList,
-  mode,
-}) {
-  // if no words, passphrases, or wordlist, assume defaults
-  const wp = wordsPerPassphrase ?? config.defaults.wordsPerPassphrase;
-  const np = numberOfPassphrases ?? config.defaults.numberOfPassphrases;
-  const wl = wordList ?? config.defaults.wordList;
-  const path = `${mode === 'preset1' ? '/preset1' : ''}/${wp}/${np}/${wl}`;
-  return path;
-}
-
-const DictionaryGenerator = ({ mode }) => {
+export default function DictionaryGenerator({ mode }) {
   const navigate = useNavigate();
   const params = useParams();
   const activeMode = mode ?? config.defaults.mode;
-  const [loadedWordList, setLoadedWordList] = useState(null);
-  const [wordListError, setWordListError] = useState('');
+  const normalised = normaliseParams(params, activeMode);
+  const { wordsPerPassphrase, numberOfPassphrases, wordList } = normalised;
 
-  // convert params to numbers when we need to, or set default values if not set
-  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
-
-  const rawWp = params.wordsPerPassphrase
-    ? parseInt(params.wordsPerPassphrase, 10)
-    : NaN;
-  let wordsPerPassphrase = Number.isFinite(rawWp)
-    ? rawWp
-    : config.defaults.wordsPerPassphrase;
-  wordsPerPassphrase = clamp(
-    wordsPerPassphrase,
-    config.limits.wordsPerPassphrase.min,
-    config.limits.wordsPerPassphrase.max
-  );
-
-  const rawNp = params.numberOfPassphrases
-    ? parseInt(params.numberOfPassphrases, 10)
-    : NaN;
-  let numberOfPassphrases = Number.isFinite(rawNp)
-    ? rawNp
-    : config.defaults.numberOfPassphrases;
-  numberOfPassphrases = clamp(
-    numberOfPassphrases,
-    config.limits.numberOfPassphrases.min,
-    config.limits.numberOfPassphrases.max
-  );
-
-  const wordList = getWordListOption(params.wordList)
-    ? params.wordList
-    : config.defaults.wordList;
-
-  useEffect(() => {
-    let cancelled = false;
-
-    loadWordList(wordList)
-      .then((words) => {
-        if (!cancelled) {
-          setLoadedWordList({ id: wordList, words });
-          setWordListError('');
-        }
-      })
-      .catch((error) => {
-        if (!cancelled) {
-          setWordListError(
-            error instanceof Error ? error.message : 'Unable to load word list'
-          );
-        }
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [wordList]);
-
-  // calculate new path, navigate to new path
-  const setParamsAndNavigate = (params) => {
-    // prioritise arguments, otherwise use params or app defaults set above
-    const newState = {
-      wordsPerPassphrase,
-      numberOfPassphrases,
-      wordList,
-      mode: activeMode,
-      ...params,
-    };
-
-    const path = generatePath(newState);
-    // console.log('path', path);
-
-    // navigate to new hash path
-    navigate(path);
-  };
-
-  // reset to default parameters
-  const handleReset = () => {
-    navigate('/');
-  };
-
-  const wordListOption = getWordListOption(wordList);
-  const dictLen = wordListOption?.count || 1;
-  const wordArray =
-    loadedWordList?.id === wordList ? loadedWordList.words : null;
-  let entropyBits = Math.floor(wordsPerPassphrase * Math.log2(dictLen));
-
-  if (activeMode === 'preset1') {
-    entropyBits += presetExtraEntropyBits();
+  if (needsCanonicalPath(params, normalised)) {
+    return <Navigate to={generatePath(normalised)} replace />;
   }
 
+  // Prioritise supplied settings, preserving the rest of the current bookmark.
+  const setParamsAndNavigate = (next) =>
+    navigate(generatePath({ ...normalised, ...next }));
+  const dictLen = getWordListOption(wordList).count;
+  const entropyBits =
+    wordsPerPassphrase * Math.log2(dictLen) +
+    (activeMode === 'preset1' ? presetExtraEntropyBits() : 0);
+
   return (
-    <div className="ui container">
-      <div className="col inputs">
-        <h3>Words per passphrase</h3>
-        <NumberPicker
-          onChange={(wordsPerPassphrase) => {
-            setParamsAndNavigate({ wordsPerPassphrase });
-          }}
-          value={wordsPerPassphrase}
-          min={config.limits.wordsPerPassphrase.min}
-          max={config.limits.wordsPerPassphrase.max}
-        />
-
-        <h3>Number of passphrases</h3>
-        <NumberPicker
-          onChange={(numberOfPassphrases) => {
-            setParamsAndNavigate({ numberOfPassphrases });
-          }}
-          value={numberOfPassphrases}
-          min={config.limits.numberOfPassphrases.min}
-          max={config.limits.numberOfPassphrases.max}
-        />
-
-        <h3>Word list</h3>
-        <WordListRadio
-          value={wordList}
-          onChange={(wordList) => {
-            setParamsAndNavigate({ wordList });
-          }}
-        />
-
-        <h3>Presets</h3>
-
-        {/* option for no presets */}
-        <label htmlFor="preset-none">
-          <input
-            type="radio"
-            id="preset-none"
-            name="preset"
-            checked={activeMode === 'normal'}
-            onChange={(e) => {
-              if (e.target.checked) {
-                setParamsAndNavigate({ mode: 'normal' });
-              }
-            }}
-          />{' '}
-          None
-        </label>
-
-        {/* presets */}
-        <label htmlFor="preset-1">
-          <input
-            type="radio"
-            id="preset-1"
-            name="preset"
-            checked={activeMode === 'preset1'}
-            onChange={(e) => {
-              if (e.target.checked) {
-                setParamsAndNavigate({ mode: 'preset1' });
-              }
-            }}
-          />{' '}
-          Capitalized + number + symbol
-        </label>
-
-        {/* extra preset for words with capitalised first letter, spaces, and number plus special char */}
-        {/* designed for certain web sites that ask for this */}
-        {/* routes to /#/custom1/{a}/{b}/{dict} */}
-        {/* TODO */}
-
-        <p className="entropy">
-          {entropyBits}{' '}
-          <a href="https://en.wikipedia.org/wiki/Password_strength#Entropy_as_a_measure_of_password_strength">
-            bits of entropy
-          </a>{' '}
-          per passphrase.
-        </p>
-        <p className="entropy">Dictionary size: {dictLen}</p>
-        <div>
-          <button type="button" onClick={handleReset}>
+    <div className={ui.layout}>
+      <section className={ui.panel} aria-label="Dictionary settings">
+        <div className={ui.panelHeader}>
+          <h2>Configuration</h2>
+          <span className={ui.badge}>Dictionary</span>
+        </div>
+        <div className={`${ui.body} ${ui.stack}`}>
+          <NumberPicker
+            label="Words per passphrase"
+            value={wordsPerPassphrase}
+            {...config.limits.wordsPerPassphrase}
+            onChange={(wordsPerPassphrase) =>
+              setParamsAndNavigate({ wordsPerPassphrase })
+            }
+          />
+          <NumberPicker
+            label="Number of passphrases"
+            value={numberOfPassphrases}
+            {...config.limits.numberOfPassphrases}
+            onChange={(numberOfPassphrases) =>
+              setParamsAndNavigate({ numberOfPassphrases })
+            }
+          />
+          <WordListRadio
+            value={wordList}
+            onChange={(wordList) => setParamsAndNavigate({ wordList })}
+          />
+          <fieldset className={ui.field}>
+            <legend>Format</legend>
+            <label className={ui.option}>
+              <input
+                type="radio"
+                name="preset"
+                checked={activeMode === 'normal'}
+                onChange={() => setParamsAndNavigate({ mode: 'normal' })}
+              />
+              Words with spaces
+            </label>
+            <label className={ui.option}>
+              <input
+                type="radio"
+                name="preset"
+                checked={activeMode === 'preset1'}
+                onChange={() => setParamsAndNavigate({ mode: 'preset1' })}
+              />
+              Capitalised + number + symbol
+            </label>
+          </fieldset>
+          <div className={ui.metrics}>
+            <div className={ui.metric}>
+              <span className={ui.muted}>Entropy / phrase</span>
+              <strong>
+                {formatEntropy(entropyBits)} <small>bits</small>
+              </strong>
+            </div>
+            <div className={ui.metric}>
+              <span className={ui.muted}>Dictionary size</span>
+              <strong>{dictLen.toLocaleString('en-AU')}</strong>
+            </div>
+          </div>
+          <button type="button" onClick={() => navigate('/')}>
             Reset to defaults
           </button>
+          <p className={ui.muted}>Bookmark this page to save your settings.</p>
         </div>
-      </div>
-
-      <div className="col col-output">
-        {wordListError ? (
-          <div className="notify" role="alert">
-            {wordListError}
-          </div>
-        ) : wordArray ? (
-          <OutputWords
-            words={wordsPerPassphrase}
-            lines={numberOfPassphrases}
-            wordArray={wordArray}
-            mode={activeMode}
-          />
-        ) : (
-          <p>Loading word list…</p>
-        )}
-      </div>
-
-      <div className="col col-crack-time">
-        <EstimateCrackingTime bits={entropyBits} />
-      </div>
+      </section>
+      <WordListOutput
+        key={wordList}
+        wordList={wordList}
+        words={wordsPerPassphrase}
+        lines={numberOfPassphrases}
+        mode={activeMode}
+      />
+      <EstimateCrackingTime bits={entropyBits} />
     </div>
   );
-};
-
-export default DictionaryGenerator;
+}

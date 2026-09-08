@@ -1,0 +1,29 @@
+.commands {
+  margin-top: var(--space-3);
+}
+.commands summary {
+  cursor: pointer;
+  padding: var(--space-3);
+  font-weight: 600;
+}
+.commands summary span {
+  margin-left: var(--space-2);
+  color: var(--muted-foreground);
+  font-weight: 400;
+  font-size: 12px;
+}
+.code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.65;
+  min-width: 180px;
+}
+.language {
+  white-space: nowrap;
+  width: 90px;
+}
+.copy {
+  width: 72px;
+}

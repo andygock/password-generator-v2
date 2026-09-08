@@ -1,40 +1,24 @@
+import { useId } from 'react';
 import config from './config';
+import ui from './ui.module.css';
 
-export default function PasswordSizeSlider({
-  sizeBytes,
-  onChange,
-  ...otherProps
-}) {
-  const handleBitSizeChange = (e) => {
-    const newSize = parseInt(e.target.value, 10);
-    onChange(newSize);
-  };
+export default function PasswordSizeSlider({ sizeBytes, onChange }) {
+  const id = useId();
   return (
-    <div>
-      <label htmlFor="size-bytes-range" className="heading">
-        Entropy
-        <span className="bits">
-          {sizeBytes * 8 < 100 && <>&nbsp;</>}
-          {sizeBytes * 8}
-          &nbsp;
-          <a
-            href="https://en.wikipedia.org/wiki/Password_strength"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            bits
-          </a>
-        </span>
+    <div className={ui.field}>
+      <label htmlFor={id} className={ui.optionText}>
+        <span className={ui.label}>Target entropy</span>
+        <span className={ui.badge}>{sizeBytes * 8} bits</span>
       </label>
       <input
-        id="size-bytes-range"
+        id={id}
         type="range"
         min={config.limits.passwordBytes.min}
         max={config.limits.passwordBytes.max}
         step={1}
         value={sizeBytes}
-        onChange={handleBitSizeChange}
-        {...otherProps}
+        aria-valuetext={`${sizeBytes * 8} bits`}
+        onChange={(event) => onChange(Number(event.target.value))}
       />
     </div>
   );

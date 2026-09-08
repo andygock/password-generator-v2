@@ -4,15 +4,23 @@ export const PRESET_SPECIAL_CHARS = '!?$#&-.';
 const UINT32_RANGE = 2 ** 32;
 
 function getCrypto() {
-  if (window.crypto && window.crypto.getRandomValues) {
-    return window.crypto;
+  if (globalThis.crypto?.getRandomValues) {
+    return globalThis.crypto;
   }
   throw new Error('Web Crypto API not supported');
 }
 
 export function randomBytes(sizeBytes) {
+  if (!Number.isSafeInteger(sizeBytes) || sizeBytes < 0) {
+    throw new RangeError('sizeBytes must be a non-negative safe integer');
+  }
   const buf = new Uint8Array(sizeBytes);
-  return getCrypto().getRandomValues(buf);
+  // Web Crypto limits each request to 65,536 bytes.
+  const crypto = getCrypto();
+  for (let offset = 0; offset < buf.length; offset += 65536) {
+    crypto.getRandomValues(buf.subarray(offset, offset + 65536));
+  }
+  return buf;
 }
 
 export function getRandomString(length, charset) {
@@ -55,6 +63,18 @@ export function randomIndices(count, max) {
 }
 
 export function generateWordRows({ lines, words, wordArray }) {
+  // Validate each dimension: an integer product can hide fractional inputs.
+  if (
+    !Number.isSafeInteger(lines) ||
+    lines < 1 ||
+    !Number.isSafeInteger(words) ||
+    words < 1
+  ) {
+    throw new RangeError('lines and words must be positive safe integers');
+  }
+  if (!Array.isArray(wordArray) || wordArray.length === 0) {
+    throw new RangeError('wordArray must be a non-empty array');
+  }
   const indices = randomIndices(lines * words, wordArray.length);
   const rows = [];
   let index = 0;
@@ -71,17 +91,10 @@ export function generateWordRows({ lines, words, wordArray }) {
 
 export function randomNumber(bits) {
   // Return an integer in [0, 2^bits - 1].
-  // Cap bits between 1 and 32 for safe 32-bit generation.
-  const safeBits = Math.min(Math.max(1, Number(bits) || 0), 32);
-  const max = Math.pow(2, safeBits);
-  const threshold = Math.floor(UINT32_RANGE / max) * max;
-  const outArr = new Uint32Array(1);
-  while (true) {
-    getCrypto().getRandomValues(outArr);
-    const v = outArr[0] >>> 0;
-    if (v < threshold) return v % max;
-    // otherwise retry
+  if (!Number.isInteger(bits) || bits < 1 || bits > 32) {
+    throw new RangeError('bits must be an integer from 1 through 32');
   }
+  return randomIndices(1, 2 ** bits)[0];
 }
 
 export function randomSpecialChar() {
@@ -92,7 +105,19 @@ export function randomSpecialChar() {
 }
 
 export function presetExtraEntropyBits() {
-  return Math.floor(
-    PRESET_NUMBER_BITS + Math.log2(PRESET_SPECIAL_CHARS.length)
+  return PRESET_NUMBER_BITS + Math.log2(PRESET_SPECIAL_CHARS.length);
+}
+
+// Sample suffixes in batches, and only for the preset that actually uses them.
+export function generatePassphrases({ mode, ...options }) {
+  const rows = generateWordRows(options);
+  if (mode !== 'preset1') return rows.map((row) => row.join(' '));
+  const numbers = randomIndices(rows.length, 2 ** PRESET_NUMBER_BITS);
+  const symbols = randomIndices(rows.length, PRESET_SPECIAL_CHARS.length);
+  return rows.map(
+    (row, index) =>
+      row.map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join('') +
+      numbers[index] +
+      PRESET_SPECIAL_CHARS[symbols[index]]
   );
 }
