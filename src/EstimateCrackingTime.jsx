@@ -7,10 +7,13 @@ import {
   WORLD_COMPUTE_DESCRIPTION,
 } from './computeProfiles';
 import { formatEntropy } from './entropy';
-import { formatCrackingTime } from './timeFormat';
+import { formatCrackingTime, UNIVERSE_AGE_LABEL } from './timeFormat';
 import Tooltip from './Tooltip';
 import ui from './ui.module.css';
 import styles from './EstimateCrackingTime.module.css';
+
+const UNIVERSE_AGE_DESCRIPTION =
+  'This estimate exceeds 13.8 billion years, the approximate age of the universe.';
 
 export default memo(function EstimateCrackingTime({
   bits,
@@ -75,42 +78,68 @@ export default memo(function EstimateCrackingTime({
             </tr>
           </thead>
           <tbody>
-            {benchmarks.map(({ name, links, rate }) => (
-              <tr key={name}>
-                <td>
-                  {links.map(({ label, url, description }, index) => (
-                    <span key={label}>
-                      {index > 0 && ', '}
-                      <a
-                        className={styles.hash}
-                        href={url}
-                        target="_blank"
-                        rel="noopener noreferrer"
+            {benchmarks.map(({ name, links, rate }) => {
+              const time = formatCrackingTime(
+                (500 * 2 ** bits) / (rate * profile.multiplier)
+              );
+              return (
+                <tr key={name}>
+                  <td>
+                    {links.map(({ label, url, description }, index) => (
+                      <span key={label}>
+                        {index > 0 && ', '}
+                        <a
+                          className={styles.hash}
+                          href={url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-describedby={
+                            hashTooltip === description
+                              ? hashTooltipId
+                              : undefined
+                          }
+                          onMouseEnter={() => setHashTooltip(description)}
+                          onMouseLeave={() => setHashTooltip('')}
+                          onFocus={() => setHashTooltip(description)}
+                          onBlur={() => setHashTooltip('')}
+                          onKeyDown={(event) => {
+                            if (event.key === 'Escape') setHashTooltip('');
+                          }}
+                        >
+                          {label}
+                        </a>
+                      </span>
+                    ))}
+                  </td>
+                  <td className={styles.time}>
+                    {time === UNIVERSE_AGE_LABEL ? (
+                      <button
+                        type="button"
+                        className={styles.timeLimit}
                         aria-describedby={
-                          hashTooltip === description
+                          hashTooltip === UNIVERSE_AGE_DESCRIPTION
                             ? hashTooltipId
                             : undefined
                         }
-                        onMouseEnter={() => setHashTooltip(description)}
+                        onMouseEnter={() =>
+                          setHashTooltip(UNIVERSE_AGE_DESCRIPTION)
+                        }
                         onMouseLeave={() => setHashTooltip('')}
-                        onFocus={() => setHashTooltip(description)}
+                        onFocus={() => setHashTooltip(UNIVERSE_AGE_DESCRIPTION)}
                         onBlur={() => setHashTooltip('')}
                         onKeyDown={(event) => {
                           if (event.key === 'Escape') setHashTooltip('');
                         }}
                       >
-                        {label}
-                      </a>
-                    </span>
-                  ))}
-                </td>
-                <td className={styles.time}>
-                  {formatCrackingTime(
-                    (500 * 2 ** bits) / (rate * profile.multiplier)
-                  )}
-                </td>
-              </tr>
-            ))}
+                        {time}
+                      </button>
+                    ) : (
+                      time
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

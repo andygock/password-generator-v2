@@ -339,4 +339,14 @@ it('shows a compact cracking table with generic benchmark help and world compute
   expect(algorithmTooltip.textContent).toContain('legacy Microsoft');
   await act(() => ntlm.blur());
   expect(document.getElementById(algorithmTooltip.id)).toBeNull();
+
+  const universeLimit = Array.from(estimate.querySelectorAll('button')).find(
+    (button) => button.textContent === '>13.8B yrs'
+  );
+  await act(() => universeLimit.focus());
+  const universeTooltip = document.getElementById(
+    universeLimit.getAttribute('aria-describedby')
+  );
+  expect(universeTooltip.getAttribute('role')).toBe('tooltip');
+  expect(universeTooltip.textContent).toContain('age of the universe');
 });
