@@ -310,3 +310,22 @@ it('recovers generation after a crypto failure without showing stale passwords',
   expect(container.querySelector('[role="alert"]')).toBeNull();
   expect(container.querySelector('input[readonly]').value).toHaveLength(2);
 });
+
+it('shows a compact cracking table with generic benchmark help and world compute', async () => {
+  window.location.hash = '#/6/20/eff-long';
+  vi.spyOn(words, 'loadWordList').mockResolvedValue(['example']);
+  await render(<App />);
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  });
+  const estimate = container.querySelector('[aria-label="Cracking estimates"]');
+  expect(estimate.textContent).toContain('World compute');
+  expect(estimate.textContent).not.toContain('Mode 1000');
+  expect(estimate.textContent).not.toContain('Benchmark settings');
+  expect(
+    estimate.querySelector('[aria-label="About benchmark rates"]')
+  ).not.toBeNull();
+  expect(
+    estimate.querySelector('[aria-label="How world compute is estimated"]')
+  ).not.toBeNull();
+});

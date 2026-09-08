@@ -9,28 +9,21 @@
   color: var(--muted-foreground);
   margin-bottom: var(--space-1);
 }
+.profileOption,
+.headingWithHelp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
 .time {
   text-align: right;
   white-space: nowrap;
   font-family: var(--font-mono);
   font-size: 11px;
 }
-.settings {
-  display: block;
-  font-size: 10px;
-  color: var(--muted-foreground);
-  margin-top: 2px;
-}
 .hash {
   text-decoration: none;
 }
 .hash:hover {
   text-decoration: underline;
-}
-.description {
-  border-top: 1px solid var(--border);
-  padding: var(--space-2) var(--space-3);
-  font-size: 11px;
-  color: var(--muted-foreground);
-  min-height: 48px;
 }

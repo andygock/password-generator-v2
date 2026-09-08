@@ -47,6 +47,8 @@
   --space-4: 16px;
   --space-5: 24px;
   --control-height: 30px;
+  --settings-column-width: 220px;
+  --estimate-column-width: 330px;
 }
 * {
   box-sizing: border-box;

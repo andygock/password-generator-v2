@@ -4,6 +4,7 @@ import { generatePassphrases, presetExtraEntropyBits } from '../src/random';
 import { generateStrings } from '../src/stringGeneration';
 import { formatEntropy, stringMetrics } from '../src/entropy';
 import { normaliseStringParams } from '../src/routeParams';
+import { WORLD_COMPUTE_MULTIPLIER } from '../src/computeProfiles';
 
 it('only draws word randomness in normal mode and batches preset suffixes', () => {
   const rng = vi
@@ -80,6 +81,13 @@ it('normalises String bookmarks without partial number parsing', () => {
   expect(
     normaliseStringParams(new URLSearchParams('bytes=-1&charset=base64'))
   ).toEqual({ sizeBytes: 1, charsetKey: 'base64' });
+});
+
+it('keeps the world-compute profile within the data-centre power upper bound', () => {
+  const averageDataCentreWatts = 415e12 / (365 * 24);
+  const maximumRtx5090Equivalents = averageDataCentreWatts / 575;
+  expect(WORLD_COMPUTE_MULTIPLIER).toBe(80_000_000);
+  expect(WORLD_COMPUTE_MULTIPLIER).toBeLessThan(maximumRtx5090Equivalents);
 });
 
 it('shares validated dictionaries across concurrent loads and retries failures', async () => {

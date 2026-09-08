@@ -39,6 +39,8 @@ Validated dictionaries are cached as immutable arrays; failed loads are evicted 
 
 Cracking times are average offline guessing estimates for uniformly generated passwords. The table links to its benchmark source and identifies the measured settings. Actual rates depend on the hash settings, hardware and password length; the large compute profile is a hypothetical multiplier. Character-based generation rounds up to a whole number of characters, so its actual entropy can slightly exceed the selected target.
 
+The **World compute** profile is a deliberately generous upper bound of 80 million RTX 5090 equivalents. It divides the [IEA's estimate of 415 TWh used by data centres in 2024](https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai) by the [RTX 5090's 575 W graphics power](https://www.nvidia.com/en-au/geforce/graphics-cards/50-series/rtx-5090/), then rounds down. Real cracking capacity would be lower because that electricity also powers CPUs, storage, networking and cooling.
+
 Estimates use unrounded actual entropy. Base64 entropy comes from its input bytes, since its final character can carry fewer than six random bits.
 
 ## Interface and styling

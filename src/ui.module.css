@@ -1,7 +1,9 @@
 /* Reusable panel, field and table primitives keep density consistent. */
 .layout {
   display: grid;
-  grid-template-columns: 238px minmax(300px, 1fr) minmax(330px, 0.85fr);
+  grid-template-columns:
+    var(--settings-column-width, 220px) minmax(0, 1fr)
+    var(--estimate-column-width, 330px);
   gap: var(--space-3);
   align-items: start;
 }
@@ -146,7 +148,7 @@
 .table tbody tr:hover {
   background: var(--background);
 }
-@media (max-width: 1150px) {
+@media (max-width: 960px) {
   .layout {
     grid-template-columns: 225px minmax(0, 1fr);
   }
