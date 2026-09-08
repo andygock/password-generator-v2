@@ -1,5 +1,5 @@
-import prettyMilliseconds from 'pretty-ms';
 import { memo, useId, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { benchmarks, BENCHMARK_SOURCE } from './benchmarks';
 import {
   BENCHMARK_DESCRIPTION,
@@ -7,25 +7,19 @@ import {
   WORLD_COMPUTE_DESCRIPTION,
 } from './computeProfiles';
 import { formatEntropy } from './entropy';
+import { formatCrackingTime } from './timeFormat';
 import Tooltip from './Tooltip';
 import ui from './ui.module.css';
 import styles from './EstimateCrackingTime.module.css';
-
-// Age of the universe in milliseconds. Cap the display, not the entropy input.
-const MILLISECONDS_PER_YEAR = 365.2425 * 24 * 60 * 60 * 1000;
-const msAgeOfUniverse = 13.8e9 * MILLISECONDS_PER_YEAR;
-const prettyTime = (ms) => {
-  if (ms > msAgeOfUniverse) return '> age of universe';
-  if (ms < 1000) return '< 1 second';
-  return prettyMilliseconds(ms, { compact: true, verbose: true });
-};
 
 export default memo(function EstimateCrackingTime({
   bits,
   type = 'dictionary',
 }) {
   const id = useId();
+  const hashTooltipId = `${id}-hash-description`;
   const [computeProfileKey, setComputeProfileKey] = useState('single-5090');
+  const [hashTooltip, setHashTooltip] = useState('');
   const profile = computeProfiles.find(({ key }) => key === computeProfileKey);
   return (
     <section className={ui.panel} aria-label="Cracking estimates">
@@ -87,34 +81,46 @@ export default memo(function EstimateCrackingTime({
                   {links.map(({ label, url, description }, index) => (
                     <span key={label}>
                       {index > 0 && ', '}
-                      <Tooltip
-                        label={`About ${label}`}
-                        align={index > 0 ? 'right' : 'left'}
-                        placement="top"
-                        trigger={
-                          <a
-                            className={styles.hash}
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {label}
-                          </a>
+                      <a
+                        className={styles.hash}
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-describedby={
+                          hashTooltip === description
+                            ? hashTooltipId
+                            : undefined
                         }
+                        onMouseEnter={() => setHashTooltip(description)}
+                        onMouseLeave={() => setHashTooltip('')}
+                        onFocus={() => setHashTooltip(description)}
+                        onBlur={() => setHashTooltip('')}
+                        onKeyDown={(event) => {
+                          if (event.key === 'Escape') setHashTooltip('');
+                        }}
                       >
-                        {description}
-                      </Tooltip>
+                        {label}
+                      </a>
                     </span>
                   ))}
                 </td>
                 <td className={styles.time}>
-                  {prettyTime((500 * 2 ** bits) / (rate * profile.multiplier))}
+                  {formatCrackingTime(
+                    (500 * 2 ** bits) / (rate * profile.multiplier)
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+      {hashTooltip &&
+        createPortal(
+          <div id={hashTooltipId} className={styles.hashTooltip} role="tooltip">
+            {hashTooltip}
+          </div>,
+          document.body
+        )}
     </section>
   );
 });

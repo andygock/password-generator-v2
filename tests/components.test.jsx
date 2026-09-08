@@ -331,9 +331,12 @@ it('shows a compact cracking table with generic benchmark help and world compute
   const ntlm = Array.from(estimate.querySelectorAll('a')).find(
     (link) => link.textContent === 'NTLM'
   );
+  await act(() => ntlm.focus());
   const algorithmTooltip = document.getElementById(
     ntlm.getAttribute('aria-describedby')
   );
   expect(algorithmTooltip.getAttribute('role')).toBe('tooltip');
   expect(algorithmTooltip.textContent).toContain('legacy Microsoft');
+  await act(() => ntlm.blur());
+  expect(document.getElementById(algorithmTooltip.id)).toBeNull();
 });
