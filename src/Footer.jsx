@@ -11,6 +11,7 @@ export default function Footer() {
         . Passwords are never sent to a server.
       </span>
       <span>
+        <a href="https://github.com/1Password/spg">1Password</a> ·{' '}
         <a href="https://www.eff.org/dice">EFF</a> ·{' '}
         <a href="https://github.com/sts10/orchard-street-wordlists">
           Orchard Street

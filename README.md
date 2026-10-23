@@ -1,6 +1,6 @@
 # Password Generator v2
 
-A passphrase / password generator running in the web browser using the [EFF word lists](https://www.eff.org/deeplinks/2016/07/new-wordlists-random-passphrases).
+A passphrase / password generator running in the web browser using the EFF, Orchard Street and 1Password Agile word lists.
 
 It's the second iteration of my [password generator](https://github.com/andygock/password-generator) web app using React. The original version was plain vanilla.
 
@@ -80,6 +80,7 @@ String mode accepts `bytes` from 1 to 64 and `charset` values `hex`, `base62`, `
 
 ## Credits
 
+- [1Password Agile word list](https://github.com/1Password/spg/blob/208cdea51360df67970a273236aff9e6c12f2d1b/testdata/agwordlist.txt): 18,325 words captured directly from the published text file, preserving its words and order. This is the `spg` repository list, which differs from the current hosted `AgileWords.txt`. Copyright 2018 AgileBits Inc., distributed under Apache 2.0; the licence is included in `public/licences/1password-spg-LICENSE.txt`. No Go code was run to obtain the words. Use `agile` as the word-list bookmark parameter.
 - [EFF Dice-Generated Passphrases](https://www.eff.org/dice)
 - [Orchard Street Wordlists](https://github.com/sts10/orchard-street-wordlists) by Sam Schlinkert
 - [Geist and Geist Mono](https://vercel.com/font) by Vercel, distributed through Fontsource under the SIL Open Font License. Font licences are included in `public/fonts/`.

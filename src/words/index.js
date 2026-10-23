@@ -1,5 +1,11 @@
 export const WORD_LIST_OPTIONS = [
   {
+    id: 'agile',
+    text: '1Password Agile',
+    count: 18325,
+    load: () => import('./agile.js'),
+  },
+  {
     id: 'orchard-street-long',
     text: 'Orchard Street Long',
     count: 17576,
