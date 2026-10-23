@@ -114,7 +114,11 @@ export default function StringGenerator() {
           sizeBytes={sizeBytes}
           charset={charset}
         />
-        <EstimateCrackingTime bits={bits} type="brute force" />
+        <EstimateCrackingTime
+          bits={bits}
+          maxPasswordBytes={length}
+          type="brute force"
+        />
       </div>
       <CommandLine charsetKey={charsetKey} bits={sizeBytes * 8} />
     </div>

@@ -46,9 +46,13 @@ export default [
     },
   },
   {
-    files: ['tests/**/*.{js,jsx}'],
+    files: ['tests/**/*.{js,jsx}', '*.{js,cjs}'],
     languageOptions: {
       globals: { ...globals.node },
     },
+  },
+  {
+    files: ['*.cjs'],
+    rules: js.configs.recommended.rules,
   },
 ];

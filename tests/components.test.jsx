@@ -9,6 +9,8 @@ import GeneratorErrorBoundary from '../src/GeneratorErrorBoundary';
 import useCopyFeedback from '../src/useCopyFeedback';
 import * as words from '../src/words';
 import App from '../src/App';
+import Tooltip from '../src/Tooltip';
+import EstimateCrackingTime from '../src/EstimateCrackingTime';
 
 const copy = vi.fn();
 
@@ -311,9 +313,8 @@ it('recovers generation after a crypto failure without showing stale passwords',
   expect(container.querySelector('input[readonly]').value).toHaveLength(2);
 });
 
-it('shows a compact cracking table with generic benchmark help and world compute', async () => {
+it('shows benchmark settings, accessible help and world compute', async () => {
   window.location.hash = '#/6/20/eff-long';
-  vi.spyOn(words, 'loadWordList').mockResolvedValue(['example']);
   await render(<App />);
   await act(async () => {
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -321,7 +322,21 @@ it('shows a compact cracking table with generic benchmark help and world compute
   const estimate = container.querySelector('[aria-label="Cracking estimates"]');
   expect(estimate.textContent).toContain('World compute');
   expect(estimate.textContent).not.toContain('Mode 1000');
-  expect(estimate.textContent).not.toContain('Benchmark settings');
+  expect(estimate.textContent).not.toContain('Cost 5 (32 iterations)');
+  expect(estimate.textContent).not.toContain('600,000 iterations');
+  for (const [label, settings] of [
+    ['bcrypt $2*$, Blowfish (Unix)', 'Cost 5 (32 iterations)'],
+    ['PBKDF2-HMAC-SHA256 (600k iterations)', '600,000 iterations'],
+  ]) {
+    const link = Array.from(estimate.querySelectorAll('a')).find(
+      (link) => link.textContent === label
+    );
+    await act(() => link.focus());
+    expect(
+      document.getElementById(link.getAttribute('aria-describedby')).textContent
+    ).toContain(settings);
+    await act(() => link.blur());
+  }
   expect(
     estimate.querySelector('[aria-label="About benchmark rates"]')
   ).not.toBeNull();
@@ -349,4 +364,214 @@ it('shows a compact cracking table with generic benchmark help and world compute
   );
   expect(universeTooltip.getAttribute('role')).toBe('tooltip');
   expect(universeTooltip.textContent).toContain('age of the universe');
+});
+
+it('allows hovering help and dismissing it with Escape without moving focus', async () => {
+  vi.useFakeTimers();
+  await render(<Tooltip label="Help">Useful explanation</Tooltip>);
+  const button = container.querySelector('button');
+  const anchor = button.parentElement;
+  await act(() =>
+    anchor.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+  );
+  const tooltip = document.querySelector('[role="tooltip"]');
+  expect(tooltip.textContent).toBe('Useful explanation');
+  await act(() =>
+    anchor.dispatchEvent(
+      new MouseEvent('mouseout', {
+        bubbles: true,
+        relatedTarget: document.body,
+      })
+    )
+  );
+  await act(() =>
+    tooltip.dispatchEvent(
+      new MouseEvent('mouseover', {
+        bubbles: true,
+        relatedTarget: document.body,
+      })
+    )
+  );
+  await act(() => vi.advanceTimersByTime(500));
+  expect(document.getElementById(tooltip.id)).not.toBeNull();
+  await act(() =>
+    tooltip.dispatchEvent(
+      new MouseEvent('mouseout', {
+        bubbles: true,
+        relatedTarget: document.body,
+      })
+    )
+  );
+  await act(() => vi.advanceTimersByTime(500));
+  expect(document.getElementById(tooltip.id)).toBeNull();
+  await act(() => button.focus());
+  expect(document.querySelector('[role="tooltip"]')).not.toBeNull();
+  await act(() =>
+    button.dispatchEvent(
+      new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })
+    )
+  );
+  expect(document.activeElement).toBe(button);
+  expect(document.querySelector('[role="tooltip"]')).toBeNull();
+});
+
+it('withholds bcrypt estimates beyond its input limit, including unknown lengths', async () => {
+  for (const maxPasswordBytes of [72, 73, 128, undefined]) {
+    await render(
+      <EstimateCrackingTime bits={512} maxPasswordBytes={maxPasswordBytes} />
+    );
+    const row = Array.from(container.querySelectorAll('tbody tr')).find((row) =>
+      row.textContent.includes('bcrypt')
+    );
+    expect(row.textContent.includes('Unavailable')).toBe(
+      maxPasswordBytes !== 72
+    );
+    if (maxPasswordBytes !== 72) {
+      const link = row.querySelector('a');
+      await act(() => link.focus());
+      expect(
+        document.getElementById(link.getAttribute('aria-describedby'))
+          .textContent
+      ).toContain('truncate or reject');
+      await act(() => link.blur());
+    }
+    const md5 = Array.from(container.querySelectorAll('tbody tr')).find((row) =>
+      row.textContent.includes('MD5')
+    );
+    expect(md5.textContent).not.toContain('Unavailable');
+  }
+});
+
+it('passes String output length to the cracking estimator', async () => {
+  window.location.hash = '#/string?bytes=64&charset=hex';
+  await render(<App />);
+  await act(async () => {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  });
+  const row = Array.from(container.querySelectorAll('tbody tr')).find((row) =>
+    row.textContent.includes('bcrypt')
+  );
+  expect(row.textContent).toContain('Unavailable');
+});
+
+it('keeps dictionary compatibility tied to possible phrases, not sampled output', async () => {
+  vi.spyOn(words, 'loadWordList').mockResolvedValue(['a', 'abcdefgh']);
+  vi.spyOn(globalThis.crypto, 'getRandomValues').mockImplementation((buffer) =>
+    buffer.fill(0)
+  );
+  await render(
+    <WordListOutput wordList="test" words={9} lines={1} mode="normal" />
+  );
+  expect(container.querySelector('input[readonly]').value.length).toBeLessThan(
+    72
+  );
+  const bcryptRow = () =>
+    Array.from(container.querySelectorAll('tbody tr')).find((row) =>
+      row.textContent.includes('bcrypt')
+    );
+  expect(bcryptRow().textContent).toContain('Unavailable');
+  await render(
+    <WordListOutput wordList="test" words={8} lines={1} mode="normal" />
+  );
+  expect(bcryptRow().textContent).not.toContain('Unavailable');
+});
+
+it.each([
+  { x: 700, expectedLeft: 438 },
+  { x: 100, expectedLeft: 112 },
+])(
+  'positions hover help beside the pointer at x=$x',
+  async ({ x, expectedLeft }) => {
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+      function () {
+        return this.getAttribute('role') === 'tooltip'
+          ? { width: 250, height: 80 }
+          : { left: x, right: x + 20, top: 190, bottom: 210 };
+      }
+    );
+    await render(<Tooltip label="Help">Positioned help</Tooltip>);
+    await act(() =>
+      container.querySelector('button').dispatchEvent(
+        new MouseEvent('mouseover', {
+          bubbles: true,
+          clientX: x,
+          clientY: 200,
+        })
+      )
+    );
+    const tooltip = document.querySelector('[role="tooltip"]');
+    expect(tooltip.style.left).toBe(`${expectedLeft}px`);
+    expect(tooltip.style.top).toBe('160px');
+  }
+);
+
+it('places help above the trigger when neither side fits', async () => {
+  vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(
+    function () {
+      return this.getAttribute('role') === 'tooltip'
+        ? { width: window.innerWidth - 16, height: 80 }
+        : { left: 400, right: 420, top: 190, bottom: 210 };
+    }
+  );
+  await render(<Tooltip label="Help">Wide help</Tooltip>);
+  await act(() =>
+    container.querySelector('button').dispatchEvent(
+      new MouseEvent('mouseover', {
+        bubbles: true,
+        clientX: 400,
+        clientY: 200,
+      })
+    )
+  );
+  const tooltip = document.querySelector('[role="tooltip"]');
+  expect(tooltip.style.left).toBe('8px');
+  expect(tooltip.style.top).toBe('98px');
+});
+
+it('immediately replaces old hover help and cancels its pending dismissal', async () => {
+  vi.useFakeTimers();
+  await render(
+    <>
+      <Tooltip label="First">First help</Tooltip>
+      <Tooltip label="Second">Second help</Tooltip>
+    </>
+  );
+  const [first, second] = container.querySelectorAll('button');
+  await act(() =>
+    first.dispatchEvent(new MouseEvent('mouseover', { bubbles: true }))
+  );
+  expect(document.querySelector('[role="tooltip"]').textContent).toBe(
+    'First help'
+  );
+  await act(() =>
+    first.dispatchEvent(
+      new MouseEvent('mouseout', {
+        bubbles: true,
+        relatedTarget: document.body,
+      })
+    )
+  );
+  expect(vi.getTimerCount()).toBe(1);
+  await act(() =>
+    second.dispatchEvent(
+      new MouseEvent('mouseover', {
+        bubbles: true,
+        relatedTarget: document.body,
+      })
+    )
+  );
+  expect(document.querySelectorAll('[role="tooltip"]')).toHaveLength(1);
+  expect(document.querySelector('[role="tooltip"]').textContent).toBe(
+    'Second help'
+  );
+  expect(vi.getTimerCount()).toBe(0);
+  await act(() => vi.advanceTimersByTime(500));
+  expect(document.querySelector('[role="tooltip"]').textContent).toBe(
+    'Second help'
+  );
+  await act(() => first.focus());
+  expect(document.querySelectorAll('[role="tooltip"]')).toHaveLength(1);
+  expect(document.querySelector('[role="tooltip"]').textContent).toBe(
+    'First help'
+  );
 });

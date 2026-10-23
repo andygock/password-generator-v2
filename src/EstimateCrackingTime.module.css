@@ -1,8 +1,3 @@
-.estimatePanel {
-  /* Let the world-compute help text extend beyond the panel edge. */
-  overflow: visible;
-}
-
 .profiles {
   display: flex;
   flex-wrap: wrap;
@@ -27,6 +22,7 @@
 .table th,
 .table td {
   padding-block: 2px;
+  white-space: nowrap;
 }
 .time {
   text-align: right;
@@ -50,19 +46,4 @@
 }
 .hash:hover {
   text-decoration: underline;
-}
-.hashTooltip {
-  position: fixed;
-  right: var(--space-3);
-  bottom: var(--space-3);
-  z-index: 30;
-  width: min(340px, calc(100vw - 16px));
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  background: var(--primary);
-  color: var(--primary-foreground);
-  font-size: 11px;
-  line-height: 1.35;
-  box-shadow: var(--shadow);
 }

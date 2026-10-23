@@ -17,12 +17,11 @@
 }
 
 .content {
-  position: absolute;
-  top: calc(100% + var(--space-2));
-  left: 0;
-  z-index: 10;
-  display: none;
-  width: 250px;
+  position: fixed;
+  z-index: 30;
+  width: min(250px, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -33,26 +32,4 @@
   font-weight: 400;
   line-height: 1.45;
   white-space: normal;
-}
-
-.alignRight .content {
-  right: 0;
-  left: auto;
-}
-
-.above .content {
-  top: auto;
-  bottom: calc(100% + var(--space-2));
-}
-
-.tooltip:hover .content,
-.trigger:focus-visible + .content,
-.target:focus-visible + .content {
-  display: block;
-}
-
-@media (max-width: 640px) {
-  .content {
-    width: min(250px, 75vw);
-  }
 }

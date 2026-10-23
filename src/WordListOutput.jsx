@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { loadWordList } from './words';
 import OutputWords from './OutputWords';
+import EstimateCrackingTime from './EstimateCrackingTime';
+import { dictionaryMetrics } from './entropy';
 import ui from './ui.module.css';
 
 // The parent keys this component by dictionary so old errors and results cannot
@@ -8,6 +10,13 @@ import ui from './ui.module.css';
 export default function WordListOutput({ wordList, words, lines, mode }) {
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState({ status: 'loading' });
+  const metrics = useMemo(
+    () =>
+      result.wordArray
+        ? dictionaryMetrics(result.wordArray, words, mode)
+        : null,
+    [result.wordArray, words, mode]
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -52,12 +61,15 @@ export default function WordListOutput({ wordList, words, lines, mode }) {
     );
   }
   return (
-    <OutputWords
-      key={`${words}:${lines}:${mode}`}
-      wordArray={result.wordArray}
-      words={words}
-      lines={lines}
-      mode={mode}
-    />
+    <>
+      <OutputWords
+        key={`${words}:${lines}:${mode}`}
+        wordArray={result.wordArray}
+        words={words}
+        lines={lines}
+        mode={mode}
+      />
+      <EstimateCrackingTime {...metrics} />
+    </>
   );
 }

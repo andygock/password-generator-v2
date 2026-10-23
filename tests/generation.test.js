@@ -2,9 +2,27 @@ import { describe, expect, it, vi } from 'vitest';
 import { CHARSETS } from '../src/charsets';
 import { generatePassphrases, presetExtraEntropyBits } from '../src/random';
 import { generateStrings } from '../src/stringGeneration';
-import { formatEntropy, stringMetrics } from '../src/entropy';
+import {
+  dictionaryMetrics,
+  formatEntropy,
+  stringMetrics,
+} from '../src/entropy';
 import { normaliseStringParams } from '../src/routeParams';
 import { WORLD_COMPUTE_MULTIPLIER } from '../src/computeProfiles';
+
+it('bounds dictionary lengths using the full word list and format overhead', () => {
+  const dictionary = ['a', 'abcdefgh'];
+  expect(dictionaryMetrics(dictionary, 8, 'normal')).toEqual({
+    bits: 8,
+    maxPasswordBytes: 71,
+  });
+  expect(dictionaryMetrics(dictionary, 9, 'normal').maxPasswordBytes).toBe(80);
+  expect(dictionaryMetrics(dictionary, 8, 'preset1')).toEqual({
+    bits: 8 + presetExtraEntropyBits(),
+    maxPasswordBytes: 70,
+  });
+  expect(dictionaryMetrics(dictionary, 9, 'preset1').maxPasswordBytes).toBe(78);
+});
 
 it('only draws word randomness in normal mode and batches preset suffixes', () => {
   const rng = vi
@@ -108,3 +126,24 @@ it('shares validated dictionaries across concurrent loads and retries failures',
   expect(Object.isFrozen(result)).toBe(true);
   expect(load).toHaveBeenCalledTimes(2);
 });
+
+it.each(CHARSETS)(
+  'rejects invalid dimensions for $key before requesting randomness',
+  (charset) => {
+    const rng = vi.spyOn(globalThis.crypto, 'getRandomValues');
+    for (const [rows, sizeBytes] of [
+      [1.5, 2],
+      [2, 1.5],
+      [0, 16],
+      [1, 0],
+      [-1, 16],
+      [NaN, 16],
+      [1, Infinity],
+    ]) {
+      expect(() => generateStrings({ rows, sizeBytes, charset })).toThrow(
+        RangeError
+      );
+    }
+    expect(rng).not.toHaveBeenCalled();
+  }
+);

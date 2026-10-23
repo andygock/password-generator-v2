@@ -10,7 +10,7 @@ The String mode supports hexadecimal, Base62, Web Safe, Human Friendly and Base6
 
 ## Development process
 
-Use Node.js 22.12 or later and pnpm. Install pnpm using its official installation instructions, then run:
+Use Node.js 22.13 or later within the 22.x series, or Node.js 24 or later, and pnpm 12.3.4 (pinned in `package.json`). Install pnpm using its official installation instructions, then run:
 
     pnpm install
     pnpm dev
@@ -24,6 +24,9 @@ Run lint and focused unit/component tests:
 
     pnpm lint
     pnpm test
+    pnpm format:check
+
+Use `pnpm format` to apply the shared Prettier configuration. Lint covers source, tests and root JavaScript configuration files. ESLint and `@eslint/js` are pinned to matching 9.x releases because the React lint plugin does not yet declare ESLint 10 support. ESLint 9 is deprecated upstream; upgrade the lint packages together when a compatible plugin release is available.
 
 Tests cover random sampling, dictionary integrity, command generation, URL validation, loading recovery and clipboard feedback. Windows command execution checks run on Windows and skip on other platforms. Tests do not open a browser or modify the system clipboard.
 
@@ -37,7 +40,9 @@ Random values come from Web Crypto, with rejection sampling for uniform characte
 
 Validated dictionaries are cached as immutable arrays; failed loads are evicted for retry. Preset suffixes and String batches minimise crypto requests. Generated values are kept only in component memory and are never included in bookmarks.
 
-Cracking times are average offline guessing estimates for uniformly generated passwords. The table links to its benchmark source and identifies the measured settings. Actual rates depend on the hash settings, hardware and password length; the large compute profile is a hypothetical multiplier. Character-based generation rounds up to a whole number of characters, so its actual entropy can slightly exceed the selected target.
+Cracking times are average offline guessing estimates for uniformly generated passwords. The table keeps each row to one line and links to its benchmark source. Hover or focus an algorithm to see its measured settings and any input-length limitations. Actual rates depend on the hash settings, hardware and password length; the large compute profile is a hypothetical multiplier. Character-based generation rounds up to a whole number of characters, so its actual entropy can slightly exceed the selected target.
+
+Bcrypt estimates are unavailable when a configuration can produce passwords longer than 72 bytes, since implementations may truncate or reject them. Dictionary mode uses the longest possible phrase in the validated list, including separators or preset suffixes, rather than the lengths of the current random batch. The benchmark uses optimised kernels with their own password-length limits; estimates are illustrative, not guarantees for every implementation.
 
 The **World compute** profile is a deliberately generous upper bound of 80 million RTX 5090 equivalents. It divides the [IEA's estimate of 415 TWh used by data centres in 2024](https://www.iea.org/reports/energy-and-ai/energy-demand-from-ai) by the [RTX 5090's 575 W graphics power](https://www.nvidia.com/en-au/geforce/graphics-cards/50-series/rtx-5090/), then rounds down. Real cracking capacity would be lower because that electricity also powers CPUs, storage, networking and cooling.
 
@@ -48,6 +53,8 @@ Estimates use unrounded actual entropy. Base64 entropy comes from its input byte
 The compact neutral interface uses shadcn-style semantic CSS variables. `src/App.css` owns shared tokens, element defaults and self-hosted Geist/Geist Mono font faces. `src/ui.module.css` provides shared panel, field and table styles; component-specific layout lives in adjacent CSS Modules. No external font service is contacted.
 
 Passwords are labelled read-only fields with separate Copy buttons. Focusing a field selects its text for manual copying. Native clipboard failures show persistent instructions; pending copy results cannot restore feedback for replaced passwords. Generation commands appear in the expandable **Generate elsewhere** section.
+
+Contextual help supports hover and keyboard focus, stays open while its text is hovered, and can be dismissed with Escape. Help is positioned outside scrolling containers to avoid clipping and appears to the left of the pointer when there is room, with a right-side or vertical fallback near viewport edges.
 
 Each generator mode has an independent error-boundary lifecycle, so a failed mode does not block navigation to the other mode. Reload remains available to recover stale deployment assets.
 
@@ -63,7 +70,9 @@ This makes it bookmark-friendly with recallable user-selected parameters. The ha
 
 e.g
 
-    http://localhost:1234/#/4/10/eff-short1
+    #/4/10/eff-short1
+
+Append this hash to the local URL printed by `pnpm dev`.
 
 If no hash is present, default parameters are used.
 

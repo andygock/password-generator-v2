@@ -1,6 +1,5 @@
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import config from './config';
-import EstimateCrackingTime from './EstimateCrackingTime';
 import NumberPicker from './NumberPicker';
 import WordListOutput from './WordListOutput';
 import WordListRadio from './WordListRadio';
@@ -107,7 +106,6 @@ export default function DictionaryGenerator({ mode }) {
         lines={numberOfPassphrases}
         mode={activeMode}
       />
-      <EstimateCrackingTime bits={entropyBits} />
     </div>
   );
 }

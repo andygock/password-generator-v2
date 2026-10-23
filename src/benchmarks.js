@@ -141,6 +141,7 @@ export const benchmarks = [
   {
     // Hash-Mode 3200 (bcrypt $2*$, Blowfish (Unix)) [Iterations: 32]
     hashMode: 3200,
+    maxInputBytes: 72,
     settings: 'Cost 5 (32 iterations)',
     // Source: Hashcat v6.2.6-851 RTX 5090 FE benchmark, Speed.#1 304.8 kH/s
     name: 'bcrypt $2*$, Blowfish (Unix)',

@@ -1,5 +1,4 @@
 import { memo, useId, useState } from 'react';
-import { createPortal } from 'react-dom';
 import { benchmarks, BENCHMARK_SOURCE } from './benchmarks';
 import {
   BENCHMARK_DESCRIPTION,
@@ -17,18 +16,14 @@ const UNIVERSE_AGE_DESCRIPTION =
 
 export default memo(function EstimateCrackingTime({
   bits,
+  maxPasswordBytes,
   type = 'dictionary',
 }) {
   const id = useId();
-  const hashTooltipId = `${id}-hash-description`;
   const [computeProfileKey, setComputeProfileKey] = useState('single-5090');
-  const [hashTooltip, setHashTooltip] = useState('');
   const profile = computeProfiles.find(({ key }) => key === computeProfileKey);
   return (
-    <section
-      className={`${ui.panel} ${styles.estimatePanel}`}
-      aria-label="Cracking estimates"
-    >
+    <section className={ui.panel} aria-label="Cracking estimates">
       <div className={ui.panelHeader}>
         <h2>Offline cracking estimate</h2>
         <span className={ui.badge}>{formatEntropy(bits)} bits</span>
@@ -81,78 +76,73 @@ export default memo(function EstimateCrackingTime({
             </tr>
           </thead>
           <tbody>
-            {benchmarks.map(({ name, links, rate }) => {
-              const time = formatCrackingTime(
-                (500 * 2 ** bits) / (rate * profile.multiplier)
-              );
-              return (
-                <tr key={name}>
-                  <td>
-                    {links.map(({ label, url, description }, index) => (
-                      <span key={label}>
-                        {index > 0 && ', '}
-                        <a
-                          className={styles.hash}
-                          href={url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-describedby={
-                            hashTooltip === description
-                              ? hashTooltipId
-                              : undefined
+            {benchmarks.map(
+              ({ name, links, rate, settings, maxInputBytes }) => {
+                const incompatible =
+                  maxInputBytes &&
+                  (!Number.isFinite(maxPasswordBytes) ||
+                    maxPasswordBytes > maxInputBytes);
+                const time = incompatible
+                  ? 'Unavailable'
+                  : formatCrackingTime(
+                      (500 * 2 ** bits) / (rate * profile.multiplier)
+                    );
+                return (
+                  <tr key={name}>
+                    <td>
+                      {links.map(({ label, url, description }, index) => (
+                        <span key={label}>
+                          {index > 0 && ', '}
+                          <Tooltip
+                            trigger={
+                              <a
+                                className={styles.hash}
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {label}
+                              </a>
+                            }
+                          >
+                            {description} Benchmark: {settings}.
+                            {incompatible && (
+                              <>
+                                {' '}
+                                This configuration may exceed {
+                                  maxInputBytes
+                                }{' '}
+                                bytes. Bcrypt can truncate or reject longer
+                                passwords; full-entropy estimates do not apply.
+                              </>
+                            )}
+                          </Tooltip>
+                        </span>
+                      ))}
+                    </td>
+                    <td className={styles.time}>
+                      {time === UNIVERSE_AGE_LABEL ? (
+                        <Tooltip
+                          align="right"
+                          trigger={
+                            <button type="button" className={styles.timeLimit}>
+                              {time}
+                            </button>
                           }
-                          onMouseEnter={() => setHashTooltip(description)}
-                          onMouseLeave={() => setHashTooltip('')}
-                          onFocus={() => setHashTooltip(description)}
-                          onBlur={() => setHashTooltip('')}
-                          onKeyDown={(event) => {
-                            if (event.key === 'Escape') setHashTooltip('');
-                          }}
                         >
-                          {label}
-                        </a>
-                      </span>
-                    ))}
-                  </td>
-                  <td className={styles.time}>
-                    {time === UNIVERSE_AGE_LABEL ? (
-                      <button
-                        type="button"
-                        className={styles.timeLimit}
-                        aria-describedby={
-                          hashTooltip === UNIVERSE_AGE_DESCRIPTION
-                            ? hashTooltipId
-                            : undefined
-                        }
-                        onMouseEnter={() =>
-                          setHashTooltip(UNIVERSE_AGE_DESCRIPTION)
-                        }
-                        onMouseLeave={() => setHashTooltip('')}
-                        onFocus={() => setHashTooltip(UNIVERSE_AGE_DESCRIPTION)}
-                        onBlur={() => setHashTooltip('')}
-                        onKeyDown={(event) => {
-                          if (event.key === 'Escape') setHashTooltip('');
-                        }}
-                      >
-                        {time}
-                      </button>
-                    ) : (
-                      time
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
+                          {UNIVERSE_AGE_DESCRIPTION}
+                        </Tooltip>
+                      ) : (
+                        time
+                      )}
+                    </td>
+                  </tr>
+                );
+              }
+            )}
           </tbody>
         </table>
       </div>
-      {hashTooltip &&
-        createPortal(
-          <div id={hashTooltipId} className={styles.hashTooltip} role="tooltip">
-            {hashTooltip}
-          </div>,
-          document.body
-        )}
     </section>
   );
 });
