@@ -23,15 +23,23 @@ export default function PasswordOutput({ values, noun = 'Password' }) {
             <span className={styles.number} aria-hidden="true">
               {String(index + 1).padStart(2, '0')}
             </span>
-            <input
-              className={styles.secret}
-              aria-label={`${noun} ${index + 1}`}
-              value={value}
-              readOnly
-              spellCheck={false}
-              autoComplete="off"
-              onFocus={(event) => event.target.select()}
-            />
+            <div className={styles.secretField}>
+              {/* The mirror sizes the selectable control without measuring DOM
+                  geometry or depending on browser support for field-sizing. */}
+              <span className={styles.measure} aria-hidden="true">
+                {value}
+              </span>
+              <textarea
+                className={styles.secret}
+                aria-label={`${noun} ${index + 1}`}
+                value={value}
+                rows={1}
+                readOnly
+                spellCheck={false}
+                autoComplete="off"
+                onFocus={(event) => event.target.select()}
+              />
+            </div>
             <button
               type="button"
               className={styles.copy}

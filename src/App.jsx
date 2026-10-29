@@ -59,7 +59,7 @@ export default function App() {
             <div className={styles.brandText}>
               <h1>Password Generator</h1>
               <p className={styles.subtitle}>
-                Generate random passphrases in the browser.
+                Generate random passwords and passphrases in the browser.
               </p>
             </div>
           </div>

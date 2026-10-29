@@ -101,6 +101,50 @@ it('replaces unfinished edits when navigation changes the value', async () => {
   expect(container.querySelector('input').value).toBe('20');
 });
 
+it('steps from an unfinished draft without committing a competing blur update', async () => {
+  const onChange = vi.fn();
+  await render(
+    <NumberPicker
+      label="Count"
+      value={6}
+      min={1}
+      max={12}
+      onChange={onChange}
+    />
+  );
+  const input = container.querySelector('input');
+  const increase = container.querySelector('[aria-label="Increase count"]');
+  await act(() => input.focus());
+  await type(input, '10');
+  await act(() => increase.focus());
+  expect(onChange).not.toHaveBeenCalled();
+  await click(increase);
+  expect(onChange).toHaveBeenCalledExactlyOnceWith(11);
+  expect(input.value).toBe('11');
+
+  await render(
+    <NumberPicker
+      label="Count"
+      value={12}
+      min={1}
+      max={12}
+      onChange={onChange}
+    />
+  );
+  await type(input, '8');
+  expect(increase.disabled).toBe(false);
+  await click(increase);
+  expect(onChange).toHaveBeenLastCalledWith(9);
+
+  onChange.mockClear();
+  await act(() => input.focus());
+  await type(input, '4');
+  await act(() => increase.focus());
+  expect(onChange).not.toHaveBeenCalled();
+  await act(() => increase.blur());
+  expect(onChange).toHaveBeenCalledExactlyOnceWith(4);
+});
+
 it('clears copied selection and notifications when strings regenerate', async () => {
   vi.useFakeTimers();
   await render(<OutputStrings values={['old-password']} />);
@@ -174,7 +218,7 @@ it('retries a failed dictionary download and ignores late results from an old li
   expect(container.textContent).not.toContain('stale');
   await click(container.querySelector('button'));
   expect(container.querySelector('[role="alert"]')).toBeNull();
-  expect(container.querySelector('input[readonly]').value).toBe('fresh');
+  expect(container.querySelector('textarea[readonly]').value).toBe('fresh');
 });
 
 it('shows loading instead of an old dictionary error when selection changes', async () => {
@@ -228,7 +272,7 @@ it('exposes the full password for manual selection when automatic copying is una
     value: undefined,
   });
   await render(<OutputStrings values={['manually-select-this']} />);
-  const input = container.querySelector('input[readonly]');
+  const input = container.querySelector('textarea[readonly]');
   expect(input.getAttribute('aria-label')).toBe('Password 1');
   await act(() => input.focus());
   expect(input.selectionStart).toBe(0);
@@ -268,7 +312,9 @@ it('keeps feedback from the most recent copy when promises finish out of order',
   await click(container.querySelectorAll('button')[0]);
   await click(container.querySelectorAll('button')[1]);
   await act(() => finishFirst());
-  expect(container.querySelector('[data-copied] input').value).toBe('second');
+  expect(container.querySelector('[data-copied] textarea').value).toBe(
+    'second'
+  );
 });
 
 it('restores bookmarked String settings and replaces malformed values', async () => {
@@ -278,7 +324,7 @@ it('restores bookmarked String settings and replaces malformed values', async ()
     await new Promise((resolve) => setTimeout(resolve, 100));
   });
   expect(container.querySelector('input[type="range"]').value).toBe('1');
-  expect(container.querySelector('input[readonly]').value).toHaveLength(2);
+  expect(container.querySelector('textarea[readonly]').value).toHaveLength(2);
   await act(async () => {
     window.location.hash = '#/string?bytes=3abc&charset=missing';
     await new Promise((resolve) => setTimeout(resolve, 100));
@@ -302,7 +348,7 @@ it('recovers generation after a crypto failure without showing stale passwords',
   expect(container.querySelector('[role="alert"]').textContent).toContain(
     'Randomness unavailable'
   );
-  expect(container.querySelector('input[readonly]')).toBeNull();
+  expect(container.querySelector('textarea[readonly]')).toBeNull();
   rng.mockRestore();
   await click(
     Array.from(container.querySelectorAll('button')).find(
@@ -310,7 +356,7 @@ it('recovers generation after a crypto failure without showing stale passwords',
     )
   );
   expect(container.querySelector('[role="alert"]')).toBeNull();
-  expect(container.querySelector('input[readonly]').value).toHaveLength(2);
+  expect(container.querySelector('textarea[readonly]').value).toHaveLength(2);
 });
 
 it('shows benchmark settings, accessible help and world compute', async () => {
@@ -462,9 +508,9 @@ it('keeps dictionary compatibility tied to possible phrases, not sampled output'
   await render(
     <WordListOutput wordList="test" words={9} lines={1} mode="normal" />
   );
-  expect(container.querySelector('input[readonly]').value.length).toBeLessThan(
-    72
-  );
+  expect(
+    container.querySelector('textarea[readonly]').value.length
+  ).toBeLessThan(72);
   const bcryptRow = () =>
     Array.from(container.querySelectorAll('tbody tr')).find((row) =>
       row.textContent.includes('bcrypt')

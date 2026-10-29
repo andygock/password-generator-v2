@@ -20,11 +20,15 @@ const NumberPicker = ({
     setDraft(String(value));
   }
 
-  const commit = (text) => {
+  const normalise = (text) => {
     const parsed = String(text).trim() === '' ? NaN : Number(text);
-    const next = Number.isFinite(parsed)
+    return Number.isFinite(parsed)
       ? Math.max(min, Math.min(max ?? Infinity, Math.trunc(parsed)))
       : value;
+  };
+  const draftValue = normalise(draft);
+  const commit = (text) => {
+    const next = normalise(text);
     setDraft(String(next));
     if (next !== value) onChange(next);
   };
@@ -34,7 +38,14 @@ const NumberPicker = ({
       <label className={ui.label} htmlFor={id}>
         {label}
       </label>
-      <div className={styles.control}>
+      <div
+        className={styles.control}
+        onBlur={(event) => {
+          // Commit when leaving the whole control so a step button can apply
+          // the draft and step together without competing route updates.
+          if (!event.currentTarget.contains(event.relatedTarget)) commit(draft);
+        }}
+      >
         <input
           {...otherProps}
           id={id}
@@ -44,7 +55,6 @@ const NumberPicker = ({
           max={max}
           step={1}
           onChange={(event) => setDraft(event.target.value)}
-          onBlur={(event) => commit(event.target.value)}
           onKeyDown={(event) => {
             if (event.key === 'Enter') event.currentTarget.blur();
             if (event.key === 'Escape') setDraft(String(value));
@@ -52,16 +62,16 @@ const NumberPicker = ({
         />
         <button
           type="button"
-          disabled={value <= min}
-          onClick={() => commit(value - 1)}
+          disabled={draftValue <= min}
+          onClick={() => commit(draftValue - 1)}
           aria-label={'Decrease ' + label.toLowerCase()}
         >
           &darr;
         </button>
         <button
           type="button"
-          disabled={typeof max === 'number' && value >= max}
-          onClick={() => commit(value + 1)}
+          disabled={typeof max === 'number' && draftValue >= max}
+          onClick={() => commit(draftValue + 1)}
           aria-label={'Increase ' + label.toLowerCase()}
         >
           &uarr;

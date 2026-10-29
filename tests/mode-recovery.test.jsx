@@ -38,7 +38,7 @@ it('allows Dictionary navigation after the String generator fails', async () => 
       await new Promise((resolve) => setTimeout(resolve, 100));
     });
     expect(container.querySelector('[role="alert"]')).toBeNull();
-    expect(container.querySelector('input[readonly]').value).toContain(
+    expect(container.querySelector('textarea[readonly]').value).toContain(
       'example'
     );
   } finally {
